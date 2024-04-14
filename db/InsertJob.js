@@ -1,17 +1,16 @@
 const JobSchema = require("./schema/JobSchema");
 
-export const saveJobs = async (jobs) => {
+const insertAllJobs = async (jobs) => {
   for (const job of jobs) {
-    await saveJob(job);
+    await insertJob(job);
   }
 };
 
-export const saveJob = async (job) => {
+const insertJob = async (job) => {
   const found = await JobSchema.findById(job.id);
 
   if (!found) {
-    job._id = job.id;
-    delete job.id;
+    job = setJobSchemaID(job);
     const jobProviders = [];
 
     for (const jp of job.jobProviders) {
@@ -25,4 +24,16 @@ export const saveJob = async (job) => {
   } else {
     console.log("found:", found);
   }
+};
+
+const setJobSchemaID = (job) => {
+  job._id = job.id;
+  delete job.id;
+  return job;
+};
+
+module.exports = {
+  insertJob,
+  insertAllJobs,
+  setJobSchemaID,
 };
