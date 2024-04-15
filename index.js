@@ -24,13 +24,9 @@ const getJobsFromFile = async (filename) => {
   return JSON.parse(jobListString);
 };
 
-
-
 const main = async () => {
   try {
     await db_connect();
-
-    
   } catch (error) {
     console.error(error);
   }
