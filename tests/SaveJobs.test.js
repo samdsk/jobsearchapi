@@ -53,7 +53,7 @@ describe("insert a job details to db", () => {
 
   beforeEach(async () => {
     const collections = await mongoose.connection.db.collections();
-    for (const collection of collections) await collection.deleteMany({});
+    for (const collection of collections) await collection.drop();
   });
 
   it("should insert a job to the db", async () => {
