@@ -14,6 +14,8 @@ const jobSchema = new mongoose.Schema({
   jobProviders: [{ jobProvider: String, url: String }],
   searchDate: Date,
   searchJobType: String,
+  searchLocation: String,
+  searchLanguage: String,
 });
 
 module.exports = mongoose.model("Job", jobSchema);
