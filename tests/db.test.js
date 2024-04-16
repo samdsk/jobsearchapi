@@ -68,11 +68,13 @@ describe("insert a job details to db", () => {
 
     expect(db_result._id).toEqual(id);
   });
+
   it("should not change original job obj", async () => {
     const id = job_example.id;
     const createdJob = await insertJob(job_example, "Cuoco");
 
     expect(job_example.id).toEqual(id);
+    expect(createdJob._id).toEqual(id);
   });
 
   it("should not contain duplicates", async () => {
@@ -82,5 +84,42 @@ describe("insert a job details to db", () => {
 
     expect(createdJob_2).toEqual(null);
     expect(db_result[0]._id).toEqual(job_example.id);
+  });
+
+  it("should contain additionalDetails such as searchDate, searchJobType, searchLocation and searchLanguage", async () => {
+    const time = new Date(Date.now());
+
+    const additionalDetails = {
+      searchJobType: "Cuoco",
+      searchLocation: "Italia",
+      searchLanguage: "it_IT",
+      searchDate: time,
+    };
+
+    const createdJob = await insertJob(job_example, additionalDetails);
+
+    const db_result = await JobSchema.findById(job_example.id);
+
+    expect(createdJob._id).toBe(db_result._id);
+    expect(db_result.searchJobType).toBe(additionalDetails.searchJobType);
+    expect(db_result.searchLocation).toBe(additionalDetails.searchLocation);
+    expect(db_result.searchLanguage).toBe(additionalDetails.searchLanguage);
+    expect(db_result.searchDate).toEqual(additionalDetails.searchDate);
+  });
+
+  it("should contains array of job providers of length 2", async () => {
+    const time = new Date(Date.now());
+
+    const additionalDetails = {
+      searchJobType: "Cuoco",
+      searchLocation: "Italia",
+      searchLanguage: "it_IT",
+      searchDate: time,
+    };
+
+    const createdJob = await insertJob(job_example, additionalDetails);
+
+    const db_result = await JobSchema.findById(job_example.id);
+    expect(db_result.jobProviders.length).toBe(2);
   });
 });
