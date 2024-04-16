@@ -135,7 +135,7 @@ const response_example_3 = {
 };
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.DB_URL);
+  await mongoose.connect(process.env.DB_URL_TEST);
   console.log("connected");
 });
 
