@@ -1,24 +1,28 @@
 const Job = require("../schema/JobSchema");
 
-const insertAllJobs = async (jobs, jobType) => {
-  for (const job of jobs) {
-    await insertJob(job, jobType);
+const insertAllJobs = async (searchResults) => {
+  const additionalDetails = {
+    searchJobType: searchResults.jobType,
+    searchLocation: searchResults.location,
+    searchLanguage: searchResults.language,
+    searchDate: searchResults.searchDate,
+  };
+
+  for (const job of searchResults.jobs) {
+    await insertJob(job, additionalDetails);
   }
 };
 
-const insertJob = async (job, jobType) => {
+const insertJob = async (job, additionalDetails) => {
   const found = await Job.findById(job.id);
 
   if (!found) {
     job = setJobSchemaID(job);
-    const jobProviders = [];
 
-    for (const jp of job.jobProviders) {
-      jobProviders.push(jp);
-    }
-
-    job.jobProviders = jobProviders;
-    job.searchJobType = jobType;
+    job.searchDate = additionalDetails.searchDate;
+    job.searchJobType = additionalDetails.searchJobType;
+    job.searchLocation = additionalDetails.searchLocation;
+    job.searchLanguage = additionalDetails.searchLanguage;
 
     const createdJob = await Job.create(job);
     return createdJob;
