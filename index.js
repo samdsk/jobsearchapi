@@ -1,44 +1,38 @@
 require("dotenv").config();
-const fs = require("fs");
+
 const { db_connect, db_close } = require("./db/db");
 const SearchRequestSender = require("./lib/searchRequestSender");
-
-const { collectJobsByType, collectAllJobTypes } = require("./lib/collector");
 const Collector = require("./lib/collector");
 
-const getJobTypesFromFile = async (filename) => {
-  const jobListString = await fs.promises.readFile(filename, {
-    encoding: "utf8",
-    flag: "r",
-  });
-
-  const jobTypes = JSON.parse(jobListString).map((job) => job.toLowerCase());
-
-  return jobTypes;
-};
-
-const getJobsFromFile = async (filename) => {
-  const jobListString = await fs.promises.readFile(filename, {
-    encoding: "utf8",
-    flag: "r",
-  });
-
-  return JSON.parse(jobListString);
-};
+const Utils = require("./lib/utils");
+const { logResultsToJSONFile } = require("./lib/resultsLogger");
 
 const main = async () => {
   try {
     await db_connect();
-    // const sender = new SearchRequestSender();
-    // const collector = new Collector(sender);
+    const filename = "./newJobTypesList.json";
+    const jobs = await Utils.getJobTypesFromFile(filename);
 
-    // const response = await collector.searchJobsByType("Segretaria");
-    // console.log(response);
+    const sender = new SearchRequestSender();
+    const collector = new Collector(sender);
+    const response = await collector.searchJobTypeList(jobs);
+    await logResultsToJSONFile("joblist_log", new Date(Date.now()), response);
+
+    console.log(response);
+
     await db_close();
-
     process.exit();
   } catch (error) {
-    console.error(error);
+    if (error.response) {
+      console.error("Request Error");
+      console.error(error.response.data);
+      await logResultsToJSONFile("error_log", new Date(Date.now()), error);
+    } else {
+      console.error(error);
+    }
+
+    await db_close();
+    process.exit(1);
   }
 };
 
