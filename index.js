@@ -25,7 +25,7 @@ const main = async () => {
   } catch (error) {
     if (error.response) {
       console.error("Request Error");
-      console.error(error.response);
+      console.error(error.response.data);
       await logResultsToJSONFile("error_log", new Date(Date.now()), error);
     } else {
       console.error(error);
