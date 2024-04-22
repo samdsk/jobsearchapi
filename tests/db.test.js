@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { setJobSchemaID, insertJob } = require("../db/InsertJob");
+const { setJobSchemaID, insertJob, insertAllJobs } = require("../db/InsertJob");
 const JobSchema = require("../schema/JobSchema");
 require("dotenv").config();
 
@@ -172,5 +172,17 @@ describe("insert a job details to db", () => {
 
     const db_result = await JobSchema.findById(job_example.id);
     expect(db_result.jobProviders.length).toBe(2);
+  });
+
+  it("should add 2 jobs to db", async () => {
+    const time = new Date(Date.now());
+
+    response_example_2.jobType = "Cuoco";
+    response_example_2.location = "Italia";
+    response_example_2.language = "it_IT";
+    response_example_2.searchDate = time;
+
+    const res = await insertAllJobs(response_example_2);
+    expect(res).toEqual(2);
   });
 });
