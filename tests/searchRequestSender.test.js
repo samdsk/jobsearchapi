@@ -49,4 +49,22 @@ describe("SearchRequestSender tests", () => {
     expect(response.language).toBe(language);
     expect(response.jobCount).toBe(response_example.jobCount);
   });
+
+  it("should throw an error with response.status=429", async () => {
+    const jobType = "Test";
+
+    axios.request.mockRejectedValue({
+      response: {
+        status: 429,
+      },
+    });
+
+    try {
+      const response = await sender.sendJobSearchRequest(jobType);
+    } catch (error) {
+      expect(error.status).toEqual(429);
+      expect(error.jobType).toEqual(jobType);
+      expect(error.index).toEqual(0);
+    }
+  });
 });
