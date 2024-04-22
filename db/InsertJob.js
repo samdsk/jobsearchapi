@@ -7,10 +7,14 @@ const insertAllJobs = async (searchResults) => {
     searchLanguage: searchResults.language,
     searchDate: searchResults.searchDate,
   };
+  let count = 0;
 
   for (const job of searchResults.jobs) {
-    await insertJob(job, additionalDetails);
+    const res = await insertJob(job, additionalDetails);
+    if (res) count++;
   }
+
+  return count;
 };
 
 const insertJob = async (job, additionalDetails) => {
