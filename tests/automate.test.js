@@ -64,6 +64,19 @@ describe("Automate collecting", () => {
     employmentTypes: "Test-Types",
   };
 
+  it("response should contain 2 element2", async () => {
+    axios.request.mockImplementation(async () => {
+      return Promise.resolve({ data: response_example });
+    });
+
+    const automate = new Automate(keys, config);
+    const response = await automate.collect(jobTypesList, options);
+
+    expect(response.length).toBe(2);
+    expect(response[0].jobType).toBe("type1");
+    expect(response[1].jobType).toBe("type2");
+  });
+
   it("response should contain only element and jobtype should be type1", async () => {
     // axios.request.mockRejectedValue({ response: { status: 429 } });
     axios.request.mockImplementation(async (data) => {
@@ -81,19 +94,5 @@ describe("Automate collecting", () => {
 
     expect(response.length).toBe(1);
     expect(response[0].jobType).toBe("type1");
-  });
-
-  it("response should contain 2 element2", async () => {
-    // axios.request.mockRejectedValue({ response: { status: 429 } });
-    axios.request.mockImplementation(async (data) => {
-      return Promise.resolve({ data: response_example });
-    });
-
-    const automate = new Automate(keys, config);
-    const response = await automate.collect(jobTypesList, options);
-
-    expect(response.length).toBe(2);
-    expect(response[0].jobType).toBe("type1");
-    expect(response[1].jobType).toBe("type2");
   });
 });
