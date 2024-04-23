@@ -134,21 +134,21 @@ const response_example_3 = {
   errors: [],
 };
 
-beforeAll(async () => {
-  await mongoose.connect(process.env.DB_URL_TEST);
-  console.log("connected");
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
-});
-
-beforeEach(async () => {
-  const collections = await mongoose.connection.db.collections();
-  for (const collection of collections) await collection.drop();
-});
-
 describe("API call testing", () => {
+  beforeAll(async () => {
+    await mongoose.connect(process.env.DB_URL_TEST);
+    console.log("connected");
+  });
+
+  afterAll(async () => {
+    await mongoose.connection.close();
+  });
+
+  beforeEach(async () => {
+    const collections = await mongoose.connection.db.collections();
+    for (const collection of collections) await collection.drop();
+  });
+
   it("should send an API request and receive list of jobs", async () => {
     const jobType = "Software Engineer";
     const mockSender = new SearchRequestSender();
@@ -195,6 +195,19 @@ describe("API call testing", () => {
 });
 
 describe("insert a job details to db", () => {
+  beforeAll(async () => {
+    await mongoose.connect(process.env.DB_URL_TEST);
+    console.log("connected");
+  });
+
+  afterAll(async () => {
+    await mongoose.connection.close();
+  });
+
+  beforeEach(async () => {
+    const collections = await mongoose.connection.db.collections();
+    for (const collection of collections) await collection.drop();
+  });
   it("should call insertAllJobs 1 time", async () => {
     jest.spyOn(InsertJob, "insertAllJobs");
     const mockSender = new SearchRequestSender();
@@ -224,10 +237,10 @@ describe("insert a job details to db", () => {
     const id1 = response_example_3.jobs[0].id;
     const id2 = response_example_3.jobs[1].id;
 
-    const res1 = await Job.findById(id1);
-    const res2 = await Job.findById(id2);
+    const res1 = await Job.find({ id: id1 });
+    const res2 = await Job.find({ id: id2 });
 
-    expect(res1._id).toBe(id1);
-    expect(res2._id).toBe(id2);
+    expect(res1[0].id).toBe(id1);
+    expect(res2[0].id).toBe(id2);
   });
 });
