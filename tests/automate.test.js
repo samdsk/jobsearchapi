@@ -1,8 +1,23 @@
-const SearchRequestSender = require("../lib/searchRequestSender");
+const Automate = require("../lib/automate");
+const mongoose = require("mongoose");
+
 const axios = require("axios");
-require("dotenv").config();
 
 jest.mock("axios");
+
+beforeAll(async () => {
+  await mongoose.connect(process.env.DB_URL_TEST);
+  console.log("connected");
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
+});
+
+beforeEach(async () => {
+  const collections = await mongoose.connection.db.collections();
+  for (const collection of collections) await collection.drop();
+});
 
 const response_example = {
   jobs: [
@@ -32,39 +47,52 @@ const response_example = {
   errors: [],
 };
 
-describe("SearchRequestSender tests", () => {
-  const sender = new SearchRequestSender();
+describe("Automate collecting", () => {
+  const keys = new Set(["key1", "key2", "key3"]);
 
-  it("should send search request and default settings", async () => {
-    axios.request.mockResolvedValue({
-      data: response_example,
+  const jobTypesList = ["type1", "type2"];
+
+  const config = {
+    API_URL: "http://example.com/api",
+    API_HOST: "http://example.com/",
+  };
+
+  const options = {
+    location: "Test-Location",
+    language: "Test-Lang",
+    datePosted: "Test-Date",
+    employmentTypes: "Test-Types",
+  };
+
+  it("response should contain 2 element2", async () => {
+    axios.request.mockImplementation(async () => {
+      return Promise.resolve({ data: response_example });
     });
-    const location = "Italia";
-    const language = "it_IT";
-    const jobType = "Software Engineer";
-    const response = await sender.sendJobSearchRequest(jobType);
 
-    expect(response.jobType).toBe(jobType);
-    expect(response.location).toBe(location);
-    expect(response.language).toBe(language);
-    expect(response.jobCount).toBe(response_example.jobCount);
+    const automate = new Automate(keys, config);
+    const response = await automate.collect(jobTypesList, options);
+
+    expect(response.length).toBe(2);
+    expect(response[0].jobType).toBe("type1");
+    expect(response[1].jobType).toBe("type2");
   });
 
-  it("should throw an error with response.status=429", async () => {
-    const jobType = "Test";
-
-    axios.request.mockRejectedValue({
-      response: {
-        status: 429,
-      },
+  it("response should contain only element and jobtype should be type1", async () => {
+    // axios.request.mockRejectedValue({ response: { status: 429 } });
+    axios.request.mockImplementation(async (data) => {
+      if (data.params.query == "type1")
+        return Promise.resolve({ data: response_example });
+      return Promise.reject({
+        response: {
+          status: 429,
+        },
+      });
     });
 
-    try {
-      const response = await sender.sendJobSearchRequest(jobType);
-    } catch (error) {
-      expect(error.status).toEqual(429);
-      expect(error.jobType).toEqual(jobType);
-      expect(error.index).toEqual(0);
-    }
+    const automate = new Automate(keys, config);
+    const response = await automate.collect(jobTypesList, options);
+
+    expect(response.length).toBe(1);
+    expect(response[0].jobType).toBe("type1");
   });
 });
