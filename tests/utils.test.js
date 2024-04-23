@@ -25,39 +25,4 @@ describe("asd", () => {
     const n = files.filter((file) => !file.startsWith("results"));
     expect(n.length).toBe(0);
   });
-
-  it.skip("asd", async () => {
-    const files = await getResultFiles();
-    const summary = [];
-
-    for (const file of files) {
-      const jobs = await getJSONFromFile("results/" + file);
-
-      const additionalDetails = {
-        searchJobType: jobs.jobType,
-        searchLocation: jobs.location,
-        searchLanguage: jobs.language,
-        searchDate: jobs.searchDate
-          ? new Date(jobs.searchDate)
-          : new Date(Date.now()),
-      };
-      let count = 0;
-      for (const job of jobs.jobs) {
-        const added = await insertJob(job, additionalDetails);
-        if (added) count++;
-      }
-
-      summary.push({
-        collected: jobs.jobs.length,
-        inserted: count,
-        jobType: jobs.jobType,
-        location: jobs.location,
-        language: jobs.language,
-        searchDate: jobs.searchDate,
-      });
-    }
-
-    // console.log(idSet);
-    console.log(summary);
-  });
 });
