@@ -7,11 +7,11 @@ const { logResultsToJSONFile } = require("./lib/resultsLogger");
 
 const main = async () => {
   try {
-    const filename_jobtypes = "./jobtypeslist.json";
+    const filename_jobtypes = process.argv[2] || "jobtypeslist.json";
     console.log(`Reading job types file : ${filename_jobtypes}`);
     const jobs = await Utils.getJobTypesFromFile(filename_jobtypes);
 
-    const filename_keys = "./keylist.json";
+    const filename_keys = process.argv[3] || "keylist.json";
     console.log(`Reading key list file : ${filename_keys}`);
     const keys = await Utils.getJSONFromFile(filename_keys);
 
