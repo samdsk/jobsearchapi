@@ -5,6 +5,20 @@ const axios = require("axios");
 
 jest.mock("axios");
 
+beforeAll(async () => {
+  await mongoose.connect(process.env.DB_URL_TEST);
+  console.log("connected");
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
+});
+
+beforeEach(async () => {
+  const collections = await mongoose.connection.db.collections();
+  for (const collection of collections) await collection.drop();
+});
+
 const response_example = {
   jobs: [
     {
@@ -34,20 +48,6 @@ const response_example = {
 };
 
 describe("Automate collecting", () => {
-  beforeAll(async () => {
-    await mongoose.connect(process.env.DB_URL_TEST);
-    console.log("connected");
-  });
-
-  afterAll(async () => {
-    await mongoose.connection.close();
-  });
-
-  beforeEach(async () => {
-    const collections = await mongoose.connection.db.collections();
-    for (const collection of collections) await collection.drop();
-  });
-
   const keys = new Set(["key1", "key2", "key3"]);
 
   const jobTypesList = ["type1", "type2"];

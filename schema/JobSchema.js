@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const jobSchema = new mongoose.Schema({
   _id: String,
-  id: String, // original job record's id (NOT unique)
   jobType: String,
   title: String,
   company: String,
@@ -13,10 +12,10 @@ const jobSchema = new mongoose.Schema({
   timeAgoPosted: String,
   salaryRange: String,
   jobProviders: [{ jobProvider: String, url: String }],
-  searchDate: Date, // search query executed date
-  searchJobType: String, // search query job type
-  searchLocation: String, // search query location
-  searchLanguage: String, // search query language
+  searchDate: Date,
+  searchJobType: String,
+  searchLocation: String,
+  searchLanguage: String,
 });
 
 module.exports = mongoose.model("Job", jobSchema);

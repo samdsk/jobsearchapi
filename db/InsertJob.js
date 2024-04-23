@@ -1,5 +1,4 @@
 const Job = require("../schema/JobSchema");
-const { generateHash } = require("./generateID");
 
 const insertAllJobs = async (searchResults) => {
   const additionalDetails = {
@@ -19,10 +18,11 @@ const insertAllJobs = async (searchResults) => {
 };
 
 const insertJob = async (job, additionalDetails) => {
-  job = setJobSchemaID(job);
-  const found = await Job.findById(job._id);
+  const found = await Job.findById(job.id);
 
   if (!found) {
+    job = setJobSchemaID(job);
+
     job.searchDate = additionalDetails.searchDate;
     job.searchJobType = additionalDetails.searchJobType;
     job.searchLocation = additionalDetails.searchLocation;
@@ -37,7 +37,8 @@ const insertJob = async (job, additionalDetails) => {
 
 const setJobSchemaID = (job) => {
   const newJob = { ...job };
-  newJob._id = generateHash(job);
+  newJob._id = job.id;
+  delete newJob.id;
   return newJob;
 };
 
