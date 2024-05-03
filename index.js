@@ -9,7 +9,7 @@ const main = async () => {
   try {
     const filename_jobtypes = process.argv[2] || "jobtypeslist.json";
     console.log(`Reading job types file : ${filename_jobtypes}`);
-    const jobs = await Utils.getJobTypesFromFile(filename_jobtypes);
+    const jobTypes = await Utils.getJobTypesFromFile(filename_jobtypes);
 
     const filename_keys = process.argv[3] || "keylist.json";
     console.log(`Reading key list file : ${filename_keys}`);
@@ -20,7 +20,7 @@ const main = async () => {
 
     console.log("Starting...");
     await db_connect();
-    const response = await automate.collect(jobs);
+    const response = await automate.collect(jobTypes);
 
     console.log("Logging results summary");
     await logResultsToJSONFile("summary", new Date(Date.now()), response);
