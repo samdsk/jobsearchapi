@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { getResultFiles, getJSONFromFile, saveToJSON } = require("../lib/utils");
 const generateId = require("../db/generateID");
-const { insertJob } = require("../db/InsertJob");
+const { insertJob } = require("../lib/InsertJob");
 
 require("dotenv").config();
 
