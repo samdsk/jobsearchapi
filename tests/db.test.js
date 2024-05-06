@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
-const { setJobSchemaID, insertJob, insertAllJobs } = require("../db/InsertJob");
+const {
+  setJobSchemaID,
+  insertJob,
+  insertAllJobs,
+} = require("../lib/InsertJob");
 const JobSchema = require("../schema/JobSchema");
 require("dotenv").config();
 
