@@ -5,8 +5,11 @@ const annotation_types = [""];
 
 const Annotation = new mongoose.Schema(
   {
-    description_id: { type: mongoose.Types.ObjectId, required: true },
-    inclusiveness_id: { type: mongoose.Types.ObjectId, required: true },
+    description_id: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+      ref: "Description",
+    },
     type: { type: String, required: true, enum: annotation_types },
     text: { type: String, required: true },
     source: { type: String, require: true },
