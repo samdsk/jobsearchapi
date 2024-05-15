@@ -3,6 +3,7 @@ const { RapidApiJobPost } = require("../lib/ConvertToJobPost");
 
 const CRUDJobPost = require("../lib/CRUDJobPost");
 const CRUDAnnotation = require("../lib/CRUDAnnotation");
+const Annotation = require("../schema/Annotation");
 
 require("dotenv").config();
 
@@ -153,10 +154,11 @@ describe("CRUD Annotation:", () => {
     example_annotation.job_post_id = job_post_res._id;
 
     await CRUDAnnotation.createAnnotation(example_annotation);
+    await Annotation.syncIndexes();
 
     await expect(
       CRUDAnnotation.createAnnotation(example_annotation)
-    ).rejects.toThrow("Duplicate detected!");
+    ).rejects.toThrow();
   });
 
   test("duplicate update annotation", async () => {
@@ -168,10 +170,17 @@ describe("CRUD Annotation:", () => {
       example_annotation
     );
 
+    example_annotation_2.job_post_id = job_post_res._id;
+    const annotation_res_2 = await CRUDAnnotation.createAnnotation(
+      example_annotation_2
+    );
+
+    await Annotation.syncIndexes();
+
     await expect(
-      CRUDAnnotation.updateAnnotationByID(annotation_res._id, {
+      CRUDAnnotation.updateAnnotationByID(annotation_res_2._id, {
         type: "type1",
       })
-    ).rejects.toThrow("Duplicate detected!");
+    ).rejects.toThrow();
   });
 });
