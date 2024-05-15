@@ -24,4 +24,9 @@ const Annotation = new mongoose.Schema(
   { timestamps: true }
 );
 
+Annotation.index(
+  { job_post_id: 1, type: 1, index_start: 1, index_end: 1 },
+  { unique: true }
+);
+
 module.exports = mongoose.model("Annotation", Annotation);
