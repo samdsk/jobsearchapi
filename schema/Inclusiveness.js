@@ -9,6 +9,7 @@ const Inclusiveness = new mongoose.Schema(
       type: String,
       required: true,
       ref: "JobPost",
+      index: { unique: true },
     },
     is_inclusive: { type: Boolean, required: true },
     type: { type: String, enum: inclusiveness_types, default: "none" },
