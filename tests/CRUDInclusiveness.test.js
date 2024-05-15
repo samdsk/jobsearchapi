@@ -122,9 +122,7 @@ describe("CRUDInclusiveness", () => {
     const job = RapidApiJobPost(example_jobpost, job_type);
     const job_post_res = await CRUDJobPost.createJobPost(job);
 
-    const expected_job_post = await JobPost.findById(job_post_res._id);
-
-    example_inclusiveness.job_post_id = expected_job_post._id;
+    example_inclusiveness.job_post_id = job_post_res._id;
 
     await CRUDInclusiveness.createInclusiveness(example_inclusiveness);
     await Inclusiveness.syncIndexes();
@@ -135,7 +133,7 @@ describe("CRUDInclusiveness", () => {
 
     const count = (
       await Inclusiveness.find({
-        job_post_id: expected_job_post._id,
+        job_post_id: job_post_res._id,
       })
     ).length;
 
@@ -161,5 +159,28 @@ describe("CRUDInclusiveness", () => {
         job_post_id: job_post_res._id,
       })
     ).rejects.toThrow();
+  });
+
+  test("delete an inclusiveness by job_post_id", async () => {
+    const job = RapidApiJobPost(example_jobpost, job_type);
+    const job_post_res = await CRUDJobPost.createJobPost(job);
+
+    example_inclusiveness.job_post_id = job_post_res._id;
+
+    const inclusiveness_res = await CRUDInclusiveness.createInclusiveness(
+      example_inclusiveness
+    );
+
+    await CRUDInclusiveness.deleteInclusivenessByJobPostId(
+      inclusiveness_res.job_post_id
+    );
+
+    const count = (
+      await Inclusiveness.find({
+        job_post_id: inclusiveness_res.job_post_id,
+      })
+    ).length;
+
+    expect(count).toBe(0);
   });
 });
