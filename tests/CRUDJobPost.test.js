@@ -4,6 +4,9 @@ const JobPost = require("../schema/JobPost");
 
 const CRUDJobPost = require("../lib/CRUDJobPost");
 const CRUDInclusiveness = require("../lib/CRUDInclusiveness");
+const CRUDAnnotation = require("../lib/CRUDAnnotation");
+const Inclusiveness = require("../schema/Inclusiveness");
+const Annotation = require("../schema/Annotation");
 
 require("dotenv").config();
 
@@ -33,43 +36,88 @@ const example_inclusiveness = {
   score: 4,
 };
 
+const example_annotation = {
+  job_post_id: null,
+  type: "type1",
+  text: "Test Annotation",
+  source: "Test human",
+  reliability_score: 4,
+  index_start: 0,
+  index_end: 10,
+};
+
+const example_annotation_2 = {
+  job_post_id: null,
+  type: "type2",
+  text: "Test Annotation 2",
+  source: "Test human 2",
+  reliability_score: 4,
+  index_start: 0,
+  index_end: 10,
+};
+
 const job_type = "Example Job Type";
 
-beforeAll(async () => {
-  await mongoose.connect(process.env.DB_URL_TEST);
-  console.log("[DB] connected");
-});
+describe("CRUD JobPost:", () => {
+  beforeAll(async () => {
+    await mongoose.connect(process.env.DB_URL_TEST);
+    console.log("[DB] connected");
+  });
 
-beforeEach(async () => {
-  const collections = await mongoose.connection.db.collections();
-  for (const collection of collections) await collection.drop();
-});
+  beforeEach(async () => {
+    const collections = await mongoose.connection.db.collections();
+    for (const collection of collections) await collection.drop();
+  });
 
-afterAll(async () => {
-  await mongoose.connection.close();
-});
+  afterAll(async () => {
+    await mongoose.connection.close();
+  });
 
-test("insert a JobPost to db", async () => {
-  const job = RapidApiJobPost(example_jobpost, job_type);
-  const res = await CRUDJobPost.createJobPost(job);
-  const expected = await JobPost.findById(res._id);
-  expect(expected._id).toEqual(res._id);
-});
+  test("insert a JobPost to db", async () => {
+    const job = RapidApiJobPost(example_jobpost, job_type);
+    const res = await CRUDJobPost.createJobPost(job);
+    const expected = await JobPost.findById(res._id);
+    expect(expected._id).toEqual(res._id);
+  });
 
-test("delete a JobPost from db", async () => {
-  const job = RapidApiJobPost(example_jobpost, job_type);
-  const res = await CRUDJobPost.createJobPost(job);
+  test("delete a JobPost from db", async () => {
+    const job = RapidApiJobPost(example_jobpost, job_type);
+    const res = await CRUDJobPost.createJobPost(job);
 
-  await CRUDJobPost.deleteJobPost(res._id);
-  expect(await CRUDJobPost.findJobPostById(res._id)).toEqual(null);
-});
+    await CRUDJobPost.deleteJobPost(res._id);
+    expect(await CRUDJobPost.findJobPostById(res._id)).toEqual(null);
+  });
 
-test("delete a JobPost and it's relative inclusiveness from db", async () => {
-  const job = RapidApiJobPost(example_jobpost, job_type);
-  const job_post_res = await CRUDJobPost.createJobPost(job);
+  test("delete a JobPost and it's relative inclusiveness and annotations from db", async () => {
+    const job = RapidApiJobPost(example_jobpost, job_type);
+    const job_post_res = await CRUDJobPost.createJobPost(job);
 
-  example_inclusiveness.job_post_id = job_post_res._id;
-  const inclusiveness_res = await CRUDInclusiveness.createInclusiveness(
-    example_inclusiveness
-  );
+    example_inclusiveness.job_post_id = job_post_res._id;
+    const inclusiveness_res = await CRUDInclusiveness.createInclusiveness(
+      example_inclusiveness
+    );
+
+    example_annotation.job_post_id = job_post_res._id;
+    const annotation_res = await CRUDAnnotation.createAnnotation(
+      example_annotation
+    );
+
+    example_annotation_2.job_post_id = job_post_res._id;
+    const annotation_res_2 = await CRUDAnnotation.createAnnotation(
+      example_annotation_2
+    );
+
+    await CRUDJobPost.deleteJobPost(job_post_res._id);
+
+    const inclusiveness_count = (
+      await Inclusiveness.find({ job_post_id: job_post_res._id })
+    ).length;
+
+    const annotation_count = (
+      await Annotation.find({ job_post_id: job_post_res._id })
+    ).length;
+
+    expect(inclusiveness_count).toBe(0);
+    expect(annotation_count).toBe(0);
+  });
 });
