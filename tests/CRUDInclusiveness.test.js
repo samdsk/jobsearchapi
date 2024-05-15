@@ -25,6 +25,29 @@ const example_jobpost = {
   ],
 };
 
+const example_jobpost_2 = {
+  id: "QSxELEQsRSxULFQsSSwgLEMsQSxULEUsUixJLE4sRywgLFAsRSxSLCAsRSxWLEUsTixULEksTSxhLG4=",
+  title: "ADDETTI CATERING PER EVENTI",
+  company: "Manpower S.r.l.",
+  description:
+    "Manpower filiale di Mondovì è alla ricerca di ADDETTI CATERING per EVENTI in tutta la provincia di Cuneo.\n\nLuogo di lavoro: Cherasco, Bra, Alba, Fossano, Cuneo\n\nRequisiti:\n- disponibilità a lavorare nel weekend e in orario serale\n- gradita esperienza pregressa maturata in bar e/o ristoranti, ma non indispensabile\n\nOrario: monte ore variabile da 20 a 36 ore settimanali, in base alla disponibilità del/la candidato/a\n\nTipologia inserimento: in somministrazione\n\nInformazioni sull’azienda:\nManpower S.r.l.\n\nManpowerGroup è leader nella creazione di soluzioni integrate per l’incontro tra domanda e offerta di lavoro e lo sviluppo della carriera. Nato a Milwaukee (USA) nel 1948, conta su un network mondiale di 2.800 uffici in 80 paesi. Presente in Italia dal 1994, il Gruppo opera sull’intero territorio attraverso 3 brand: Manpower Experis Talent Solutions ed è specializzato in: Ricerca, selezione e valutazione di personale in tutte le posizioni professionali, anche di middle e top management... Somministrazione di lavoro a tempo determinato e indeterminato Progettazione e realizzazione di corsi di formazione Pianificazione e realizzazione di progetti di formazione dei lavoratori temporanei finanziati attraverso i fondi del \"Forma.Temp\" Servizi di consulenza per l'organizzazione aziendale, lo sviluppo di carriere e l'outplacement Per il decimo anno ManpowerGroup è stata inclusa nella classifica \"World’s Most Ethical Companies\" (2020) #crediamoneltalento Crediamo che il talento sia l'elemento cruciale di differenziazione delle aziende nel mondo del business. Lavoriamo per generare spirito e passione, e coinvolgere le nostre persone, con un approccio attento e sensibile all'individuo.\n\nDimensioni dell’azienda:\nOltre 10.000 dipendenti\n\nSettore:\nAgenzie di ricerca personale/Staffing/Agenzie per l'impiego\n\nFondata:\n0\n\nSito web:\nhttps://www.manpower.it",
+  image: "",
+  location: "Fossano CN, Italia",
+  employmentType: "Full-time",
+  datePosted: "1 giorno fa",
+  salaryRange: "",
+  jobProviders: [
+    {
+      jobProvider: "Monster.it",
+      url: "https://www.monster.it/offerte-di-lavoro/addetti-catering-per-eventi-fossano-12--23f2d32d-859a-469e-aba3-ff61974309b4?mstr_dist=true&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+    },
+    {
+      jobProvider: "SimplyHired",
+      url: "https://www.simplyhired.it/job/3MTJFS3yEHVTN-5ltH8KcLx0XS6ZpyoAAbOm3uIXyMunOJK5pw6v6Q?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
+    },
+  ],
+};
+
 const example_inclusiveness = {
   job_post_id: null,
   is_inclusive: true,
@@ -34,82 +57,109 @@ const example_inclusiveness = {
 
 const job_type = "Example Job Type";
 
-beforeAll(async () => {
-  await mongoose.connect(process.env.DB_URL_TEST);
-  console.log("[DB] connected");
-});
-
-beforeEach(async () => {
-  const collections = await mongoose.connection.db.collections();
-  for (const collection of collections) await collection.drop();
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
-});
-
-test("insert a Inclusiveness to db", async () => {
-  const job = RapidApiJobPost(example_jobpost, job_type);
-  const job_post_res = await CRUDJobPost.insertJobPost(job);
-
-  const expected_job_post = await JobPost.findById(job_post_res._id);
-  expect(expected_job_post._id).toEqual(job_post_res._id);
-
-  example_inclusiveness.job_post_id = expected_job_post._id;
-  const inclusiveness_res = await CRUDInclusiveness.insertInclusiveness(
-    example_inclusiveness
-  );
-
-  const expected_inclusiveness = await CRUDInclusiveness.findInclusiveness({
-    _id: inclusiveness_res._id,
+describe("CRUDInclusiveness", () => {
+  beforeAll(async () => {
+    await mongoose.connect(process.env.DB_URL_TEST);
+    console.log("[DB] connected");
   });
 
-  expect(expected_inclusiveness._id).toEqual(inclusiveness_res._id);
-  expect(expected_inclusiveness.job_post_id).toEqual(expected_job_post._id);
-});
+  beforeEach(async () => {
+    const collections = await mongoose.connection.db.collections();
+    for (const collection of collections) await collection.drop();
+  });
 
-test("undefined job_post_id", async () => {
-  delete example_inclusiveness.job_post_id;
+  afterAll(async () => {
+    await mongoose.connection.close();
+  });
 
-  await expect(
-    CRUDInclusiveness.insertInclusiveness(example_inclusiveness)
-  ).rejects.toThrow("job_post_id is required!");
-});
+  test("insert a Inclusiveness to db", async () => {
+    const job = RapidApiJobPost(example_jobpost, job_type);
+    const job_post_res = await CRUDJobPost.createJobPost(job);
 
-test("null job_post_id", async () => {
-  await expect(
-    CRUDInclusiveness.insertInclusiveness(example_inclusiveness)
-  ).rejects.toThrow("job_post_id is required!");
-});
+    example_inclusiveness.job_post_id = job_post_res._id;
 
-test("invalid job_post_id", async () => {
-  example_inclusiveness.job_post_id = 123456;
-  await expect(
-    CRUDInclusiveness.insertInclusiveness(example_inclusiveness)
-  ).rejects.toThrow("Invalid job_post_id!");
-});
+    const inclusiveness_res = await CRUDInclusiveness.createInclusiveness(
+      example_inclusiveness
+    );
 
-test("not existing job_post_id", async () => {
-  example_inclusiveness.job_post_id = "123456";
-  await expect(
-    CRUDInclusiveness.insertInclusiveness(example_inclusiveness)
-  ).rejects.toThrow("Invalid job_post_id!");
-});
+    const expected_inclusiveness =
+      await CRUDInclusiveness.findInclusivenessByJobPostID(
+        inclusiveness_res.job_post_id
+      );
 
-test("already existing inclusiveness", async () => {
-  const job = RapidApiJobPost(example_jobpost, job_type);
-  const job_post_res = await CRUDJobPost.insertJobPost(job);
+    expect(expected_inclusiveness._id).toEqual(inclusiveness_res._id);
+  });
 
-  const expected_job_post = await JobPost.findById(job_post_res._id);
-  expect(expected_job_post._id).toEqual(job_post_res._id);
+  test("undefined job_post_id", async () => {
+    delete example_inclusiveness.job_post_id;
 
-  example_inclusiveness.job_post_id = expected_job_post._id;
+    await expect(
+      CRUDInclusiveness.createInclusiveness(example_inclusiveness)
+    ).rejects.toThrow("job_post_id is required!");
+  });
 
-  await CRUDInclusiveness.insertInclusiveness(example_inclusiveness);
+  test("null job_post_id", async () => {
+    await expect(
+      CRUDInclusiveness.createInclusiveness(example_inclusiveness)
+    ).rejects.toThrow("job_post_id is required!");
+  });
 
-  await expect(
-    CRUDInclusiveness.insertInclusiveness(example_inclusiveness)
-  ).rejects.toThrow(
-    "Already exists an inclusiveness record for this job post!"
-  );
+  test("invalid job_post_id", async () => {
+    example_inclusiveness.job_post_id = 123456;
+    await expect(
+      CRUDInclusiveness.createInclusiveness(example_inclusiveness)
+    ).rejects.toThrow("Invalid job_post_id!");
+  });
+
+  test("not existing job_post_id", async () => {
+    example_inclusiveness.job_post_id = "123456";
+    await expect(
+      CRUDInclusiveness.createInclusiveness(example_inclusiveness)
+    ).rejects.toThrow("Invalid job_post_id!");
+  });
+
+  test("already existing inclusiveness", async () => {
+    const job = RapidApiJobPost(example_jobpost, job_type);
+    const job_post_res = await CRUDJobPost.createJobPost(job);
+
+    const expected_job_post = await JobPost.findById(job_post_res._id);
+
+    example_inclusiveness.job_post_id = expected_job_post._id;
+
+    await CRUDInclusiveness.createInclusiveness(example_inclusiveness);
+    await Inclusiveness.syncIndexes();
+
+    await expect(
+      CRUDInclusiveness.createInclusiveness(example_inclusiveness)
+    ).rejects.toThrow();
+
+    const count = (
+      await Inclusiveness.find({
+        job_post_id: expected_job_post._id,
+      })
+    ).length;
+
+    expect(count).toBe(1);
+  });
+
+  test("check index consistency after an update", async () => {
+    const job = RapidApiJobPost(example_jobpost, job_type);
+    const job_2 = RapidApiJobPost(example_jobpost_2, job_type);
+    const job_post_res = await CRUDJobPost.createJobPost(job);
+    const job_post_res_2 = await CRUDJobPost.createJobPost(job_2);
+
+    example_inclusiveness.job_post_id = job_post_res._id;
+
+    await CRUDInclusiveness.createInclusiveness(example_inclusiveness);
+    await Inclusiveness.syncIndexes();
+
+    example_inclusiveness.job_post_id = job_post_res_2._id;
+    await CRUDInclusiveness.createInclusiveness(example_inclusiveness);
+
+    await expect(
+      CRUDInclusiveness.updateInclusivenessByJobPostID(job_post_res_2._id, {
+        job_post_id: job_post_res._id,
+      })
+    ).rejects.toThrow();
+  });
 });
