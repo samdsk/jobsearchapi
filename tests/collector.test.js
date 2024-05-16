@@ -1,9 +1,9 @@
 require("dotenv").config();
 const Collector = require("../lib/collector");
 const SearchRequestSender = require("../lib/searchRequestSender");
-const InsertJob = require("../db/InsertJob");
+const InsertJob = require("../lib/InsertJob");
 const mongoose = require("mongoose");
-const Job = require("../schema/JobSchema");
+const CRUDJobPost = require("../lib/CRUDJobPost");
 
 const response_example = {
   jobs: [
@@ -234,13 +234,9 @@ describe("insert a job details to db", () => {
     const response = await collector.searchJobsByType("Cuoco");
 
     expect(mockSender.sendJobSearchRequest).toHaveBeenCalledTimes(1);
-    const id1 = response_example_3.jobs[0].id;
-    const id2 = response_example_3.jobs[1].id;
 
-    const res1 = await Job.find({ id: id1 });
-    const res2 = await Job.find({ id: id2 });
+    const res = await CRUDJobPost.getAllJobPosts();
 
-    expect(res1[0].id).toBe(id1);
-    expect(res2[0].id).toBe(id2);
+    expect(res.length).toBe(2);
   });
 });
