@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand --coverage"
+    "test": "jest --runInBand --coverage --verbose",
+    "find-circular-deps": "madge . -c"
   },
   "author": "",
   "license": "ISC",
@@ -12,11 +13,14 @@
     "axios": "^1.6.8",
     "dotenv": "^16.4.5",
     "mongodb": "^6.5.0",
-    "mongoose": "^8.3.1"
+    "mongoose": "^8.3.1",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@shelf/jest-mongodb": "^4.2.0",
     "@types/jest": "^29.5.12",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "madge": "^7.0.0"
   }
 }

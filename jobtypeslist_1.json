@@ -25,6 +25,7 @@
   "maestra",
   "maestro",
   "manager",
+  "notaio",
   "odontoiatra",
   "pediatra",
   "psicologa",
@@ -39,5 +40,6 @@
   "segretario",
   "tata",
   "traduttore",
-  "traduttrice"
+  "traduttrice",
+  "venditore"
 ]
