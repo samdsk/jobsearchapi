@@ -5,9 +5,14 @@ const inclusiveness_types = ["none", "gender"];
 
 const Inclusiveness = new mongoose.Schema(
   {
-    description_id: { type: mongoose.Types.ObjectId, required: true },
+    job_post_id: {
+      type: String,
+      required: true,
+      ref: "JobPost",
+      index: { unique: true },
+    },
     is_inclusive: { type: Boolean, required: true },
-    type: { type: String, enum: inclusiveness_types },
+    type: { type: String, enum: inclusiveness_types, default: "none" },
     score: {
       type: Number,
       required: true,
