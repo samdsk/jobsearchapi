@@ -2,12 +2,23 @@ const generateID = require("../lib/generateID");
 const crypto = require("crypto");
 const fs = require("fs/promises");
 
+const job = {
+  title: "Title",
+  company: "Company    Name",
+  location: "   LOCAtion   ",
+};
+const job_2 = {
+  title: "Software Engineer, Junior",
+  company: "e-work s.p.a.",
+  location: "Roma RM, Italia",
+};
+const job_3 = {
+  title: "   Software Engineer   Junior",
+  company: "e-work s.p a",
+  location: "Roma RM Italia",
+};
+
 describe("generate unique ID:", () => {
-  const job = {
-    title: "Title",
-    company: "Company    Name",
-    location: "   LOCAtion   ",
-  };
   it("should generate string from job containing title, company and location without spaces and all in lowercase", () => {
     const res = generateID.jobToStringTitleCompanyLocation(job);
     const expectedString = "titlecompanynamelocation";
@@ -39,6 +50,13 @@ describe("generate unique ID:", () => {
         location: 1234,
       })
     ).toThrow("Invalid JobPost!");
+  });
+
+  it("should remove special characters", () => {
+    const res = generateID.generateID(job_2);
+    const expected = generateID.generateID(job_3);
+
+    expect(expected).toEqual(res);
   });
 
   it.skip("should process a list of job objs", async () => {
