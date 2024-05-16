@@ -1,12 +1,15 @@
 const mongoose = require("mongoose");
 
 // TODO: define annotation types
-const annotation_types = [""];
+const annotation_types = ["type1", "type2"];
 
 const Annotation = new mongoose.Schema(
   {
-    description_id: { type: mongoose.Types.ObjectId, required: true },
-    inclusiveness_id: { type: mongoose.Types.ObjectId, required: true },
+    job_post_id: {
+      type: String,
+      required: true,
+      ref: "JobPost",
+    },
     type: { type: String, required: true, enum: annotation_types },
     text: { type: String, required: true },
     source: { type: String, require: true },
@@ -21,4 +24,9 @@ const Annotation = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Inclusiveness", Annotation);
+Annotation.index(
+  { job_post_id: 1, type: 1, index_start: 1, index_end: 1 },
+  { unique: true }
+);
+
+module.exports = mongoose.model("Annotation", Annotation);
