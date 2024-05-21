@@ -3,6 +3,7 @@
   "architetta",
   "architetto",
   "avvocato",
+  "avvocata",
   "babysitter",
   "badante",
   "barista",
@@ -13,7 +14,8 @@
   "cuoco",
   "direttore",
   "direttrice",
-  "dogsitter",
+  "dog sitter",
+  "pet sitter",
   "farmacista",
   "geometra",
   "giardiniere",
@@ -26,6 +28,7 @@
   "maestro",
   "manager",
   "notaio",
+  "notaia",
   "odontoiatra",
   "pediatra",
   "psicologa",
@@ -40,6 +43,5 @@
   "segretario",
   "tata",
   "traduttore",
-  "traduttrice",
-  "venditore"
+  "traduttrice"
 ]
