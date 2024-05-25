@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
 const { RapidApiJobPost } = require("../lib/ConvertToJobPost");
 
-const CRUDJobPost = require("../lib/CRUDJobPost");
-const CRUDAnnotation = require("../lib/CRUDAnnotation");
-const Annotation = require("../schema/Annotation");
+const JobPostService = require("../lib/JobPostService");
+const AnnotationService = require("../lib/AnnotationService");
+const Annotation = require("../schemas/Annotation");
 
 require("dotenv").config();
+
+// TODO: not working
 
 const example_jobpost = {
   id: "QSxkLGQsZSx0LHQsbywgLEMsYSx0LGUscixpLG4sZywgLEEsZSxyLG8scCxvLHIsdCxvLCAsRixpLHU=",
@@ -48,7 +50,7 @@ const example_annotation_2 = {
 
 const job_type = "Example Job Type";
 
-describe("CRUD Annotation:", () => {
+describe("Annotation Service:", () => {
   beforeAll(async () => {
     await mongoose.connect(process.env.DB_URL_TEST);
     console.log("[DB] connected");
@@ -66,13 +68,13 @@ describe("CRUD Annotation:", () => {
   const JOB = RapidApiJobPost(example_jobpost, job_type);
 
   test("insert an Annotation to db", async () => {
-    const job_post_res = await CRUDJobPost.createJobPost(JOB);
+    const job_post_res = await JobPostService.createJobPost(JOB);
     example_annotation.job_post_id = job_post_res._id;
-    const annotation_res = await CRUDAnnotation.createAnnotation(
+    const annotation_res = await AnnotationService.createAnnotation(
       example_annotation
     );
 
-    const expected_annotation = await CRUDAnnotation.findAnnotationById(
+    const expected_annotation = await AnnotationService.findAnnotationById(
       annotation_res._id
     );
 
@@ -83,45 +85,45 @@ describe("CRUD Annotation:", () => {
     example_annotation.job_post_id = "1234";
 
     await expect(
-      CRUDAnnotation.createAnnotation(example_annotation)
+      AnnotationService.createAnnotation(example_annotation)
     ).rejects.toThrow("Invalid job_post_id!");
   });
 
   test("delete annotation by id", async () => {
-    const job_post_res = await CRUDJobPost.createJobPost(JOB);
+    const job_post_res = await JobPostService.createJobPost(JOB);
     example_annotation.job_post_id = job_post_res._id;
-    const annotation_res = await CRUDAnnotation.createAnnotation(
+    const annotation_res = await AnnotationService.createAnnotation(
       example_annotation
     );
 
-    await CRUDAnnotation.deleteAnnotationByID(annotation_res._id);
+    await AnnotationService.deleteAnnotationByID(annotation_res._id);
 
-    expect(await CRUDAnnotation.findAnnotationById(annotation_res._id)).toBe(
+    expect(await AnnotationService.findAnnotationById(annotation_res._id)).toBe(
       null
     );
   });
 
   test("delete multiple annotations by job_post_id", async () => {
-    const job_post_res = await CRUDJobPost.createJobPost(JOB);
+    const job_post_res = await JobPostService.createJobPost(JOB);
 
     example_annotation.job_post_id = job_post_res._id;
     example_annotation_2.job_post_id = job_post_res._id;
 
-    const annotation_res_1 = await CRUDAnnotation.createAnnotation(
+    const annotation_res_1 = await AnnotationService.createAnnotation(
       example_annotation
     );
 
-    const annotation_res_2 = await CRUDAnnotation.createAnnotation(
+    const annotation_res_2 = await AnnotationService.createAnnotation(
       example_annotation_2
     );
 
-    await CRUDAnnotation.deleteAnnotationsByJobPostID(
+    await AnnotationService.deleteAnnotationsByJobPostID(
       annotation_res_1.job_post_id
     );
 
     expect(
       (
-        await CRUDAnnotation.findAnnotationByJobPostID(
+        await AnnotationService.findAnnotationByJobPostID(
           annotation_res_1.job_post_id
         )
       ).length
@@ -129,19 +131,19 @@ describe("CRUD Annotation:", () => {
   });
 
   test("update annotation", async () => {
-    const job_post_res = await CRUDJobPost.createJobPost(JOB);
+    const job_post_res = await JobPostService.createJobPost(JOB);
 
     example_annotation.job_post_id = job_post_res._id;
 
-    const annotation_res = await CRUDAnnotation.createAnnotation(
+    const annotation_res = await AnnotationService.createAnnotation(
       example_annotation
     );
 
-    await CRUDAnnotation.updateAnnotationByID(annotation_res._id, {
+    await AnnotationService.updateAnnotationByID(annotation_res._id, {
       type: "type2",
     });
 
-    const annotation_update = await CRUDAnnotation.findAnnotationById(
+    const annotation_update = await AnnotationService.findAnnotationById(
       annotation_res._id
     );
 
@@ -149,36 +151,36 @@ describe("CRUD Annotation:", () => {
   });
 
   test("duplicate annotations", async () => {
-    const job_post_res = await CRUDJobPost.createJobPost(JOB);
+    const job_post_res = await JobPostService.createJobPost(JOB);
 
     example_annotation.job_post_id = job_post_res._id;
 
-    await CRUDAnnotation.createAnnotation(example_annotation);
+    await AnnotationService.createAnnotation(example_annotation);
     await Annotation.syncIndexes();
 
     await expect(
-      CRUDAnnotation.createAnnotation(example_annotation)
+      AnnotationService.createAnnotation(example_annotation)
     ).rejects.toThrow();
   });
 
   test("duplicate update annotation", async () => {
-    const job_post_res = await CRUDJobPost.createJobPost(JOB);
+    const job_post_res = await JobPostService.createJobPost(JOB);
 
     example_annotation.job_post_id = job_post_res._id;
 
-    const annotation_res = await CRUDAnnotation.createAnnotation(
+    const annotation_res = await AnnotationService.createAnnotation(
       example_annotation
     );
 
     example_annotation_2.job_post_id = job_post_res._id;
-    const annotation_res_2 = await CRUDAnnotation.createAnnotation(
+    const annotation_res_2 = await AnnotationService.createAnnotation(
       example_annotation_2
     );
 
     await Annotation.syncIndexes();
 
     await expect(
-      CRUDAnnotation.updateAnnotationByID(annotation_res_2._id, {
+      AnnotationService.updateAnnotationByID(annotation_res_2._id, {
         type: "type1",
       })
     ).rejects.toThrow();
