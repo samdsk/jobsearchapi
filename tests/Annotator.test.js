@@ -1,14 +1,13 @@
 const { connect, close, clearDatabase } = require("./db_handler");
 const mongoose = require("mongoose");
 
-const { Annotator } = require("../schema/Annotator");
-const { Role } = require("../schema/Role");
-const { Background } = require("../schema/Background");
-const { Domain } = require("../schema/Domain");
-const { JobPost } = require("../schema/JobPost");
-const { Label } = require("../schema/Label");
-const { Annotation } = require("../schema/Annotation");
-const { Token } = require("../schema/Token");
+const { Annotator } = require("../schemas/Annotator");
+const { Role } = require("../schemas/Role");
+const { Background } = require("../schemas/Background");
+const { Domain } = require("../schemas/Domain");
+const { JobPost } = require("../schemas/JobPost");
+const { Label } = require("../schemas/Label");
+const { Annotation } = require("../schemas/Annotation");
 
 const delete_list = ["annotators"];
 
@@ -42,17 +41,13 @@ const job_1 = {
   description: "Description_1",
 };
 
-const token_1 = {
-  token: "Token_1",
-};
-
 var role = null;
 var background = null;
 var domain = null;
 var job = null;
 var label = null;
 
-describe("Annotator Schema", () => {
+describe("Annotator schemas", () => {
   beforeAll(async () => {
     await connect();
     background = await Background.create(background_1);
@@ -75,10 +70,11 @@ describe("Annotator Schema", () => {
       role: role._id,
       email: "name@example.com",
       background: background._id,
+      tokens: ["token1", "token2"],
     };
     await expect(Annotator.create(annotator)).resolves.not.toThrow();
   });
-  test("Annotator delete and cascade to Annotation and Token", async () => {
+  test("Annotator delete cascade to Annotation", async () => {
     const annotator = {
       role: role._id,
       email: "name@example.com",
@@ -95,13 +91,10 @@ describe("Annotator Schema", () => {
       domain: domain._id,
       role: role._id,
       background: background._id,
+      tokens: ["token1", "token2"],
     };
 
     const annotation = await Annotation.create(annotation_1);
-
-    token_1.annotation = annotation._id;
-
-    const token = await Token.create(token_1);
 
     await expect(
       Annotator.deleteOne({ _id: res_annotator._id })
@@ -109,7 +102,6 @@ describe("Annotator Schema", () => {
 
     expect(await Annotator.findById(res_annotator._id)).toBe(null);
     expect(await Annotation.findById(annotation._id)).toBe(null);
-    expect(await Token.findById(token._id)).toBe(null);
   });
 
   test("Cant delete with out an ID", async () => {
