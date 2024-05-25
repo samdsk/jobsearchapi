@@ -5,7 +5,7 @@ const { isEmail } = require("validator");
 const Role = require("./Role");
 const Background = require("./Background");
 
-const { cascadeDeleteAnnotations } = require("../lib/db_utils");
+const CascadeDelete = require("../lib/db_utils");
 
 const Annotator = new mongoose.Schema(
   {
@@ -40,7 +40,7 @@ Annotator.path("background").validate(async (value) => {
 
 Annotator.pre("deleteOne", { document: true, query: false }, async function () {
   const id = this._id;
-  await cascadeDeleteAnnotations({ annotator: id });
+  await CascadeDelete.cascadeDeleteAnnotations({ annotator: id });
 });
 
 Annotator.pre("deleteOne", { document: false, query: true }, async function () {
@@ -48,7 +48,7 @@ Annotator.pre("deleteOne", { document: false, query: true }, async function () {
 
   if (!id) throw new Error("usage: Annotator.deleteOne({_id:id})");
 
-  await cascadeDeleteAnnotations({ annotator: id });
+  await CascadeDelete.cascadeDeleteAnnotations({ annotator: id });
 });
 
 module.exports.Annotator = mongoose.model("Annotator", Annotator);

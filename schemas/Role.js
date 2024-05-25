@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const { cascadeDeleteAnnotators } = require("../lib/db_utils");
+const CascadeDelete = require("../lib/db_utils");
 
 const Role = new mongoose.Schema(
   {
@@ -21,7 +21,7 @@ const Role = new mongoose.Schema(
 
 Role.pre("deleteOne", { document: true, query: false }, async function () {
   const id = this._id;
-  await cascadeDeleteAnnotators({ role: id });
+  await CascadeDelete.cascadeDeleteAnnotators({ role: id });
 });
 
 Role.pre("deleteOne", { document: false, query: true }, async function () {
@@ -29,7 +29,7 @@ Role.pre("deleteOne", { document: false, query: true }, async function () {
 
   if (!id) throw new Error("usage: Role.deleteOne({_id:id})");
 
-  await cascadeDeleteAnnotators({ role: id });
+  await CascadeDelete.cascadeDeleteAnnotators({ role: id });
 });
 
 module.exports.Role = mongoose.model("Role", Role);

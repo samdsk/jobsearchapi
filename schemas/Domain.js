@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const { cascadeDeleteAnnotations } = require("../lib/db_utils");
+const CascadeDelete = require("../lib/db_utils");
 
 // TODO: cascade deletes to Annotation
 const Domain = new mongoose.Schema(
@@ -16,7 +16,7 @@ const Domain = new mongoose.Schema(
 
 Domain.pre("deleteOne", { document: true, query: false }, async function () {
   const id = this._id;
-  await cascadeDeleteAnnotations({ domain: id });
+  await CascadeDelete.cascadeDeleteAnnotations({ domain: id });
 });
 
 Domain.pre("deleteOne", { document: false, query: true }, async function () {
@@ -24,7 +24,7 @@ Domain.pre("deleteOne", { document: false, query: true }, async function () {
 
   if (!id) throw new Error("usage: Domain.deleteOne({_id:id})");
 
-  await cascadeDeleteAnnotations({ domain: id });
+  await CascadeDelete.cascadeDeleteAnnotations({ domain: id });
 });
 
 module.exports.Domain = mongoose.model("Domain", Domain);
