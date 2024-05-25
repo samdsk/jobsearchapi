@@ -3,7 +3,7 @@ const Collector = require("../lib/collector");
 const SearchRequestSender = require("../lib/searchRequestSender");
 const InsertJob = require("../lib/InsertJob");
 const mongoose = require("mongoose");
-const CRUDJobPost = require("../lib/CRUDJobPost");
+const JobPostService = require("../lib/JobPostService");
 
 const response_example = {
   jobs: [
@@ -235,7 +235,7 @@ describe("insert a job details to db", () => {
 
     expect(mockSender.sendJobSearchRequest).toHaveBeenCalledTimes(1);
 
-    const res = await CRUDJobPost.getAllJobPosts();
+    const res = await JobPostService.getAllJobPosts();
 
     expect(res.length).toBe(2);
   });
