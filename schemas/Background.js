@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const { cascadeDeleteAnnotators } = require("../lib/db_utils");
+const CascadeDelete = require("../lib/db_utils");
 
 const Background = new mongoose.Schema(
   {
@@ -18,7 +18,7 @@ Background.pre(
   { document: true, query: false },
   async function () {
     const id = this._id;
-    await cascadeDeleteAnnotators({ background: id });
+    await CascadeDelete.cascadeDeleteAnnotators({ background: id });
   }
 );
 
@@ -30,7 +30,7 @@ Background.pre(
 
     if (!id) throw new Error("usage: Background.deleteOne({_id:id})");
 
-    await cascadeDeleteAnnotators({ background: id });
+    await CascadeDelete.cascadeDeleteAnnotators({ background: id });
   }
 );
 
