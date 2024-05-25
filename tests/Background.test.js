@@ -1,14 +1,12 @@
 const { connect, close, clearDatabase } = require("./db_handler");
 
-const { Link } = require("../schema/Link");
-const { Annotation } = require("../schema/Annotation");
-const { Annotator } = require("../schema/Annotator");
-const { Role } = require("../schema/Role");
-const { Background } = require("../schema/Background");
-const { Domain } = require("../schema/Domain");
-const { JobPost } = require("../schema/JobPost");
-const { Label } = require("../schema/Label");
-const { Token } = require("../schema/Token");
+const { Annotation } = require("../schemas/Annotation");
+const { Annotator } = require("../schemas/Annotator");
+const { Role } = require("../schemas/Role");
+const { Background } = require("../schemas/Background");
+const { Domain } = require("../schemas/Domain");
+const { JobPost } = require("../schemas/JobPost");
+const { Label } = require("../schemas/Label");
 
 const delete_list = [""];
 
@@ -42,10 +40,6 @@ const job_1 = {
   description: "Description_1",
 };
 
-const token_1 = {
-  token: "Token_1",
-};
-
 var role = null;
 var background = null;
 var annotator = null;
@@ -53,10 +47,8 @@ var domain = null;
 var job = null;
 var label = null;
 var annotation = null;
-var link = null;
-var token = null;
 
-describe("Label Schema", () => {
+describe("Background schemas", () => {
   beforeAll(async () => {
     await connect();
     background = await Background.create(background_1);
@@ -76,21 +68,10 @@ describe("Label Schema", () => {
       label: label.id,
       reason: "Reason_1",
       domain: domain.id,
+      tokens: ["token1", "token2"],
     };
 
     annotation = await Annotation.create(annotation_1);
-
-    token_1.annotation = annotation._id;
-
-    token = await Token.create(token_1);
-
-    const link_1 = {
-      job_post: job._id,
-      source: "Example.com",
-      url: "http://example.com",
-    };
-
-    link = await Link.create(link_1);
   });
 
   afterAll(async () => {
@@ -101,7 +82,7 @@ describe("Label Schema", () => {
     await clearDatabase(delete_list);
   });
 
-  test("Delete Role and cascade delete to Annotator and Annotations", async () => {
+  test("Delete Background and cascade delete to Annotator and Annotations", async () => {
     await expect(
       Background.deleteOne({ _id: background._id })
     ).resolves.not.toThrow();
@@ -109,10 +90,9 @@ describe("Label Schema", () => {
     expect(await Background.findById(background._id)).toBe(null);
     expect(await Annotation.findById(annotation._id)).toBe(null);
     expect(await Annotator.findById(annotator._id)).toBe(null);
-    expect(await Token.findById(token._id)).toBe(null);
   });
 
-  test("Cant delete Label without an id", async () => {
+  test("Cant delete Background without an id", async () => {
     await expect(Background.deleteOne({ background: "Role" })).rejects.toThrow(
       "usage: Background.deleteOne({_id:id})"
     );

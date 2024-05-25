@@ -1,14 +1,13 @@
 const { connect, close, clearDatabase } = require("./db_handler");
 const mongoose = require("mongoose");
 
-const { Annotator } = require("../schema/Annotator");
-const { Role } = require("../schema/Role");
-const { Background } = require("../schema/Background");
-const { Domain } = require("../schema/Domain");
-const { JobPost } = require("../schema/JobPost");
-const { Label } = require("../schema/Label");
-const { Annotation } = require("../schema/Annotation");
-const { Token } = require("../schema/Token");
+const { Annotator } = require("../schemas/Annotator");
+const { Role } = require("../schemas/Role");
+const { Background } = require("../schemas/Background");
+const { Domain } = require("../schemas/Domain");
+const { JobPost } = require("../schemas/JobPost");
+const { Label } = require("../schemas/Label");
+const { Annotation } = require("../schemas/Annotation");
 
 const delete_list = ["annotations"];
 
@@ -49,7 +48,7 @@ var domain = null;
 var job = null;
 var label = null;
 
-describe("Annotation Schema", () => {
+describe("Annotation schemas", () => {
   beforeAll(async () => {
     await connect();
     background = await Background.create(background_1);
@@ -79,31 +78,12 @@ describe("Annotation Schema", () => {
       label: label._id,
       reason: "Reason_1",
       domain: domain._id,
+      tokens: ["token1", "token2"],
     };
 
     await expect(Annotation.create(annotation)).resolves.not.toThrow();
   });
-  test("Delete cascade Tokens", async () => {
-    const annotation = {
-      source: job._id,
-      annotator: annotator._id,
-      label: label._id,
-      reason: "Reason_1",
-      domain: domain._id,
-    };
 
-    const res = await Annotation.create(annotation);
-
-    await expect(Annotation.deleteOne({ _id: res._id })).resolves.not.toThrow();
-
-    expect(await Annotation.findById(res._id)).toBe(null);
-    expect(await Token.findOne({ annotation: res._id })).toBe(null);
-  });
-  test("Cant delete without an ID", async () => {
-    await expect(
-      Annotation.deleteOne({ annotator: annotator._id })
-    ).rejects.toThrow("usage: Annotation.deleteOne({_id:id})");
-  });
   test("Duplicate Annotation", async () => {
     const annotation = {
       source: job.id,
