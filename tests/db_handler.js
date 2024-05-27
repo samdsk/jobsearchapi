@@ -7,7 +7,6 @@ var mongo = null;
 
 const connect = async () => {
   mongo = await MongoMemoryServer.create();
-
   const uri = mongo.getUri();
   await mongoose.connect(uri);
 };

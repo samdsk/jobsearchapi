@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const CascadeDelete = require("../lib/db_utils");
+const CascadeDelete = require("../db/db_utils");
 
 const Label = new mongoose.Schema(
   {
@@ -15,6 +15,7 @@ const Label = new mongoose.Schema(
 
 Label.pre("deleteOne", { document: true, query: false }, async function () {
   const id = this._id;
+
   await CascadeDelete.cascadeDeleteAnnotations({ label: id });
 });
 
