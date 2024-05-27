@@ -5,7 +5,7 @@ const { isEmail } = require("validator");
 const Role = require("./Role");
 const Background = require("./Background");
 
-const CascadeDelete = require("../lib/db_utils");
+const CascadeDelete = require("../db/db_utils");
 
 const Annotator = new mongoose.Schema(
   {

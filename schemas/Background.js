@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const CascadeDelete = require("../lib/db_utils");
+const CascadeDelete = require("../db/db_utils");
 
 const Background = new mongoose.Schema(
   {
@@ -29,7 +29,6 @@ Background.pre(
     const id = this.getFilter()["_id"];
 
     if (!id) throw new Error("usage: Background.deleteOne({_id:id})");
-
     await CascadeDelete.cascadeDeleteAnnotators({ background: id });
   }
 );
