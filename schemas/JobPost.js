@@ -2,7 +2,24 @@ const mongoose = require("mongoose");
 const { isURL } = require("validator");
 const { cascadeDeleteAnnotations } = require("../lib/db_utils");
 
-// TODO: test Links
+function links_validator(links) {
+  const set = new Set();
+
+  for (const link of links) {
+    if (!link.source)
+      return Promise.reject(new Error(`Link source is required!`));
+    if (set.has(link.source))
+      return Promise.reject(
+        new Error(`Duplicate link source '${link.source}'`)
+      );
+
+    if (!isURL(link.url))
+      return Promise.reject(new Error(`Invalid link url '${link.url}'`));
+    set.add(link.source);
+  }
+
+  return true;
+}
 
 const JobPost = new mongoose.Schema(
   {
@@ -16,31 +33,14 @@ const JobPost = new mongoose.Schema(
     links: {
       type: [
         {
-          source: { type: String, unique: true },
+          source: { type: String, required: true },
           url: {
             type: String,
           },
         },
       ],
       validate: {
-        validator: function (links) {
-          const set = new Set();
-
-          for (const link of links) {
-            if (set.has(link.source))
-              return Promise.reject(
-                new Error(`Duplicate link source '${link.source}'`)
-              );
-
-            if (!isURL(link.url))
-              return Promise.reject(
-                new Error(`Invalid link url '${link.url}'`)
-              );
-            set.add(link.source);
-          }
-
-          return true;
-        },
+        validator: links_validator,
       },
     },
   },
