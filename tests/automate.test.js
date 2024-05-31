@@ -78,7 +78,6 @@ describe("Automate collecting", () => {
   });
 
   it("response should contain only element and jobtype should be type1", async () => {
-    // axios.request.mockRejectedValue({ response: { status: 429 } });
     axios.request.mockImplementation(async (data) => {
       if (data.params.query == "type1")
         return Promise.resolve({ data: response_example });
