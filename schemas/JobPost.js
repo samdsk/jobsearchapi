@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { isURL } = require("validator");
-const { cascadeDeleteAnnotations } = require("../db/db_utils");
 
 function links_validator(links) {
   const set = new Set();
@@ -46,20 +45,5 @@ const JobPost = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-JobPost.pre("deleteOne", { document: true, query: false }, async function () {
-  const id = this._id;
-  const filter = { source: id };
-  await cascadeDeleteAnnotations(filter);
-});
-
-JobPost.pre("deleteOne", { document: false, query: true }, async function () {
-  const id = this.getFilter()["_id"];
-
-  if (!id) throw new Error("usage: JobPost.deleteOne({_id:id})");
-
-  const filter = { source: id };
-  await cascadeDeleteAnnotations(filter);
-});
 
 module.exports.JobPost = mongoose.model("JobPost", JobPost);

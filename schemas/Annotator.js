@@ -5,8 +5,6 @@ const { isEmail } = require("validator");
 const Role = require("./Role");
 const Background = require("./Background");
 
-const CascadeDelete = require("../db/db_utils");
-
 const Annotator = new mongoose.Schema(
   {
     role: {
@@ -37,18 +35,5 @@ Annotator.path("role").validate(async (value) => {
 Annotator.path("background").validate(async (value) => {
   return await Background.Background.exists({ _id: value });
 }, "Invalid Background");
-
-Annotator.pre("deleteOne", { document: true, query: false }, async function () {
-  const id = this._id;
-  await CascadeDelete.cascadeDeleteAnnotations({ annotator: id });
-});
-
-Annotator.pre("deleteOne", { document: false, query: true }, async function () {
-  const id = this.getFilter()["_id"];
-
-  if (!id) throw new Error("usage: Annotator.deleteOne({_id:id})");
-
-  await CascadeDelete.cascadeDeleteAnnotations({ annotator: id });
-});
 
 module.exports.Annotator = mongoose.model("Annotator", Annotator);
