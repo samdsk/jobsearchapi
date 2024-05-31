@@ -3,6 +3,7 @@ const {
   RES_DIR,
   getPathCompatibleStringFromDate,
 } = require("../lib/resultsLogger");
+
 const fs = require("fs").promises;
 
 const response_example = {
@@ -44,7 +45,7 @@ describe("Custom JSON logger", () => {
       await fs.access(fullPath);
       await fs.rm(fullPath);
     } catch (error) {
-      console.log(eroor);
+      console.log(error);
     }
   });
   it("should create file in results directory", async () => {

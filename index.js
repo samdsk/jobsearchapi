@@ -5,8 +5,10 @@ const Utils = require("./lib/utils");
 const Automate = require("./lib/automate");
 const { logResultsToJSONFile } = require("./lib/resultsLogger");
 const Logger = require("./lib/logger");
+const Collector = require("./lib/collector");
+const SearchRequestSender = require("./lib/searchRequestSender");
 
-const main = async () => {
+const automate = async () => {
   try {
     const filename_jobtypes = process.argv[2] || "jobtypeslist.json";
     Logger.info(`Reading job types file : ${filename_jobtypes}`);
@@ -38,4 +40,21 @@ const main = async () => {
   }
 };
 
-main();
+const single = async () => {
+  const sender = new SearchRequestSender();
+  const collector = new Collector(sender);
+  try {
+    Logger.info("Starting...");
+
+    await db_connect();
+    const response = await collector.searchJobsByType("Software Engineer");
+    Logger.debug(response);
+    await db_close();
+    Logger.info("Exiting...");
+  } catch (err) {
+    Logger.debug(err);
+    process.exit(1);
+  }
+};
+
+single();
