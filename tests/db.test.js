@@ -4,8 +4,8 @@ const {
   insertJob,
   insertAllJobs,
 } = require("../lib/InsertJob");
-const JobSchema = require("../schema/JobSchema");
-const CRUDJobPost = require("../lib/CRUDJobPost");
+const JobSchema = require("../schemas/JobSchema");
+const JobPostService = require("../lib/JobPostService");
 require("dotenv").config();
 
 let job_example = {
@@ -119,7 +119,7 @@ describe("insert a job details to db", () => {
 
   it("should insert a job record to db via insertJob function", async () => {
     const createdJob = await insertJob(job_example, { searchJobType: "Cuoco" });
-    const db_result = await CRUDJobPost.findJobPostById(createdJob._id);
+    const db_result = await JobPostService.findJobPostById(createdJob._id);
 
     expect(db_result).not.toBe(null);
   });
@@ -174,7 +174,7 @@ describe("insert a job details to db", () => {
 
     const createdJob = await insertJob(job_example, additionalDetails);
 
-    const db_result = await CRUDJobPost.findJobPostById(createdJob._id);
+    const db_result = await JobPostService.findJobPostById(createdJob._id);
     expect(db_result.links.length).toBe(2);
   });
 
