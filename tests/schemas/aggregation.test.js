@@ -2,16 +2,16 @@ require("dotenv").config();
 
 const mongoose = require("mongoose");
 
-const pipeline = require("../db/finetune_pipeline");
+const pipeline = require("../../db/finetune_pipeline");
 
-const { Annotation } = require("../schemas/Annotation");
-const { Annotator } = require("../schemas/Annotator");
-const { Background } = require("../schemas/Background");
-const { Domain } = require("../schemas/Domain");
-const { JobPost } = require("../schemas/JobPost");
-const { Label } = require("../schemas/Label");
-const { Role } = require("../schemas/Role");
-const OutputLLM = require("../schemas/OutputLLM");
+const { Annotation } = require("../../schemas/Annotation");
+const { Annotator } = require("../../schemas/Annotator");
+const { Background } = require("../../schemas/Background");
+const { Domain } = require("../../schemas/Domain");
+const { JobPost } = require("../../schemas/JobPost");
+const { Label } = require("../../schemas/Label");
+const { Role } = require("../../schemas/Role");
+const OutputLLM = require("../../schemas/OutputLLM");
 
 const init_setup = async () => {
   const role_1 = {

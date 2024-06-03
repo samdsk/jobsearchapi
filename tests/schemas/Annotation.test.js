@@ -1,13 +1,13 @@
-const { connect, close, clearDatabase } = require("./db_handler");
+const { connect, close, clearDatabase } = require("../db_handler");
 const mongoose = require("mongoose");
 
-const { Annotator } = require("../schemas/Annotator");
-const { Role } = require("../schemas/Role");
-const { Background } = require("../schemas/Background");
-const { Domain } = require("../schemas/Domain");
-const { JobPost } = require("../schemas/JobPost");
-const { Label } = require("../schemas/Label");
-const { Annotation } = require("../schemas/Annotation");
+const { Annotator } = require("../../schemas/Annotator");
+const { Role } = require("../../schemas/Role");
+const { Background } = require("../../schemas/Background");
+const { Domain } = require("../../schemas/Domain");
+const { JobPost } = require("../../schemas/JobPost");
+const { Label } = require("../../schemas/Label");
+const { Annotation } = require("../../schemas/Annotation");
 
 const delete_list = ["annotations"];
 
