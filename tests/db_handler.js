@@ -1,12 +1,15 @@
 require("dotenv").config();
 
-const { MongoMemoryServer } = require("mongodb-memory-server");
+const {
+  MongoMemoryServer,
+  MongoMemoryReplSet,
+} = require("mongodb-memory-server");
 const mongoose = require("mongoose");
 
 var mongo = null;
 
 const connect = async () => {
-  mongo = await MongoMemoryServer.create();
+  mongo = await MongoMemoryReplSet.create();
   const uri = mongo.getUri();
   await mongoose.connect(uri);
 };
