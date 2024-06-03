@@ -1,9 +1,10 @@
-const { Annotator } = require("../schemas/Annotator");
-const AnnotatorService = require("../lib/AnnotatorService");
-const AnnotationService = require("../lib/AnnotationService");
-const TransactionWrapper = require("../lib/TransactionWrapper");
+const { Annotator } = require("../../schemas/Annotator");
+const AnnotatorService = require("../../lib/Services/AnnotatorService");
+const AnnotationService = require("../../lib/Services/AnnotationService");
+const TransactionWrapper = require("../../lib/TransactionWrapper");
 
 describe("Annotator Service", () => {
+  beforeEach(() => jest.restoreAllMocks());
   it("creates annotator", async () => {
     const spy = jest
       .spyOn(Annotator, "create")

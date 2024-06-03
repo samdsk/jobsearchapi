@@ -1,10 +1,11 @@
-const BackgroundService = require("../lib/BackgroundService");
-const TransactionWrapper = require("../lib/TransactionWrapper");
-const { Background } = require("../schemas/Background");
-
-const AnnotatorService = require("../lib/AnnotatorService");
+const BackgroundService = require("../../lib/Services/BackgroundService");
+const AnnotatorService = require("../../lib/Services/AnnotatorService");
+const TransactionWrapper = require("../../lib/TransactionWrapper");
+const { Background } = require("../../schemas/Background");
 
 describe("Background Service", () => {
+  beforeEach(() => jest.restoreAllMocks());
+
   it("create a background", async () => {
     const spyRole = jest
       .spyOn(Background, "create")
