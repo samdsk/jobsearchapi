@@ -1,10 +1,11 @@
-const RoleService = require("../lib/RoleService");
-const TransactionWrapper = require("../lib/TransactionWrapper");
-const { Role } = require("../schemas/Role");
-
-const AnnotatorService = require("../lib/AnnotatorService");
+const RoleService = require("../../lib/Services/RoleService");
+const AnnotatorService = require("../../lib/Services/AnnotatorService");
+const TransactionWrapper = require("../../lib/TransactionWrapper");
+const { Role } = require("../../schemas/Role");
 
 describe("Role Service", () => {
+  beforeEach(() => jest.restoreAllMocks());
+
   it("create a role", async () => {
     const spyRole = jest
       .spyOn(Role, "create")

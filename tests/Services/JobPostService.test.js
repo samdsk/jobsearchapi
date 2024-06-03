@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
-const { RapidApiJobPost } = require("../lib/ConvertToJobPost");
-const { JobPost } = require("../schemas/JobPost");
-
-const JobPostService = require("../lib/JobPostService");
-const CRUDAnnotation = require("../lib/AnnotationService");
-const Annotation = require("../schemas/Annotation");
+const { RapidApiJobPost } = require("../../lib/ConvertToJobPost");
+const JobPostService = require("../../lib/Services/JobPostService");
+const { JobPost } = require("../../schemas/JobPost");
 
 require("dotenv").config();
 
@@ -27,36 +24,9 @@ const example_jobpost = {
   ],
 };
 
-const example_inclusiveness = {
-  job_post_id: null,
-  is_inclusive: true,
-  type: "gender",
-  score: 4,
-};
-
-const example_annotation = {
-  job_post_id: null,
-  type: "type1",
-  text: "Test Annotation",
-  source: "Test human",
-  reliability_score: 4,
-  index_start: 0,
-  index_end: 10,
-};
-
-const example_annotation_2 = {
-  job_post_id: null,
-  type: "type2",
-  text: "Test Annotation 2",
-  source: "Test human 2",
-  reliability_score: 4,
-  index_start: 0,
-  index_end: 10,
-};
-
 const job_type = "Example Job Type";
 
-describe("CRUD JobPost:", () => {
+describe("JobPost Service:", () => {
   beforeAll(async () => {
     await mongoose.connect(process.env.DB_URL_TEST);
     console.log("[DB] connected");
@@ -84,38 +54,5 @@ describe("CRUD JobPost:", () => {
 
     await JobPostService.deleteJobPost(res._id);
     expect(await JobPostService.findJobPostById(res._id)).toEqual(null);
-  });
-
-  test.skip("delete a JobPost and it's relative inclusiveness and annotations from db", async () => {
-    const job = RapidApiJobPost(example_jobpost, job_type);
-    const job_post_res = await JobPostService.createJobPost(job);
-
-    example_inclusiveness.job_post_id = job_post_res._id;
-    const inclusiveness_res = await CRUDInclusiveness.createInclusiveness(
-      example_inclusiveness
-    );
-
-    example_annotation.job_post_id = job_post_res._id;
-    const annotation_res = await CRUDAnnotation.createAnnotation(
-      example_annotation
-    );
-
-    example_annotation_2.job_post_id = job_post_res._id;
-    const annotation_res_2 = await CRUDAnnotation.createAnnotation(
-      example_annotation_2
-    );
-
-    await JobPostService.deleteJobPost(job_post_res._id);
-
-    const inclusiveness_count = (
-      await Inclusiveness.find({ job_post_id: job_post_res._id })
-    ).length;
-
-    const annotation_count = (
-      await Annotation.find({ job_post_id: job_post_res._id })
-    ).length;
-
-    expect(inclusiveness_count).toBe(0);
-    expect(annotation_count).toBe(0);
   });
 });
