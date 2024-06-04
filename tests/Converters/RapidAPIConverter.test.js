@@ -1,4 +1,4 @@
-const { RapidApiJobPost } = require("../lib/ConvertToJobPost");
+const RapidAPIConverter = require("../../lib/Converters/RapidAPIConverter");
 
 const example_rapidapi_jobpost = {
   id: "QSxkLGQsZSx0LHQsbywgLEMsYSx0LGUscixpLG4sZywgLEEsZSxyLG8scCxvLHIsdCxvLCAsRixpLHU=",
@@ -20,8 +20,9 @@ const example_rapidapi_jobpost = {
 };
 
 test("Creates a Job post from RapidAPI data", async () => {
+  const converter = RapidAPIConverter.convert;
   const job_type = "Example Job Type";
-  const JobPost = RapidApiJobPost(example_rapidapi_jobpost, job_type);
+  const JobPost = converter(example_rapidapi_jobpost, job_type);
 
   expect(JobPost).not.toBe(undefined);
 
