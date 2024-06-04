@@ -33,6 +33,8 @@ const automate = async () => {
 
     Logger.info(JSON.stringify(response));
 
+    console.log(response);
+
     await db_close();
     Logger.info("Exiting...");
 
