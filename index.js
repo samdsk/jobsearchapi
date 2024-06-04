@@ -30,7 +30,8 @@ const automate = async () => {
 
     Logger.info("Logging results summary");
     await logResultsToJSONFile("summary", new Date(Date.now()), response);
-    Logger.info(response);
+
+    Logger.info(JSON.stringify(response));
 
     await db_close();
     Logger.info("Exiting...");
@@ -38,6 +39,7 @@ const automate = async () => {
     process.exit();
   } catch (error) {
     await db_close();
+    Logger.error(JSON.stringify(error));
     console.error(error);
     process.exit(1);
   }
@@ -61,4 +63,4 @@ const single = async () => {
   }
 };
 
-single();
+automate();
