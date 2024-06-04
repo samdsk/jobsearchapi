@@ -32,6 +32,7 @@ const Annotation = new mongoose.Schema(
     tokens: {
       type: [String],
       required: true,
+      validator: (v) => Array.isArray(v),
     },
   },
   { timestamps: true }

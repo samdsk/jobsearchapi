@@ -3,6 +3,8 @@ const AnnotatorService = require("../../lib/Services/AnnotatorService");
 const TransactionWrapper = require("../../lib/TransactionWrapper");
 const { Role } = require("../../schemas/Role");
 
+const opts = { runValidators: true };
+
 describe("Role Service", () => {
   beforeEach(() => jest.restoreAllMocks());
 
@@ -30,7 +32,8 @@ describe("Role Service", () => {
     expect(spyRole).toHaveBeenCalled();
     expect(spyRole).toHaveBeenCalledWith(
       { _id: id },
-      { reliability_score: score }
+      { reliability_score: score },
+      opts
     );
   });
 
