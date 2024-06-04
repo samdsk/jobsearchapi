@@ -3,6 +3,8 @@ const AnnotatorService = require("../../lib/Services/AnnotatorService");
 const AnnotationService = require("../../lib/Services/AnnotationService");
 const TransactionWrapper = require("../../lib/TransactionWrapper");
 
+const opts = { runValidators: true };
+
 describe("Annotator Service", () => {
   beforeEach(() => jest.restoreAllMocks());
   it("creates annotator", async () => {
@@ -32,7 +34,7 @@ describe("Annotator Service", () => {
 
     await AnnotatorService.updateEmail(id, email);
 
-    expect(spy).toHaveBeenCalledWith({ _id: id }, { email: email });
+    expect(spy).toHaveBeenCalledWith({ _id: id }, { email: email }, opts);
   });
   it("update annotator role", async () => {
     const spy = jest
@@ -45,7 +47,7 @@ describe("Annotator Service", () => {
 
     await AnnotatorService.updateRole(id, role);
 
-    expect(spy).toHaveBeenCalledWith({ _id: id }, { role: role });
+    expect(spy).toHaveBeenCalledWith({ _id: id }, { role: role }, opts);
   });
   it("update annotator background", async () => {
     const spy = jest
@@ -58,7 +60,11 @@ describe("Annotator Service", () => {
 
     await AnnotatorService.updateBackground(id, background);
 
-    expect(spy).toHaveBeenCalledWith({ _id: id }, { background: background });
+    expect(spy).toHaveBeenCalledWith(
+      { _id: id },
+      { background: background },
+      opts
+    );
   });
 
   it("delete Annotator and cascade to AnnotationService with session", async () => {
