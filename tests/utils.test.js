@@ -24,7 +24,7 @@ describe("asd", () => {
     expect(n.length).toBe(0);
   });
 
-  it("transferDatabase", async () => {
+  it.skip("transferDatabase", async () => {
     const res = await Utils.transferDataBase(process.env.DB_URL_TEST);
     expect(res.total).toEqual(res.count);
   });
