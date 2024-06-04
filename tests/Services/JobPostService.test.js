@@ -1,58 +1,193 @@
-const mongoose = require("mongoose");
-const { RapidApiJobPost } = require("../../lib/ConvertToJobPost");
 const JobPostService = require("../../lib/Services/JobPostService");
+const AnnotationService = require("../../lib/Services/AnnotationService");
 const { JobPost } = require("../../schemas/JobPost");
+const TransactionWrapper = require("../../lib/TransactionWrapper");
 
-require("dotenv").config();
-
-const example_jobpost = {
-  id: "QSxkLGQsZSx0LHQsbywgLEMsYSx0LGUscixpLG4sZywgLEEsZSxyLG8scCxvLHIsdCxvLCAsRixpLHU=",
-  title: "Addetto Catering Aeroporto Fiumicino (697941)",
-  company: "Manpower CORE Volume",
-  description:
-    "Manpower, per importante azienda leader nella fornitura di servizi catering, cerca:\n\nADDETTI ED ADDETTE AL CATERING AEREO\n\nLa figura richiesta dovrà occuparsi di:\n• predisposizione degli alimenti in conformità con le normative sanitarie e di sicurezza\n• caricamento dei pasti su appositi carrelli aerei\n• pulizia e lavaggio delle attrezzature e delle aree di lavoro\n• gestione degli inventari\n\nRequisiti:\n\nAutomuniti\n\nDisponibilità al lavoro su turni\n\nDisponibilità a lavorare nel weekend\n\nCapacità di lavorare in un ambiente dinamico e veloce\n\nOrario di lavoro: lavoro su 2 turni (6-14 e 14-22)\n\nLuogo di Lavoro: FIUMICINO (RM)\n\nTipo di contratto: previsto contratto di somministrazione FULL TIME a tempo determinato con possibilità di proroga\n\n\"Manpower e le altre Società di ManpowerGroup garantiscono (ai sensi del D.Lgs 198/2006, D.Lgs.215/2003 e D.Lgs.216/2003) pari opportunità di accesso al lavoro a tutt* i/le candidat* e sono impegnate nel favorire il rispetto delle diversità e... l'inclusione sul posto di lavoro. Il servizio è gratuito. I/Le candidat* sono invitati a leggere l'informativa Privacy disponibile su www.Manpower.it - Aut. Min. Prot. N. 1116 - SG - del 26/11/04. Il titolare della registrazione e/o candidatura dichiara di essere a conoscenza delle sanzioni penali previste in caso di dichiarazioni mendaci ai sensi e per gli effetti dell'art.46 del D.P.R. 445/2000\"\nby helplavoro.it",
-  image: "",
-  location: "Fiumicino RM, Italia",
-  employmentType: "Full-time e Temporaneo",
-  datePosted: "10 ore fa",
-  salaryRange: "",
-  jobProviders: [
-    {
-      jobProvider: "Indeed",
-      url: "https://it.indeed.com/viewjob?jk=2031bf99cfc5cf64&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic",
-    },
-  ],
-};
-
-const job_type = "Example Job Type";
+const opts = { runValidators: true };
 
 describe("JobPost Service:", () => {
-  beforeAll(async () => {
-    await mongoose.connect(process.env.DB_URL_TEST);
-    console.log("[DB] connected");
+  beforeEach(() => jest.restoreAllMocks());
+  it("create jobpost", async () => {
+    const spy = jest
+      .spyOn(JobPost, "create")
+      .mockImplementation(async () => Promise.resolve());
+
+    const jobpost = {
+      title: "title",
+      company: "company",
+      location: "location",
+    };
+
+    await JobPostService.create(jobpost);
+
+    expect(spy).toHaveBeenCalled();
   });
 
-  beforeEach(async () => {
-    const collections = await mongoose.connection.db.collections();
-    for (const collection of collections) await collection.drop();
+  it("jobpost update job_type", async () => {
+    const spy = jest
+      .spyOn(JobPost, "updateOne")
+      .mockImplementation(async () => Promise.resolve());
+
+    const id = "id";
+    const job_type = "job_type";
+    await JobPostService.updateJobType(id, job_type);
+
+    expect(spy).toHaveBeenCalledWith({ _id: id }, { job_type: job_type }, opts);
+  });
+  it("jobpost update title", async () => {
+    const spy = jest
+      .spyOn(JobPost, "updateOne")
+      .mockImplementation(async () => Promise.resolve());
+
+    const id = "id";
+    const title = "title";
+    await JobPostService.updateTitle(id, title);
+
+    expect(spy).toHaveBeenCalledWith({ _id: id }, { title: title }, opts);
+  });
+  it("jobpost update company", async () => {
+    const spy = jest
+      .spyOn(JobPost, "updateOne")
+      .mockImplementation(async () => Promise.resolve());
+
+    const id = "id";
+    const company = "company";
+    await JobPostService.updateCompany(id, company);
+
+    expect(spy).toHaveBeenCalledWith({ _id: id }, { company: company }, opts);
+  });
+  it("jobpost update location", async () => {
+    const spy = jest
+      .spyOn(JobPost, "updateOne")
+      .mockImplementation(async () => Promise.resolve());
+
+    const id = "id";
+    const location = "location";
+    await JobPostService.updateLocation(id, location);
+
+    expect(spy).toHaveBeenCalledWith({ _id: id }, { location: location }, opts);
+  });
+  it("jobpost update employment_type", async () => {
+    const spy = jest
+      .spyOn(JobPost, "updateOne")
+      .mockImplementation(async () => Promise.resolve());
+
+    const id = "id";
+    const employment_type = "employment_type";
+    await JobPostService.updateEmploymentType(id, employment_type);
+
+    expect(spy).toHaveBeenCalledWith(
+      { _id: id },
+      { employment_type: employment_type },
+      opts
+    );
+  });
+  it("jobpost update description", async () => {
+    const spy = jest
+      .spyOn(JobPost, "updateOne")
+      .mockImplementation(async () => Promise.resolve());
+
+    const id = "id";
+    const description = "description";
+    await JobPostService.updateDescription(id, description);
+
+    expect(spy).toHaveBeenCalledWith(
+      { _id: id },
+      { description: description },
+      opts
+    );
+  });
+  it("jobpost update links", async () => {
+    const spy = jest
+      .spyOn(JobPost, "updateOne")
+      .mockImplementation(async () => Promise.resolve());
+
+    const id = "id";
+    const links = "links";
+    await JobPostService.updateLinks(id, links);
+
+    expect(spy).toHaveBeenCalledWith({ _id: id }, { links: links }, opts);
+  });
+  it("jobpost add link", async () => {
+    const spy = jest
+      .spyOn(JobPost, "updateOne")
+      .mockImplementation(async () => Promise.resolve());
+
+    const id = "id";
+    const link = "link";
+    await JobPostService.addLink(id, link);
+
+    expect(spy).toHaveBeenCalledWith(
+      { _id: id },
+      { $push: { links: link } },
+      opts
+    );
+  });
+  it("jobpost remove link by source", async () => {
+    const spy = jest
+      .spyOn(JobPost, "updateOne")
+      .mockImplementation(async () => Promise.resolve());
+
+    const id = "id";
+    const link_source = "link source";
+    await JobPostService.removeLinkBySource(id, link_source);
+
+    expect(spy).toHaveBeenCalledWith(
+      { _id: id },
+      { $pull: { links: { source: link_source } } },
+      opts
+    );
+  });
+  it("jobpost remove link by url", async () => {
+    const spy = jest
+      .spyOn(JobPost, "updateOne")
+      .mockImplementation(async () => Promise.resolve());
+
+    const id = "id";
+    const link_url = "link_url";
+    await JobPostService.removeLinkByURL(id, link_url);
+
+    expect(spy).toHaveBeenCalledWith(
+      { _id: id },
+      { $pull: { links: { url: link_url } } },
+      opts
+    );
   });
 
-  afterAll(async () => {
-    await mongoose.connection.close();
+  it("delete jobpost with session", async () => {
+    const spyJobPost = jest
+      .spyOn(JobPost, "deleteOne")
+      .mockImplementation(async () => Promise.resolve());
+
+    const spyAnnotationService = jest
+      .spyOn(AnnotationService, "deleteAnnotations")
+      .mockImplementation(async () => Promise.resolve());
+
+    const id = "id";
+    const session = "session";
+
+    await JobPostService.deleteJobPost(id, session);
+
+    expect(spyJobPost).toHaveBeenCalledWith({ _id: id }, { session: session });
+    expect(spyAnnotationService).toHaveBeenCalledWith(
+      { job_post: id },
+      session
+    );
   });
 
-  test("insert a JobPost to db", async () => {
-    const job = RapidApiJobPost(example_jobpost, job_type);
-    const res = await JobPostService.createJobPost(job);
-    const expected = await JobPost.findById(res._id);
-    expect(expected._id).toEqual(res._id);
-  });
+  it("delete jobpost without session", async () => {
+    const spyJobPost = jest
+      .spyOn(JobPost, "deleteOne")
+      .mockImplementation(async () => Promise.resolve());
 
-  test("delete a JobPost from db", async () => {
-    const job = RapidApiJobPost(example_jobpost, job_type);
-    const res = await JobPostService.createJobPost(job);
+    const spyTransactionWrapper = jest
+      .spyOn(TransactionWrapper, "transactionWrapper")
+      .mockImplementation(async () => Promise.resolve());
 
-    await JobPostService.deleteJobPost(res._id);
-    expect(await JobPostService.findJobPostById(res._id)).toEqual(null);
+    const id = "id";
+
+    await JobPostService.deleteJobPost(id);
+
+    expect(spyTransactionWrapper).toHaveBeenCalled();
   });
 });
