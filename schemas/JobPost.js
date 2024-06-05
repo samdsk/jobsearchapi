@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const { isURL } = require("validator");
 
 function links_validator(links) {
+  if (!Array.isArray(links))
+    return Promise.reject(
+      new Error("Links must be an array with a source and an url!")
+    );
   const set = new Set();
 
   for (const link of links) {
