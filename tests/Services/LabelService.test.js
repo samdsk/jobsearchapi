@@ -44,4 +44,29 @@ describe("Label Service", () => {
 
     expect(spyTransactionWrapper).toHaveBeenCalled();
   });
+
+  it("get all labels", async () => {
+    const spy = jest
+      .spyOn(Label, "find")
+      .mockImplementation(async () => Promise.resolve([1, 2, 3]));
+
+    const res = await LabelService.getAll();
+
+    expect(res.length).toBe(3);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it("get label", async () => {
+    const label = "label";
+    const spy = jest
+      .spyOn(Label, "findById")
+      .mockImplementation(async () => Promise.resolve({ label: label }));
+
+    const id = "label id";
+    const res = await LabelService.getLabel(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(label);
+  });
 });

@@ -47,4 +47,31 @@ describe("Background Service", () => {
 
     expect(spyTransactionWrapper).toHaveBeenCalled();
   });
+
+  it("get all backgrounds", async () => {
+    const spy = jest
+      .spyOn(Background, "find")
+      .mockImplementation(async () => Promise.resolve([1, 2, 3]));
+
+    const res = await BackgroundService.getAll();
+
+    expect(res.length).toBe(3);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it("get background", async () => {
+    const background = "background";
+    const spy = jest
+      .spyOn(Background, "findById")
+      .mockImplementation(async () =>
+        Promise.resolve({ background: background })
+      );
+
+    const id = "background id";
+    const res = await BackgroundService.getBackground(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(background);
+  });
 });
