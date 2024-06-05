@@ -178,4 +178,124 @@ describe("Annotation Service", () => {
 
     expect(spy).toHaveBeenCalled();
   });
+
+  it("get all annotations", async () => {
+    const spy = jest
+      .spyOn(Annotation, "find")
+      .mockImplementation(() => Promise.resolve([1, 2, 3]));
+
+    const res = await AnnotationService.getAll();
+
+    expect(res.length).toBe(3);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it("get all annotations by annotator", async () => {
+    const spy = jest
+      .spyOn(Annotation, "find")
+      .mockImplementation(() => Promise.resolve());
+
+    const annotator = "annotator id";
+
+    await AnnotationService.getAnnotationsByAnnotator(annotator);
+
+    expect(spy).toHaveBeenCalledWith({ annotator: annotator });
+  });
+  it("get all annotations by source", async () => {
+    const spy = jest
+      .spyOn(Annotation, "find")
+      .mockImplementation(() => Promise.resolve());
+
+    const source = "source id";
+
+    await AnnotationService.getAnnotationsBySource(source);
+
+    expect(spy).toHaveBeenCalledWith({ source: source });
+  });
+  it("get all annotations by label", async () => {
+    const spy = jest
+      .spyOn(Annotation, "find")
+      .mockImplementation(() => Promise.resolve());
+
+    const label = "label id";
+
+    await AnnotationService.getAnnotationsByLabel(label);
+
+    expect(spy).toHaveBeenCalledWith({ label: label });
+  });
+  it("get all annotations by domain", async () => {
+    const spy = jest
+      .spyOn(Annotation, "find")
+      .mockImplementation(() => Promise.resolve());
+
+    const domain = "domain id";
+
+    await AnnotationService.getAnnotationsByDomain(domain);
+
+    expect(spy).toHaveBeenCalledWith({ domain: domain });
+  });
+
+  it("get source", async () => {
+    const source = "source";
+    const spy = jest
+      .spyOn(Annotation, "findById")
+      .mockImplementation(async () => Promise.resolve({ source: source }));
+
+    const id = "annotation id";
+    const res = await AnnotationService.getSource(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(source);
+  });
+  it("get tokens", async () => {
+    const tokens = ["token1", "token2"];
+    const spy = jest
+      .spyOn(Annotation, "findById")
+      .mockImplementation(async () => Promise.resolve({ tokens: tokens }));
+
+    const id = "annotation id";
+    const res = await AnnotationService.getTokens(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(tokens);
+  });
+  it("get domain", async () => {
+    const domain = "domain";
+    const spy = jest
+      .spyOn(Annotation, "findById")
+      .mockImplementation(async () => Promise.resolve({ domain: domain }));
+
+    const id = "annotation id";
+    const res = await AnnotationService.getDomain(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(domain);
+  });
+  it("get reason", async () => {
+    const reason = "reason";
+    const spy = jest
+      .spyOn(Annotation, "findById")
+      .mockImplementation(async () => Promise.resolve({ reason: reason }));
+
+    const id = "annotation id";
+    const res = await AnnotationService.getReason(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(reason);
+  });
+  it("get annotator", async () => {
+    const annotator = "annotator";
+    const spy = jest
+      .spyOn(Annotation, "findById")
+      .mockImplementation(async () =>
+        Promise.resolve({ annotator: annotator })
+      );
+
+    const id = "annotation id";
+    const res = await AnnotationService.getAnnotator(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(annotator);
+  });
 });

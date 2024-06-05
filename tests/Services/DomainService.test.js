@@ -44,4 +44,29 @@ describe("Domain Service", () => {
 
     expect(spyTransactionWrapper).toHaveBeenCalled();
   });
+
+  it("get all domains", async () => {
+    const spy = jest
+      .spyOn(Domain, "find")
+      .mockImplementation(async () => Promise.resolve([1, 2, 3]));
+
+    const res = await DomainService.getAll();
+
+    expect(res.length).toBe(3);
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it("get domain", async () => {
+    const domain = "domain";
+    const spy = jest
+      .spyOn(Domain, "findById")
+      .mockImplementation(async () => Promise.resolve({ domain: domain }));
+
+    const id = "domain id";
+    const res = await DomainService.getDomain(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(domain);
+  });
 });

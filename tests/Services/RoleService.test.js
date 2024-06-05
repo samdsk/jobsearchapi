@@ -64,4 +64,54 @@ describe("Role Service", () => {
 
     expect(spyTransactionWrapper).toHaveBeenCalled();
   });
+
+  it("get all roles", async () => {
+    const spy = jest
+      .spyOn(Role, "find")
+      .mockImplementation(async () => Promise.resolve([1, 2, 3]));
+
+    const res = await RoleService.getAll();
+
+    expect(res.length).toBe(3);
+
+    expect(spy).toHaveBeenCalled();
+  });
+  it("get all roles by reliability score", async () => {
+    const spy = jest
+      .spyOn(Role, "find")
+      .mockImplementation(async () => Promise.resolve());
+
+    const score = 5;
+    await RoleService.getRolesByReliabilityScore(score);
+
+    expect(spy).toHaveBeenCalledWith({ reliability_score: score });
+  });
+
+  it("get role", async () => {
+    const role = "role";
+    const spy = jest
+      .spyOn(Role, "findById")
+      .mockImplementation(async () => Promise.resolve({ role: role }));
+
+    const id = "role id";
+    const res = await RoleService.getRole(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(role);
+  });
+
+  it("get reliability score", async () => {
+    const score = 5;
+    const spy = jest
+      .spyOn(Role, "findById")
+      .mockImplementation(async () =>
+        Promise.resolve({ reliability_score: score })
+      );
+
+    const id = "role id";
+    const res = await RoleService.getReliabilityScore(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(score);
+  });
 });

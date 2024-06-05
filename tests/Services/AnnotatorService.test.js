@@ -132,4 +132,85 @@ describe("Annotator Service", () => {
 
     expect(spyTransactionWrapper).toHaveBeenCalled();
   });
+
+  it("get all annotators", async () => {
+    const spy = jest
+      .spyOn(Annotator, "find")
+      .mockImplementation(() => Promise.resolve([1, 2, 3]));
+
+    const res = await AnnotatorService.getAll();
+
+    expect(res.length).toBe(3);
+
+    expect(spy).toHaveBeenCalled();
+  });
+  it("get all annotators by role", async () => {
+    const spy = jest
+      .spyOn(Annotator, "find")
+      .mockImplementation(() => Promise.resolve());
+
+    const role = "role id";
+    await AnnotatorService.getAnnotatorsByRole(role);
+
+    expect(spy).toHaveBeenCalledWith({ role: role });
+  });
+  it("get all annotators by background", async () => {
+    const spy = jest
+      .spyOn(Annotator, "find")
+      .mockImplementation(() => Promise.resolve());
+
+    const background = "background id";
+    await AnnotatorService.getAnnotatorsByBackground(background);
+
+    expect(spy).toHaveBeenCalledWith({ background: background });
+  });
+  it("get all annotator by email", async () => {
+    const spy = jest
+      .spyOn(Annotator, "findOne")
+      .mockImplementation(() => Promise.resolve());
+
+    const email = "email";
+    await AnnotatorService.getAnnotatorByEmail(email);
+
+    expect(spy).toHaveBeenCalledWith({ email: email });
+  });
+
+  it("get background", async () => {
+    const background = "background";
+    const spy = jest
+      .spyOn(Annotator, "findById")
+      .mockImplementation(async () =>
+        Promise.resolve({ background: background })
+      );
+
+    const id = "annotator id";
+    const res = await AnnotatorService.getBackground(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(background);
+  });
+  it("get email", async () => {
+    const email = "email";
+    const spy = jest
+      .spyOn(Annotator, "findById")
+      .mockImplementation(async () => Promise.resolve({ email: email }));
+
+    const id = "annotator id";
+    const res = await AnnotatorService.getEmail(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(email);
+  });
+  it("get role", async () => {
+    const role = "role";
+    const spy = jest
+      .spyOn(Annotator, "findById")
+      .mockImplementation(async () => Promise.resolve({ role: role }));
+
+    const id = "annotator id";
+    const res = await AnnotatorService.getRole(id);
+
+    expect(spy).toHaveBeenCalledWith(id);
+    expect(res).toEqual(role);
+  });
 });
