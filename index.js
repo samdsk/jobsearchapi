@@ -7,6 +7,9 @@ const { logResultsToJSONFile } = require("./lib/resultsLogger");
 const Logger = require("./lib/logger");
 const Collector = require("./lib/collector");
 const SearchRequestSender = require("./lib/searchRequestSender");
+const JobPostController = require("./lib/Controllers/JobPostController");
+const RapidAPIConverter = require("./lib/Converters/RapidAPIConverter");
+const JobPostService = require("./lib/Services/JobPostService");
 
 const automate = async () => {
   try {
@@ -27,7 +30,10 @@ const automate = async () => {
 
     Logger.info("Logging results summary");
     await logResultsToJSONFile("summary", new Date(Date.now()), response);
-    Logger.info(response);
+
+    Logger.info(JSON.stringify(response));
+
+    console.log(response);
 
     await db_close();
     Logger.info("Exiting...");
@@ -35,6 +41,7 @@ const automate = async () => {
     process.exit();
   } catch (error) {
     await db_close();
+    Logger.error(JSON.stringify(error));
     console.error(error);
     process.exit(1);
   }
@@ -42,7 +49,8 @@ const automate = async () => {
 
 const single = async () => {
   const sender = new SearchRequestSender();
-  const collector = new Collector(sender);
+  const controller = new JobPostController(RapidAPIConverter, JobPostService);
+  const collector = new Collector(sender, controller);
   try {
     Logger.info("Starting...");
 
@@ -57,4 +65,4 @@ const single = async () => {
   }
 };
 
-single();
+automate();
