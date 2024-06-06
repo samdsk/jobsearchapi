@@ -1,5 +1,5 @@
 const OutputLLMService = require("../../Services/OutputLLMService");
-const OutputLLM = require("../../Schemas/OutputLLM");
+const OutputLLM = require("../../Models/OutputLLM");
 
 describe("OutputLLM Service:", () => {
   beforeEach(() => jest.restoreAllMocks());

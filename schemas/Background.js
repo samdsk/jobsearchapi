@@ -11,4 +11,4 @@ const Background = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports.Background = mongoose.model("Background", Background);
+module.exports = Background;

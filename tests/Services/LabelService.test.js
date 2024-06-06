@@ -1,7 +1,7 @@
 const LabelService = require("../../Services/LabelService");
 const AnnotationService = require("../../Services/AnnotationService");
 const TransactionWrapper = require("../../db/TransactionWrapper");
-const { Label } = require("../../Schemas/Label");
+const { Label } = require("../../Models/Label");
 
 describe("Label Service", () => {
   beforeEach(() => jest.restoreAllMocks());

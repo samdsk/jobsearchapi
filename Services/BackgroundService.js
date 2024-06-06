@@ -1,5 +1,5 @@
 const AnnotatorService = require("./AnnotatorService");
-const Background = require("../Schemas/Background");
+const Background = require("../Models/Background");
 const TransactionWrapper = require("../db/TransactionWrapper");
 
 const create = async (background) => {

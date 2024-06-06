@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const JobPost = require("./JobPost");
-const Annotator = require("./Annotator");
-const Label = require("./Label");
-const Domain = require("./Domain");
+const JobPost = require("../Models/JobPost");
+const Annotator = require("../Models/Annotator");
+const Label = require("../Models/Label");
+const Domain = require("../Models/Domain");
 
 const Annotation = new mongoose.Schema(
   {
@@ -59,4 +59,4 @@ Annotation.path("domain").validate(async (value) => {
   return await Domain.Domain.exists({ _id: value });
 }, "Invalid Domain");
 
-module.exports.Annotation = mongoose.model("Annotation", Annotation);
+module.exports = Annotation;

@@ -1,4 +1,4 @@
-const { Annotator } = require("../Schemas/Annotator");
+const { Annotator } = require("../Models/Annotator");
 
 const AnnotationService = require("./AnnotationService");
 

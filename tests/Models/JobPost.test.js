@@ -1,6 +1,6 @@
 const { connect, close, clearDatabase } = require("../db_handler");
 
-const { JobPost } = require("../../schemas/JobPost");
+const { JobPost } = require("../../Models/JobPost");
 
 const delete_list = ["jobposts"];
 
