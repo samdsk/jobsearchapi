@@ -1,7 +1,7 @@
 const Collector = require("../lib/collector");
 const SearchRequestSender = require("../lib/searchRequestSender");
-const JobPostController = require("../lib/Controllers/JobPostController");
-const JobPostService = require("../lib/Services/JobPostService");
+const JobPostController = require("../Controllers/JobPostController");
+const JobPostService = require("../Services/JobPostService");
 const RapidAPIConverter = require("../lib/Converters/RapidAPIConverter");
 const ResultLogger = require("../lib/resultsLogger");
 

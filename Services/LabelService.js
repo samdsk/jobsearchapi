@@ -1,6 +1,6 @@
-const { Label } = require("../../schemas/Label");
+const { Label } = require("../Schemas/Label");
 const AnnotationService = require("./AnnotationService");
-const TransactionWrapper = require("../TransactionWrapper");
+const TransactionWrapper = require("../db/TransactionWrapper");
 
 const create = async (label) => {
   return await Label.create(label);

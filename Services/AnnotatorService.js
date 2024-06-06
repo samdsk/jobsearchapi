@@ -1,8 +1,8 @@
-const { Annotator } = require("../../schemas/Annotator");
+const { Annotator } = require("../Schemas/Annotator");
 
 const AnnotationService = require("./AnnotationService");
 
-const TransactionWrapper = require("../TransactionWrapper");
+const TransactionWrapper = require("../db/TransactionWrapper");
 
 const opts = { runValidators: true };
 
