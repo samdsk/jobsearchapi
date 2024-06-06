@@ -1,4 +1,4 @@
-const OutputLLM = require("../../schemas/OutputLLM");
+const OutputLLM = require("../Schemas/OutputLLM");
 
 const getAll = async () => {
   return await OutputLLM.find();

@@ -1,7 +1,7 @@
 const AnnotationService = require("./AnnotationService");
-const { JobPost } = require("../../schemas/JobPost");
-const TransactionWrapper = require("../TransactionWrapper");
-const generateId = require("../generateID");
+const { JobPost } = require("../Schemas/JobPost");
+const TransactionWrapper = require("../db/TransactionWrapper");
+const generateId = require("../lib/generateID");
 
 const opts = { runValidators: true };
 

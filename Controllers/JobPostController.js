@@ -1,4 +1,4 @@
-const logger = require("../logger");
+const logger = require("../lib/logger");
 
 class JobPostController {
   constructor(Converter, JobPostService) {

@@ -1,6 +1,6 @@
-const AnnotationService = require("../../lib/Services/AnnotationService");
-const TransactionWrapper = require("../../lib/TransactionWrapper");
-const { Annotation } = require("../../schemas/Annotation");
+const AnnotationService = require("../../Services/AnnotationService");
+const TransactionWrapper = require("../../db/TransactionWrapper");
+const { Annotation } = require("../../Schemas/Annotation");
 
 const { connect, close } = require("../db_handler");
 

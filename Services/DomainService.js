@@ -1,6 +1,6 @@
-const { Domain } = require("../../schemas/Domain");
+const { Domain } = require("../Schemas/Domain");
 const AnnotationService = require("./AnnotationService");
-const TransactionWrapper = require("../TransactionWrapper");
+const TransactionWrapper = require("../db/TransactionWrapper");
 
 const create = async (domain) => {
   return await Domain.create(domain);
