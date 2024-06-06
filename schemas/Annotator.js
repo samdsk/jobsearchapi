@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 
 const { isEmail } = require("validator");
 
-const Role = require("./Role");
-const Background = require("./Background");
+const Role = require("../Models/Role");
+const Background = require("../Models/Background");
 
 const Annotator = new mongoose.Schema(
   {
@@ -36,4 +36,4 @@ Annotator.path("background").validate(async (value) => {
   return await Background.Background.exists({ _id: value });
 }, "Invalid Background");
 
-module.exports.Annotator = mongoose.model("Annotator", Annotator);
+module.exports = Annotator;

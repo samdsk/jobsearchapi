@@ -1,4 +1,4 @@
-const { Annotator } = require("../../Schemas/Annotator");
+const { Annotator } = require("../../Models/Annotator");
 const AnnotatorService = require("../../Services/AnnotatorService");
 const AnnotationService = require("../../Services/AnnotationService");
 const TransactionWrapper = require("../../db/TransactionWrapper");

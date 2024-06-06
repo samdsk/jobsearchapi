@@ -4,14 +4,14 @@ const mongoose = require("mongoose");
 
 const pipeline = require("../../db/finetune_pipeline");
 
-const { Annotation } = require("../../schemas/Annotation");
-const { Annotator } = require("../../schemas/Annotator");
-const { Background } = require("../../schemas/Background");
-const { Domain } = require("../../schemas/Domain");
-const { JobPost } = require("../../schemas/JobPost");
-const { Label } = require("../../schemas/Label");
-const { Role } = require("../../schemas/Role");
-const OutputLLM = require("../../schemas/OutputLLM");
+const { Annotation } = require("../../Models/Annotation");
+const { Annotator } = require("../../Models/Annotator");
+const { Background } = require("../../Models/Background");
+const { Domain } = require("../../Models/Domain");
+const { JobPost } = require("../../Models/JobPost");
+const { Label } = require("../../Models/Label");
+const { Role } = require("../../Models/Role");
+const OutputLLM = require("../../Models/OutputLLM");
 
 const init_setup = async () => {
   const role_1 = {

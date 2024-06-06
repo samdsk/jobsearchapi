@@ -1,4 +1,4 @@
-const { Domain } = require("../Schemas/Domain");
+const { Domain } = require("../Models/Domain");
 const AnnotationService = require("./AnnotationService");
 const TransactionWrapper = require("../db/TransactionWrapper");
 

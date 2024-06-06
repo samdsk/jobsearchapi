@@ -1,13 +1,13 @@
 const { connect, close, clearDatabase } = require("../db_handler");
 const mongoose = require("mongoose");
 
-const { Annotator } = require("../../schemas/Annotator");
-const { Role } = require("../../schemas/Role");
-const { Background } = require("../../schemas/Background");
-const { Domain } = require("../../schemas/Domain");
-const { JobPost } = require("../../schemas/JobPost");
-const { Label } = require("../../schemas/Label");
-const { Annotation } = require("../../schemas/Annotation");
+const { Annotator } = require("../../Models/Annotator");
+const { Role } = require("../../Models/Role");
+const { Background } = require("../../Models/Background");
+const { Domain } = require("../../Models/Domain");
+const { JobPost } = require("../../Models/JobPost");
+const { Label } = require("../../Models/Label");
+const { Annotation } = require("../../Models/Annotation");
 
 const delete_list = ["annotations"];
 
@@ -48,7 +48,7 @@ var domain = null;
 var job = null;
 var label = null;
 
-describe("Annotation schemas", () => {
+describe("Annotation Models", () => {
   beforeAll(async () => {
     await connect();
     background = await Background.create(background_1);

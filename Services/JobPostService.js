@@ -1,5 +1,5 @@
 const AnnotationService = require("./AnnotationService");
-const { JobPost } = require("../Schemas/JobPost");
+const { JobPost } = require("../Models/JobPost");
 const TransactionWrapper = require("../db/TransactionWrapper");
 const generateId = require("../lib/generateID");
 

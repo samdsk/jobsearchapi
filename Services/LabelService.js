@@ -1,4 +1,4 @@
-const { Label } = require("../Schemas/Label");
+const { Label } = require("../Models/Label");
 const AnnotationService = require("./AnnotationService");
 const TransactionWrapper = require("../db/TransactionWrapper");
 
