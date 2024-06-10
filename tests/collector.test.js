@@ -162,11 +162,11 @@ describe("Collector: ", () => {
 
     await collector.searchJobsByType(job_type);
 
-    const LIMIT = 5 + 1;
+    const LIMIT = 5;
 
     expect(spySender).toHaveBeenCalledTimes(LIMIT);
     expect(spyController).toHaveBeenCalled();
-    expect(spyResultLogger).toHaveBeenCalled();
+    expect(spyResultLogger).toHaveBeenCalledTimes(2);
   });
   it("search JobPost array of types", async () => {
     const sender = new SearchRequestSender();

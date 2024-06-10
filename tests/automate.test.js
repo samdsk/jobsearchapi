@@ -64,7 +64,7 @@ describe("Automate collecting", () => {
     employmentTypes: "Test-Types",
   };
 
-  it("response should contain 2 element2", async () => {
+  it("response should contain 2 elements", async () => {
     axios.request.mockImplementation(async () => {
       return Promise.resolve({ data: response_example });
     });
