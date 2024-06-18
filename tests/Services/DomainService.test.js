@@ -1,7 +1,7 @@
-const DomainService = require("../../lib/Services/DomainService");
-const AnnotationService = require("../../lib/Services/AnnotationService");
-const TransactionWrapper = require("../../lib/TransactionWrapper");
-const { Domain } = require("../../schemas/Domain");
+const DomainService = require("../../Services/DomainService");
+const AnnotationService = require("../../Services/AnnotationService");
+const TransactionWrapper = require("../../db/TransactionWrapper");
+const { Domain } = require("../../Models/Domain");
 
 describe("Domain Service", () => {
   beforeEach(() => jest.restoreAllMocks());
