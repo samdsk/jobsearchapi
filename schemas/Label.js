@@ -11,4 +11,4 @@ const Label = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports.Label = mongoose.model("Label", Label);
+module.exports = Label;

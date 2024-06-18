@@ -1,7 +1,7 @@
-const JobPostService = require("../../lib/Services/JobPostService");
-const AnnotationService = require("../../lib/Services/AnnotationService");
-const { JobPost } = require("../../schemas/JobPost");
-const TransactionWrapper = require("../../lib/TransactionWrapper");
+const JobPostService = require("../../Services/JobPostService");
+const AnnotationService = require("../../Services/AnnotationService");
+const { JobPost } = require("../../Models/JobPost");
+const TransactionWrapper = require("../../db/TransactionWrapper");
 
 const opts = { runValidators: true };
 

@@ -12,4 +12,4 @@ const OutputLLM = new mongoose.Schema(
   { timestamps: true, autoCreate: false, autoIndex: false }
 );
 
-module.exports = mongoose.model("OutputLLM", OutputLLM);
+module.exports = OutputLLM;

@@ -1,7 +1,7 @@
 const Collector = require("../lib/collector");
 const SearchRequestSender = require("../lib/searchRequestSender");
-const JobPostController = require("../lib/Controllers/JobPostController");
-const JobPostService = require("../lib/Services/JobPostService");
+const JobPostController = require("../Controllers/JobPostController");
+const JobPostService = require("../Services/JobPostService");
 const RapidAPIConverter = require("../lib/Converters/RapidAPIConverter");
 const ResultLogger = require("../lib/resultsLogger");
 
@@ -162,11 +162,11 @@ describe("Collector: ", () => {
 
     await collector.searchJobsByType(job_type);
 
-    const LIMIT = 5 + 1;
+    const LIMIT = 5;
 
     expect(spySender).toHaveBeenCalledTimes(LIMIT);
     expect(spyController).toHaveBeenCalled();
-    expect(spyResultLogger).toHaveBeenCalled();
+    expect(spyResultLogger).toHaveBeenCalledTimes(2);
   });
   it("search JobPost array of types", async () => {
     const sender = new SearchRequestSender();
