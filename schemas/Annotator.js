@@ -26,7 +26,7 @@ const Annotator = new mongoose.Schema(
   { timestamps: true }
 );
 
-Annotator.index({ role: 1, email: 1 }, { unique: true });
+Annotator.index({ email: 1 }, { unique: true });
 
 Annotator.path("role").validate(async (value) => {
   return await Role.Role.exists({ _id: value });
