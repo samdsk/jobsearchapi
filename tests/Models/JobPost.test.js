@@ -1,8 +1,11 @@
 const { connect, close, clearDatabase } = require("../db_handler");
 
 const { JobPost } = require("../../Models/JobPost");
+const { default: mongoose } = require("mongoose");
+const { DataProvider } = require("../../Models/DataProvider");
+const { Language } = require("../../Models/Language");
 
-const delete_list = ["jobposts"];
+const delete_list = ["texts"];
 
 const job_1 = {
   _id: "test_1",
@@ -10,12 +13,29 @@ const job_1 = {
   title: "Title_1",
   company: "Company_1",
   location: "Location_1",
-  description: "Description_1",
+  text: "Description_1",
+  links: [
+    {
+      source: "source 1",
+      url: "example.com",
+    },
+    {
+      source: "source 2",
+      url: "http://hhwexample.com",
+    },
+  ],
 };
 
-describe("JobPost Schema", () => {
+let data_provider;
+let language;
+
+describe("JobPost Model", () => {
   beforeAll(async () => {
     await connect();
+    data_provider = await DataProvider.create({ data_provider: "RapidAPI" });
+    language = await Language.create({ icu_locale: "en-US" });
+    job_1.data_provider = data_provider._id;
+    job_1.language = language._id;
   });
 
   afterAll(async () => {
@@ -27,17 +47,16 @@ describe("JobPost Schema", () => {
   });
 
   test("Valid JobPost", async () => {
-    job_1.links = [
-      {
-        source: "source 1",
-        url: "example.com",
-      },
-      {
-        source: "source 2",
-        url: "http://hhwexample.com",
-      },
-    ];
     await expect(JobPost.create(job_1)).resolves.not.toThrow();
+  });
+
+  test("Invalid Data Provider", async () => {
+    const job = job_1;
+
+    job.data_provider = new mongoose.Types.ObjectId();
+    await expect(JobPost.create(job)).rejects.toThrow(
+      "JobPost validation failed: data_provider: Invalid Data Provider"
+    );
   });
 
   test("Invalid url", async () => {
@@ -55,6 +74,7 @@ describe("JobPost Schema", () => {
       "JobPost validation failed: links: Invalid link url 'examplecom'"
     );
   });
+
   test("Duplicate source", async () => {
     job_1.links = [
       {
