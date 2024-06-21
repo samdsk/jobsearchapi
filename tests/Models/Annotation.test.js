@@ -5,9 +5,10 @@ const { Annotator } = require("../../Models/Annotator");
 const { Role } = require("../../Models/Role");
 const { Background } = require("../../Models/Background");
 const { Domain } = require("../../Models/Domain");
-const { JobPost } = require("../../Models/JobPost");
+const { Text } = require("../../Models/Text");
 const { Label } = require("../../Models/Label");
 const { Annotation } = require("../../Models/Annotation");
+const { DataProvider } = require("../../Models/DataProvider");
 
 const delete_list = ["annotations"];
 
@@ -21,7 +22,7 @@ const background_1 = {
 };
 
 const annotator_1 = {
-  email: "asd@asd.com",
+  _id: "Annotator_1",
 };
 
 const domain_1 = {
@@ -32,21 +33,34 @@ const label_1 = {
   label: "Label_1",
 };
 
-const job_1 = {
+const text_1 = {
   _id: "test_1",
-  job_type: "JobType_1",
-  title: "Title_1",
-  company: "Company_1",
-  location: "Location_1",
-  description: "Description_1",
+  title: "title_1",
+  text: "Description_1",
+  links: [
+    {
+      source: "source 1",
+      url: "example.com",
+    },
+    {
+      source: "source 2",
+      url: "http://hhwexample.com",
+    },
+  ],
+  icu_locale_language_tag: "it-IT",
+};
+
+const data_provider_1 = {
+  data_provider: "DataProvider_1",
 };
 
 var role = null;
 var background = null;
 var annotator = null;
 var domain = null;
-var job = null;
+var text = null;
 var label = null;
+var data_provider = null;
 
 describe("Annotation Models", () => {
   beforeAll(async () => {
@@ -56,11 +70,13 @@ describe("Annotation Models", () => {
 
     annotator_1.role = role.id;
     annotator_1.background = background.id;
-
+    data_provider = await DataProvider.create(data_provider_1);
     annotator = await Annotator.create(annotator_1);
     domain = await Domain.create(domain_1);
     label = await Label.create(label_1);
-    job = await JobPost.create(job_1);
+
+    text_1.data_provider = data_provider._id;
+    text = await Text.create(text_1);
   });
 
   afterAll(async () => {
@@ -73,11 +89,11 @@ describe("Annotation Models", () => {
 
   test("Valid Annotation", async () => {
     const annotation = {
-      source: job._id,
-      annotator: annotator._id,
+      text: text._id,
       label: label._id,
-      reason: "Reason_1",
       domain: domain._id,
+      annotator: annotator._id,
+      reason: "Reason_1",
       tokens: ["token1", "token2"],
     };
 
@@ -86,33 +102,39 @@ describe("Annotation Models", () => {
 
   test("Duplicate Annotation", async () => {
     const annotation = {
-      source: job.id,
-      annotator: annotator.id,
-      label: label.id,
+      text: text._id,
+      label: label._id,
+      domain: domain._id,
+      annotator: annotator._id,
       reason: "Reason_1",
-      domain: domain.id,
+      tokens: ["token1", "token2"],
     };
+
     const annotation_2 = { ...annotation, reason: "Reason_2" };
 
     await Annotation.create(annotation);
-
-    await expect(Annotation.create(annotation_2)).rejects.toThrow();
+    try {
+      await Annotation.create(annotation_2);
+    } catch (e) {
+      expect(e.message.startsWith("E11000 duplicate")).toBe(true);
+    }
   });
-  test("Invalid source", async () => {
+  test("Invalid text", async () => {
     const annotation = {
-      source: "job.id",
+      text: "job.id",
       annotator: annotator.id,
       label: label.id,
       reason: "Reason_1",
       domain: domain.id,
     };
     await expect(Annotation.create(annotation)).rejects.toThrow(
-      "Annotation validation failed: source: Invalid JobPost"
+      "Annotation validation failed: text: Invalid Text"
     );
   });
+
   test("Invalid annotator", async () => {
     const annotation = {
-      source: job.id,
+      text: text.id,
       annotator: new mongoose.Types.ObjectId(),
       label: label.id,
       reason: "Reason_1",
@@ -124,7 +146,7 @@ describe("Annotation Models", () => {
   });
   test("Invalid label", async () => {
     const annotation = {
-      source: job.id,
+      text: text.id,
       annotator: annotator.id,
       label: new mongoose.Types.ObjectId(),
       reason: "Reason_1",
@@ -136,7 +158,7 @@ describe("Annotation Models", () => {
   });
   test("Invalid domain", async () => {
     const annotation = {
-      source: job.id,
+      text: text.id,
       annotator: annotator.id,
       label: label.id,
       reason: "Reason_1",
