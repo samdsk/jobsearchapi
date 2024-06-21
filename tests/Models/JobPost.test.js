@@ -3,7 +3,6 @@ const { connect, close, clearDatabase } = require("../db_handler");
 const { JobPost } = require("../../Models/JobPost");
 const { default: mongoose } = require("mongoose");
 const { DataProvider } = require("../../Models/DataProvider");
-const { Language } = require("../../Models/Language");
 
 const delete_list = ["texts"];
 
@@ -24,18 +23,16 @@ const job_1 = {
       url: "http://hhwexample.com",
     },
   ],
+  icu_locale_language_tag: "it-IT",
 };
 
 let data_provider;
-let language;
 
 describe("JobPost Model", () => {
   beforeAll(async () => {
     await connect();
     data_provider = await DataProvider.create({ data_provider: "RapidAPI" });
-    language = await Language.create({ icu_locale: "en-US" });
     job_1.data_provider = data_provider._id;
-    job_1.language = language._id;
   });
 
   afterAll(async () => {
