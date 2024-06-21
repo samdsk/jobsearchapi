@@ -1,7 +1,14 @@
 const mongoose = require("mongoose");
 const { isURL } = require("validator");
 const DataProvider = require("../Models/DataProvider");
-const Language = require("../Models/Language");
+const LanguageUtils = require("../lib/LanguageUtils");
+
+function langTagValidator(value) {
+  if (!LanguageUtils.validate(value))
+    return Promise.reject(
+      new Error(`Invalid ICU locale language tag : ${value}`)
+    );
+}
 
 function links_validator(links) {
   const set = new Set();
@@ -41,9 +48,12 @@ const Text = new mongoose.Schema(
         validator: links_validator,
       },
     },
-    language: {
-      type: mongoose.Types.ObjectId,
+    icu_locale_language_tag: {
+      type: String,
       required: true,
+      validate: {
+        validator: langTagValidator,
+      },
     },
   },
   { timestamps: true }
@@ -52,9 +62,5 @@ const Text = new mongoose.Schema(
 Text.path("data_provider").validate(async (value) => {
   return await DataProvider.DataProvider.exists({ _id: value });
 }, "Invalid Data Provider");
-
-Text.path("language").validate(async (value) => {
-  return await Language.Language.exists({ _id: value });
-}, "Invalid Language");
 
 module.exports = Text;
