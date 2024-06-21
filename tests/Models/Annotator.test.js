@@ -19,7 +19,7 @@ const background_1 = {
 var role = null;
 var background = null;
 
-describe("Annotator Models", () => {
+describe("Annotator Model", () => {
   beforeAll(async () => {
     await connect();
     background = await Background.create(background_1);
@@ -36,8 +36,8 @@ describe("Annotator Models", () => {
 
   test("Valid Annotator", async () => {
     const annotator = {
+      _id: "test1",
       role: role._id,
-      email: "name@example.com",
       background: background._id,
     };
     await expect(Annotator.create(annotator)).resolves.not.toThrow();
@@ -45,8 +45,8 @@ describe("Annotator Models", () => {
 
   test("Invalid role id", async () => {
     const annotator = {
+      _id: "test1",
       role: new mongoose.Types.ObjectId(),
-      email: "name@example.com",
       background: background._id,
     };
     await expect(Annotator.create(annotator)).rejects.toThrow(
@@ -56,8 +56,8 @@ describe("Annotator Models", () => {
 
   test("Invalid background id", async () => {
     const annotator = {
+      _id: "test1",
       role: role._id,
-      email: "name@example.com",
       background: new mongoose.Types.ObjectId(),
     };
     await expect(Annotator.create(annotator)).rejects.toThrow(
@@ -65,14 +65,19 @@ describe("Annotator Models", () => {
     );
   });
 
-  test("Invalid email", async () => {
+  test("Duplicate Annotator", async () => {
     const annotator = {
+      _id: "test1",
       role: role._id,
-      email: "nameatexample.com",
       background: background._id,
     };
-    await expect(Annotator.create(annotator)).rejects.toThrow(
-      "Annotator validation failed: email: Invalid Email"
-    );
+
+    await Annotator.create(annotator);
+
+    try {
+      await Annotator.create(annotator);
+    } catch (e) {
+      expect(e.message.startsWith("E11000 duplicate")).toBe(true);
+    }
   });
 });

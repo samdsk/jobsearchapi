@@ -1,21 +1,15 @@
 const mongoose = require("mongoose");
 
-const { isEmail } = require("validator");
-
 const Role = require("../Models/Role");
 const Background = require("../Models/Background");
 
 const Annotator = new mongoose.Schema(
   {
+    _id: { type: String },
     role: {
       type: mongoose.Types.ObjectId,
       required: true,
       ref: "Role",
-    },
-    email: {
-      type: String,
-      required: true,
-      validate: [isEmail, "Invalid Email"],
     },
     background: {
       type: mongoose.Types.ObjectId,
@@ -25,8 +19,6 @@ const Annotator = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-Annotator.index({ email: 1 }, { unique: true });
 
 Annotator.path("role").validate(async (value) => {
   return await Role.Role.exists({ _id: value });
