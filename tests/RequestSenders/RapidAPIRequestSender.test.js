@@ -1,4 +1,8 @@
-const SearchRequestSender = require("../lib/searchRequestSender");
+const { language } = require("language-tags");
+const {
+  RapidAPIRequestSender,
+  DATA_PROVIDER,
+} = require("../../lib/RequestSenders/RapiAPIRequestSender");
 const axios = require("axios");
 require("dotenv").config();
 
@@ -26,6 +30,10 @@ const response_example = {
       ],
     },
   ],
+  location: "Italia",
+  language: "it_IT",
+  job_type: "Example",
+  data_provider: DATA_PROVIDER,
   index: 0,
   jobCount: 4,
   hasError: false,
@@ -33,21 +41,24 @@ const response_example = {
 };
 
 describe("SearchRequestSender tests", () => {
-  const sender = new SearchRequestSender();
+  const sender = new RapidAPIRequestSender();
 
   it("should send search request and default settings", async () => {
-    axios.request.mockResolvedValue({
-      data: response_example,
-    });
-    const location = "Italia";
-    const language = "it_IT";
     const jobType = "Software Engineer";
-    const response = await sender.sendJobSearchRequest(jobType);
+    const language = "it_IT";
+    const response_example_1 = {
+      ...response_example,
+      language: language,
+      job_type: jobType,
+    };
 
-    expect(response.jobType).toBe(jobType);
-    expect(response.location).toBe(location);
-    expect(response.language).toBe(language);
-    expect(response.jobCount).toBe(response_example.jobCount);
+    axios.request.mockResolvedValue({
+      data: response_example_1,
+    });
+
+    const response = await sender.sendRequest(jobType);
+
+    expect(response).toEqual(response_example_1);
   });
 
   it("should throw an error with response.status=429", async () => {
@@ -60,7 +71,7 @@ describe("SearchRequestSender tests", () => {
     });
 
     try {
-      const response = await sender.sendJobSearchRequest(jobType);
+      await sender.sendRequest(jobType);
     } catch (error) {
       expect(error.status).toEqual(429);
       expect(error.jobType).toEqual(jobType);
