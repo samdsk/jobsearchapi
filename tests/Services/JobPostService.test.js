@@ -1,6 +1,7 @@
 const JobPostService = require("../../Services/JobPostService");
 const AnnotationService = require("../../Services/AnnotationService");
 const { JobPost } = require("../../Models/JobPost");
+const DataProviderService = require("../../Services/DataProviderService");
 const TransactionWrapper = require("../../db/TransactionWrapper");
 
 const opts = { runValidators: true };
@@ -11,16 +12,21 @@ describe("JobPost Service:", () => {
     const spy = jest
       .spyOn(JobPost, "create")
       .mockImplementation(async () => Promise.resolve());
+    const spyDataProvider = jest
+      .spyOn(DataProviderService, "getIDByName")
+      .mockImplementation(async () => Promise.resolve("MockedID"));
 
     const jobpost = {
       title: "title",
       company: "company",
       location: "location",
+      data_provider: "DataProvider",
     };
 
     await JobPostService.create(jobpost);
 
     expect(spy).toHaveBeenCalled();
+    expect(spyDataProvider).toHaveBeenCalled();
   });
 
   it("jobpost update job_type", async () => {
@@ -82,20 +88,16 @@ describe("JobPost Service:", () => {
       opts
     );
   });
-  it("jobpost update description", async () => {
+  it("jobpost update text", async () => {
     const spy = jest
       .spyOn(JobPost, "updateOne")
       .mockImplementation(async () => Promise.resolve());
 
     const id = "id";
-    const description = "description";
-    await JobPostService.updateDescription(id, description);
+    const text = "text";
+    await JobPostService.updateText(id, text);
 
-    expect(spy).toHaveBeenCalledWith(
-      { _id: id },
-      { description: description },
-      opts
-    );
+    expect(spy).toHaveBeenCalledWith({ _id: id }, { text: text }, opts);
   });
   it("jobpost update links", async () => {
     const spy = jest
@@ -316,19 +318,17 @@ describe("JobPost Service:", () => {
     expect(spy).toHaveBeenCalledWith(id);
     expect(res).toEqual(employment_type);
   });
-  it("get description", async () => {
-    const description = "description";
+  it("get text", async () => {
+    const text = "text";
     const spy = jest
       .spyOn(JobPost, "findById")
-      .mockImplementation(async () =>
-        Promise.resolve({ description: description })
-      );
+      .mockImplementation(async () => Promise.resolve({ text: text }));
 
     const id = "jobpost id";
-    const res = await JobPostService.getDescription(id);
+    const res = await JobPostService.getText(id);
 
     expect(spy).toHaveBeenCalledWith(id);
-    expect(res).toEqual(description);
+    expect(res).toEqual(text);
   });
   it("get links", async () => {
     const links = [{ source: "source", url: "url" }];
@@ -358,20 +358,20 @@ describe("JobPost Service:", () => {
     expect(res).toEqual(url);
   });
 
-  it("get all descriptions", async () => {
-    const descriptions = [
-      { description: "description1" },
-      { description: "description2" },
-      { description: "description3" },
+  it("get all text", async () => {
+    const text = [
+      { text: "description1" },
+      { text: "description2" },
+      { text: "description3" },
     ];
     const spy = jest
       .spyOn(JobPost, "find")
-      .mockImplementation(async () => Promise.resolve(descriptions));
+      .mockImplementation(async () => Promise.resolve(text));
 
-    const res = await JobPostService.getAllDescriptions();
+    const res = await JobPostService.getAllTexts();
 
     expect(spy).toHaveBeenCalled();
-    expect(res.length).toEqual(descriptions.length);
-    expect(res[2]).toEqual(descriptions[2].description);
+    expect(res.length).toEqual(text.length);
+    expect(res[2]).toEqual(text[2].text);
   });
 });

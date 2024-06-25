@@ -24,6 +24,20 @@ describe("DataProvider Model", () => {
     await expect(DataProvider.create(data_provider)).resolves.not.toThrow();
   });
 
+  test("Get Data Providers id by name", async () => {
+    const name = "DataProvider1";
+    const data_provider = {
+      data_provider: name,
+    };
+
+    const created = await DataProvider.create(data_provider);
+    const result = await DataProvider.findOne({ data_provider: name }).select(
+      "_id"
+    );
+
+    expect(result._id).toEqual(created._id);
+  });
+
   test("Duplicate DataProvider", async () => {
     const data_provider = {
       data_provider: "DataProvider1",

@@ -14,7 +14,6 @@ describe("Annotator Service", () => {
 
     const annotator = {
       role: "role.id",
-      email: "name@example.com",
       background: "background.id",
     };
 
@@ -23,19 +22,6 @@ describe("Annotator Service", () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it("update annotator email", async () => {
-    const spy = jest
-      .spyOn(Annotator, "updateOne")
-      .mockImplementation(async () => Promise.resolve());
-
-    const id = "something";
-
-    const email = "asd@asd.com";
-
-    await AnnotatorService.updateEmail(id, email);
-
-    expect(spy).toHaveBeenCalledWith({ _id: id }, { email: email }, opts);
-  });
   it("update annotator role", async () => {
     const spy = jest
       .spyOn(Annotator, "updateOne")
@@ -164,16 +150,6 @@ describe("Annotator Service", () => {
 
     expect(spy).toHaveBeenCalledWith({ background: background });
   });
-  it("get all annotator by email", async () => {
-    const spy = jest
-      .spyOn(Annotator, "findOne")
-      .mockImplementation(() => Promise.resolve());
-
-    const email = "email";
-    await AnnotatorService.getAnnotatorByEmail(email);
-
-    expect(spy).toHaveBeenCalledWith({ email: email });
-  });
 
   it("get background", async () => {
     const background = "background";
@@ -189,18 +165,7 @@ describe("Annotator Service", () => {
     expect(spy).toHaveBeenCalledWith(id);
     expect(res).toEqual(background);
   });
-  it("get email", async () => {
-    const email = "email";
-    const spy = jest
-      .spyOn(Annotator, "findById")
-      .mockImplementation(async () => Promise.resolve({ email: email }));
 
-    const id = "annotator id";
-    const res = await AnnotatorService.getEmail(id);
-
-    expect(spy).toHaveBeenCalledWith(id);
-    expect(res).toEqual(email);
-  });
   it("get role", async () => {
     const role = "role";
     const spy = jest

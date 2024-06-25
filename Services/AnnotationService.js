@@ -7,8 +7,8 @@ const create = async (annotation) => {
   return await Annotation.create(annotation);
 };
 
-const updateSource = async (id, source) => {
-  return await Annotation.updateOne({ _id: id }, { source: source }, opts);
+const updateText = async (id, text) => {
+  return await Annotation.updateOne({ _id: id }, { text: text }, opts);
 };
 
 const updateAnnotator = async (id, annotator) => {
@@ -76,8 +76,8 @@ const getAll = async () => {
   return await Annotation.find();
 };
 
-const getAnnotationsBySource = async (source) => {
-  return await Annotation.find({ source: source });
+const getAnnotationsByText = async (text) => {
+  return await Annotation.find({ text: text });
 };
 const getAnnotationsByLabel = async (label) => {
   return await Annotation.find({ label: label });
@@ -89,9 +89,9 @@ const getAnnotationsByAnnotator = async (annotator) => {
   return await Annotation.find({ annotator: annotator });
 };
 
-const getSource = async (id) => {
+const getText = async (id) => {
   const res = await Annotation.findById(id);
-  return res.source;
+  return res.text;
 };
 const getAnnotator = async (id) => {
   const res = await Annotation.findById(id);
@@ -116,7 +116,7 @@ const getTokens = async (id) => {
 
 module.exports = {
   create,
-  updateSource,
+  updateText,
   updateAnnotator,
   updateLabel,
   updateReason,
@@ -130,8 +130,8 @@ module.exports = {
   getAnnotationsByAnnotator,
   getAnnotationsByDomain,
   getAnnotationsByLabel,
-  getAnnotationsBySource,
-  getSource,
+  getAnnotationsByText,
+  getText,
   getTokens,
   getDomain,
   getReason,

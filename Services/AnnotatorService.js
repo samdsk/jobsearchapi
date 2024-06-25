@@ -1,7 +1,5 @@
 const { Annotator } = require("../Models/Annotator");
-
 const AnnotationService = require("./AnnotationService");
-
 const TransactionWrapper = require("../db/TransactionWrapper");
 
 const opts = { runValidators: true };
@@ -10,12 +8,10 @@ const create = async (annotator) => {
   return await Annotator.create(annotator);
 };
 
-const updateEmail = async (id, email) => {
-  return await Annotator.updateOne({ _id: id }, { email: email }, opts);
-};
 const updateRole = async (id, role) => {
   return await Annotator.updateOne({ _id: id }, { role: role }, opts);
 };
+
 const updateBackground = async (id, background) => {
   return await Annotator.updateOne(
     { _id: id },
@@ -92,18 +88,12 @@ const getAnnotatorsByRole = async (role) => {
 const getAnnotatorsByBackground = async (background) => {
   return await Annotator.find({ background: background });
 };
-const getAnnotatorByEmail = async (email) => {
-  return await Annotator.findOne({ email: email });
-};
 
 const getRole = async (id) => {
   const res = await Annotator.findById(id);
   return res.role;
 };
-const getEmail = async (id) => {
-  const res = await Annotator.findById(id);
-  return res.email;
-};
+
 const getBackground = async (id) => {
   const res = await Annotator.findById(id);
   return res.background;
@@ -111,7 +101,6 @@ const getBackground = async (id) => {
 
 module.exports = {
   create,
-  updateEmail,
   updateRole,
   updateBackground,
   deleteAnnotator,
@@ -119,8 +108,6 @@ module.exports = {
   getAll,
   getAnnotatorsByRole,
   getAnnotatorsByBackground,
-  getAnnotatorByEmail,
   getRole,
-  getEmail,
   getBackground,
 };

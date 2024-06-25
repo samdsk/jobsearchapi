@@ -1,7 +1,8 @@
 const AnnotationService = require("./AnnotationService");
 const { JobPost } = require("../Models/JobPost");
 const TransactionWrapper = require("../db/TransactionWrapper");
-const generateId = require("../lib/generateID");
+const IdGenerator = require("../lib/IdGenerator");
+const DataProviderService = require("../Services/DataProviderService");
 
 const opts = { runValidators: true };
 
@@ -11,8 +12,16 @@ const opts = { runValidators: true };
  * @returns inserted JobPost and if it already exists returns null
  */
 const create = async (job_post) => {
-  const id = generateId.generateID(job_post);
+  const id = IdGenerator.generateJobPostID(job_post);
   job_post._id = id;
+
+  const data_provider_id = await DataProviderService.getIDByName(
+    job_post.data_provider
+  );
+
+  if (!data_provider_id) throw new Error("Data Provider not found 404!");
+
+  job_post.data_provider = data_provider_id;
 
   return await JobPost.create(job_post);
 };
@@ -41,12 +50,8 @@ const updateEmploymentType = async (id, employment_type) => {
   );
 };
 
-const updateDescription = async (id, description) => {
-  return await JobPost.updateOne(
-    { _id: id },
-    { description: description },
-    opts
-  );
+const updateText = async (id, text) => {
+  return await JobPost.updateOne({ _id: id }, { text: text }, opts);
 };
 
 const updateLinks = async (id, links) => {
@@ -134,9 +139,9 @@ const getEmploymentType = async (id) => {
   const res = await JobPost.findById(id);
   return res.employment_type;
 };
-const getDescription = async (id) => {
+const getText = async (id) => {
   const res = await JobPost.findById(id);
-  return res.description;
+  return res.text;
 };
 const getLinks = async (id) => {
   const res = await JobPost.findById(id);
@@ -150,9 +155,9 @@ const getLinkBySource = async (id, source) => {
   return null;
 };
 
-const getAllDescriptions = async () => {
+const getAllTexts = async () => {
   const res = await getAll();
-  return res.map((job) => job.description);
+  return res.map((job) => job.text);
 };
 
 module.exports = {
@@ -162,14 +167,14 @@ module.exports = {
   updateCompany,
   updateLocation,
   updateEmploymentType,
-  updateDescription,
+  updateText,
   updateLinks,
   addLink,
   removeLinkBySource,
   removeLinkByURL,
   deleteJobPost,
   getAll,
-  getAllDescriptions,
+  getAllTexts,
   getJobPostsByJobType,
   getJobPostsByTitle,
   getJobPostsByCompany,
@@ -180,7 +185,7 @@ module.exports = {
   getCompany,
   getLocation,
   getEmploymentType,
-  getDescription,
+  getText,
   getLinks,
   getLinkBySource,
 };

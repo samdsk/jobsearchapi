@@ -21,7 +21,6 @@ describe("Annotation Service", () => {
 
     const annotator = {
       role: "role.id",
-      email: "name@example.com",
       background: "background.id",
     };
 
@@ -30,16 +29,16 @@ describe("Annotation Service", () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it("annotator update source", async () => {
+  it("annotator update text", async () => {
     const spy = jest
       .spyOn(Annotation, "updateOne")
       .mockImplementation(async () => Promise.resolve());
 
     const id = "id";
-    const source = "source";
-    await AnnotationService.updateSource(id, source);
+    const text = "text";
+    await AnnotationService.updateText(id, text);
 
-    expect(spy).toHaveBeenCalledWith({ _id: id }, { source: source }, opts);
+    expect(spy).toHaveBeenCalledWith({ _id: id }, { text: text }, opts);
   });
   it("annotator update annotator", async () => {
     const spy = jest
@@ -202,16 +201,16 @@ describe("Annotation Service", () => {
 
     expect(spy).toHaveBeenCalledWith({ annotator: annotator });
   });
-  it("get all annotations by source", async () => {
+  it("get all annotations by text", async () => {
     const spy = jest
       .spyOn(Annotation, "find")
       .mockImplementation(() => Promise.resolve());
 
-    const source = "source id";
+    const text = "text id";
 
-    await AnnotationService.getAnnotationsBySource(source);
+    await AnnotationService.getAnnotationsByText(text);
 
-    expect(spy).toHaveBeenCalledWith({ source: source });
+    expect(spy).toHaveBeenCalledWith({ text: text });
   });
   it("get all annotations by label", async () => {
     const spy = jest
@@ -236,17 +235,17 @@ describe("Annotation Service", () => {
     expect(spy).toHaveBeenCalledWith({ domain: domain });
   });
 
-  it("get source", async () => {
-    const source = "source";
+  it("get text", async () => {
+    const text = "text";
     const spy = jest
       .spyOn(Annotation, "findById")
-      .mockImplementation(async () => Promise.resolve({ source: source }));
+      .mockImplementation(async () => Promise.resolve({ text: text }));
 
     const id = "annotation id";
-    const res = await AnnotationService.getSource(id);
+    const res = await AnnotationService.getText(id);
 
     expect(spy).toHaveBeenCalledWith(id);
-    expect(res).toEqual(source);
+    expect(res).toEqual(text);
   });
   it("get tokens", async () => {
     const tokens = ["token1", "token2"];
