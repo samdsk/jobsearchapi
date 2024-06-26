@@ -2,6 +2,8 @@ const Automate = require("../lib/automate");
 const mongoose = require("mongoose");
 
 const axios = require("axios");
+const { DATA_PROVIDER } = require("../lib/RequestSenders/RapiAPIRequestSender");
+const DataProviderService = require("../Services/DataProviderService");
 
 jest.mock("axios");
 
@@ -59,7 +61,7 @@ describe("Automate collecting", () => {
 
   const options = {
     location: "Test-Location",
-    language: "Test-Lang",
+    language: "it-IT",
     datePosted: "Test-Date",
     employmentTypes: "Test-Types",
   };
@@ -68,6 +70,8 @@ describe("Automate collecting", () => {
     axios.request.mockImplementation(async () => {
       return Promise.resolve({ data: response_example });
     });
+
+    await DataProviderService.create(DATA_PROVIDER);
 
     const automate = new Automate(keys, config);
     const response = await automate.collect(jobTypesList, options);
@@ -87,6 +91,8 @@ describe("Automate collecting", () => {
         },
       });
     });
+
+    await DataProviderService.create(DATA_PROVIDER);
 
     const automate = new Automate(keys, config);
     const response = await automate.collect(jobTypesList, options);

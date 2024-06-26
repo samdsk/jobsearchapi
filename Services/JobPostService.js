@@ -13,13 +13,18 @@ const opts = { runValidators: true };
  */
 const create = async (job_post) => {
   const id = IdGenerator.generateJobPostID(job_post);
+
+  const found = await JobPost.findById(id);
+  if (found) return null;
+
   job_post._id = id;
 
   const data_provider_id = await DataProviderService.getIDByName(
     job_post.data_provider
   );
 
-  if (!data_provider_id) throw new Error("Data Provider not found 404!");
+  if (!data_provider_id)
+    throw new Error(`Data Provider ${job_post.data_provider} not found 404!`);
 
   job_post.data_provider = data_provider_id;
 
