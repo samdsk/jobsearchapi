@@ -58,10 +58,10 @@ describe("RapidAPI Converter", () => {
   test("invalid icu locale", () => {
     const converter = RapidAPIConverter.convert;
     const job_type = "Job type";
-    const icu_locale = "it_IT";
+    const icu_locale = "it-en";
 
     expect(() =>
       converter(example_rapidapi_jobpost, job_type, icu_locale)
-    ).toThrow("Please a provide a valid ICU Locale Language Tag.");
+    ).toThrow("Invalid ICU locale tag: it-en");
   });
 });
