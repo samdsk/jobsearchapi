@@ -6,10 +6,10 @@ const Automate = require("./lib/automate");
 const { logResultsToJSONFile } = require("./lib/resultsLogger");
 const Logger = require("./lib/logger");
 const Collector = require("./lib/collector");
-const SearchRequestSender = require("./lib/searchRequestSender");
-const JobPostController = require("./lib/Controllers/JobPostController");
+const SearchRequestSender = require("./lib/RequestSenders/RapiAPIRequestSender");
+const JobPostController = require("./Controllers/JobPostController");
 const RapidAPIConverter = require("./lib/Converters/RapidAPIConverter");
-const JobPostService = require("./lib/Services/JobPostService");
+const JobPostService = require("./Services/JobPostService");
 
 const automate = async () => {
   try {
@@ -64,5 +64,3 @@ const single = async () => {
     process.exit(1);
   }
 };
-
-automate();

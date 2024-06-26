@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
-
+const logger = require("../lib/logger");
 const OldJobPost = require("../Models/OldJobPost");
 
 const JobPostSchema = require("../Schemas/JobPost");
@@ -49,7 +49,6 @@ async function convertOldJobPostToText(DB_URL, data_provider_name, language) {
 
   for await (const oldJob of OldJobPost.find()) {
     try {
-      console.log(`processing: ${oldJob._id}`);
       const textJob = JobPostConverter.convert(
         oldJob,
         data_provider_name,
@@ -57,9 +56,13 @@ async function convertOldJobPostToText(DB_URL, data_provider_name, language) {
       );
       const res = await JobPostService.create(textJob);
       if (res) count++;
+      else logger.debug(`not inserted: ${oldJob._id}`);
     } catch (error) {
       console.error(`error: ${oldJob._id} : ${error.message}`);
     }
+    console.log(
+      `Processed: ${count} of ${total} - ${(count / total).toFixed(5) * 100}%`
+    );
   }
 
   console.log(
