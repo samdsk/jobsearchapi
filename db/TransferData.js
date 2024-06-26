@@ -1,7 +1,14 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+const OldJobPost = require("../Models/OldJobPost");
+
 const JobPostSchema = require("../Schemas/JobPost");
+const DataProviderService = require("../Services/DataProviderService");
+const JobPostService = require("../Services/JobPostService");
+const JobPostConverter = require("../lib/Converters/JobPostConverter");
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const transferJobPosts = async (local, remote) => {
   const conn_local = mongoose.createConnection(local);
@@ -34,4 +41,34 @@ const transferJobPosts = async (local, remote) => {
   return { total, count };
 };
 
-module.exports = { transferJobPosts };
+async function convertOldJobPostToText(DB_URL, data_provider_name, language) {
+  await mongoose.connect(DB_URL);
+  await DataProviderService.create(data_provider_name);
+  const total = await OldJobPost.countDocuments();
+  let count = 0;
+
+  for await (const oldJob of OldJobPost.find()) {
+    try {
+      console.log(`processing: ${oldJob._id}`);
+      const textJob = JobPostConverter.convert(
+        oldJob,
+        data_provider_name,
+        language
+      );
+      const res = await JobPostService.create(textJob);
+      if (res) count++;
+    } catch (error) {
+      console.error(`error: ${oldJob._id} : ${error.message}`);
+    }
+  }
+
+  console.log(
+    `Total: ${total}, inserted: ${count}, not inserted: ${total - count}`
+  );
+  await mongoose.connection.close();
+  return { total, count };
+}
+
+// TODO: icu_locale valida tag from beginning
+// TODO: data provider delete cascade
+module.exports = { transferJobPosts, convertOldJobPostToText };
