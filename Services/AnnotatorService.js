@@ -91,12 +91,28 @@ const getAnnotatorsByBackground = async (background) => {
 
 const getRole = async (id) => {
   const res = await Annotator.findById(id);
-  return res.role;
+  return res?.role || null;
 };
 
 const getBackground = async (id) => {
   const res = await Annotator.findById(id);
-  return res.background;
+  return res?.background || null;
+};
+
+const isHuman = async (id) => {
+  const res = await Annotator.findById(id);
+  return res?.isHuman || null;
+};
+
+const getHumanAnnotators = async () => {
+  return await Annotator.find({ isHuman: true });
+};
+const getNotHumanAnnotators = async () => {
+  return await Annotator.find({ isHuman: false });
+};
+
+const setHuman = async (id, human) => {
+  await Annotator.updateOne({ _id: id }, { isHuman: human });
 };
 
 module.exports = {
@@ -110,4 +126,8 @@ module.exports = {
   getAnnotatorsByBackground,
   getRole,
   getBackground,
+  isHuman,
+  getHumanAnnotators,
+  getNotHumanAnnotators,
+  setHuman,
 };

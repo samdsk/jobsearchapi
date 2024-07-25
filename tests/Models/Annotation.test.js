@@ -23,6 +23,7 @@ const background_1 = {
 
 const annotator_1 = {
   _id: "Annotator_1",
+  isHuman: true,
 };
 
 const domain_1 = {

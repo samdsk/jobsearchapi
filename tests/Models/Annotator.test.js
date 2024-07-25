@@ -39,6 +39,7 @@ describe("Annotator Model", () => {
       _id: "test1",
       role: role._id,
       background: background._id,
+      isHuman: true,
     };
     await expect(Annotator.create(annotator)).resolves.not.toThrow();
   });
@@ -48,6 +49,7 @@ describe("Annotator Model", () => {
       _id: "test1",
       role: new mongoose.Types.ObjectId(),
       background: background._id,
+      isHuman: false,
     };
     await expect(Annotator.create(annotator)).rejects.toThrow(
       "Annotator validation failed: role: Invalid Role"
@@ -59,6 +61,7 @@ describe("Annotator Model", () => {
       _id: "test1",
       role: role._id,
       background: new mongoose.Types.ObjectId(),
+      isHuman: true,
     };
     await expect(Annotator.create(annotator)).rejects.toThrow(
       "Annotator validation failed: background: Invalid Background"
@@ -70,6 +73,7 @@ describe("Annotator Model", () => {
       _id: "test1",
       role: role._id,
       background: background._id,
+      isHuman: true,
     };
 
     await Annotator.create(annotator);

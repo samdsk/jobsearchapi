@@ -16,6 +16,7 @@ const Annotator = new mongoose.Schema(
       required: true,
       ref: "Background",
     },
+    isHuman: { type: Boolean, required: true },
   },
   { timestamps: true }
 );

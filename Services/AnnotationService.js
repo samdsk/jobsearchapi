@@ -42,7 +42,7 @@ const addToken = async (id, token) => {
     opts
   );
 };
-const removeToken = async (id, token) => {
+const deleteToken = async (id, token) => {
   return await Annotation.updateOne(
     { _id: id },
     { $pull: { tokens: token } },
@@ -91,27 +91,27 @@ const getAnnotationsByAnnotator = async (annotator) => {
 
 const getText = async (id) => {
   const res = await Annotation.findById(id);
-  return res.text;
+  return res?.text || null;
 };
 const getAnnotator = async (id) => {
   const res = await Annotation.findById(id);
-  return res.annotator;
+  return res?.annotator || null;
 };
 const getLabel = async (id) => {
   const res = await Annotation.findById(id);
-  return res.label;
+  return res?.label || null;
 };
 const getReason = async (id) => {
   const res = await Annotation.findById(id);
-  return res.reason;
+  return res?.reason || null;
 };
 const getDomain = async (id) => {
   const res = await Annotation.findById(id);
-  return res.domain;
+  return res?.domain || null;
 };
 const getTokens = async (id) => {
   const res = await Annotation.findById(id);
-  return res.tokens;
+  return res?.tokens || [];
 };
 
 module.exports = {
@@ -123,7 +123,7 @@ module.exports = {
   updateDomain,
   updateTokens,
   addToken,
-  removeToken,
+  deleteToken,
   deleteAnnotations,
   deleteAnnotation,
   getAll,

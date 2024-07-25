@@ -1,6 +1,7 @@
 const JobPostService = require("../../Services/JobPostService");
 const AnnotationService = require("../../Services/AnnotationService");
 const { JobPost } = require("../../Models/JobPost");
+const { Text } = require("../../Models/Text");
 const DataProviderService = require("../../Services/DataProviderService");
 const TransactionWrapper = require("../../db/TransactionWrapper");
 
@@ -11,7 +12,11 @@ describe("JobPost Service:", () => {
   it("create jobpost", async () => {
     const spy = jest
       .spyOn(JobPost, "create")
-      .mockImplementation(async () => Promise.resolve());
+      .mockImplementation(async () => Promise.resolve("Test obj"));
+    jest
+      .spyOn(JobPost, "findById")
+      .mockImplementation(async () => Promise.resolve(false));
+
     const spyDataProvider = jest
       .spyOn(DataProviderService, "getIDByName")
       .mockImplementation(async () => Promise.resolve("MockedID"));
@@ -42,7 +47,7 @@ describe("JobPost Service:", () => {
   });
   it("jobpost update title", async () => {
     const spy = jest
-      .spyOn(JobPost, "updateOne")
+      .spyOn(Text, "updateOne")
       .mockImplementation(async () => Promise.resolve());
 
     const id = "id";
@@ -90,18 +95,18 @@ describe("JobPost Service:", () => {
   });
   it("jobpost update text", async () => {
     const spy = jest
-      .spyOn(JobPost, "updateOne")
+      .spyOn(Text, "updateOne")
       .mockImplementation(async () => Promise.resolve());
 
     const id = "id";
     const text = "text";
-    await JobPostService.updateText(id, text);
+    await JobPostService.updateTextField(id, text);
 
     expect(spy).toHaveBeenCalledWith({ _id: id }, { text: text }, opts);
   });
   it("jobpost update links", async () => {
     const spy = jest
-      .spyOn(JobPost, "updateOne")
+      .spyOn(Text, "updateOne")
       .mockImplementation(async () => Promise.resolve());
 
     const id = "id";
@@ -112,7 +117,7 @@ describe("JobPost Service:", () => {
   });
   it("jobpost add link", async () => {
     const spy = jest
-      .spyOn(JobPost, "updateOne")
+      .spyOn(Text, "updateOne")
       .mockImplementation(async () => Promise.resolve());
 
     const id = "id";
@@ -127,7 +132,7 @@ describe("JobPost Service:", () => {
   });
   it("jobpost remove link by source", async () => {
     const spy = jest
-      .spyOn(JobPost, "updateOne")
+      .spyOn(Text, "updateOne")
       .mockImplementation(async () => Promise.resolve());
 
     const id = "id";
@@ -142,7 +147,7 @@ describe("JobPost Service:", () => {
   });
   it("jobpost remove link by url", async () => {
     const spy = jest
-      .spyOn(JobPost, "updateOne")
+      .spyOn(Text, "updateOne")
       .mockImplementation(async () => Promise.resolve());
 
     const id = "id";
@@ -158,7 +163,7 @@ describe("JobPost Service:", () => {
 
   it("delete jobpost with session", async () => {
     const spyJobPost = jest
-      .spyOn(JobPost, "deleteOne")
+      .spyOn(Text, "deleteOne")
       .mockImplementation(async () => Promise.resolve());
 
     const spyAnnotationService = jest
@@ -168,13 +173,10 @@ describe("JobPost Service:", () => {
     const id = "id";
     const session = "session";
 
-    await JobPostService.deleteJobPost(id, session);
+    await JobPostService.deleteOne(id, session);
 
     expect(spyJobPost).toHaveBeenCalledWith({ _id: id }, { session: session });
-    expect(spyAnnotationService).toHaveBeenCalledWith(
-      { job_post: id },
-      session
-    );
+    expect(spyAnnotationService).toHaveBeenCalledWith({ text: id }, session);
   });
 
   it("delete jobpost without session", async () => {
@@ -184,10 +186,11 @@ describe("JobPost Service:", () => {
 
     const id = "id";
 
-    await JobPostService.deleteJobPost(id);
+    await JobPostService.deleteOne(id);
 
     expect(spyTransactionWrapper).toHaveBeenCalled();
   });
+
   it("get all job posts", async () => {
     const spy = jest
       .spyOn(JobPost, "find")
@@ -207,21 +210,11 @@ describe("JobPost Service:", () => {
 
     const job_type = "job type";
 
-    await JobPostService.getJobPostsByJobType(job_type);
+    await JobPostService.getByJobType(job_type);
 
     expect(spy).toHaveBeenCalledWith({ job_type: job_type });
   });
-  it("get all job posts by title", async () => {
-    const spy = jest
-      .spyOn(JobPost, "find")
-      .mockImplementation(() => Promise.resolve());
 
-    const title = "title";
-
-    await JobPostService.getJobPostsByTitle(title);
-
-    expect(spy).toHaveBeenCalledWith({ title: title });
-  });
   it("get all job posts by company", async () => {
     const spy = jest
       .spyOn(JobPost, "find")
@@ -229,7 +222,7 @@ describe("JobPost Service:", () => {
 
     const company = "company";
 
-    await JobPostService.getJobPostsByCompany(company);
+    await JobPostService.getByCompany(company);
 
     expect(spy).toHaveBeenCalledWith({ company: company });
   });
@@ -240,7 +233,7 @@ describe("JobPost Service:", () => {
 
     const location = "location";
 
-    await JobPostService.getJobPostsByLocation(location);
+    await JobPostService.getByLocation(location);
 
     expect(spy).toHaveBeenCalledWith({ location: location });
   });
@@ -251,7 +244,7 @@ describe("JobPost Service:", () => {
 
     const employment_type = "employment type";
 
-    await JobPostService.getJobPostsByEmploymentType(employment_type);
+    await JobPostService.getByEmploymentType(employment_type);
 
     expect(spy).toHaveBeenCalledWith({ employment_type: employment_type });
   });
@@ -271,7 +264,7 @@ describe("JobPost Service:", () => {
   it("get title", async () => {
     const title = "title";
     const spy = jest
-      .spyOn(JobPost, "findById")
+      .spyOn(Text, "findById")
       .mockImplementation(async () => Promise.resolve({ title: title }));
 
     const id = "jobpost id";
@@ -289,7 +282,7 @@ describe("JobPost Service:", () => {
     const id = "jobpost id";
     const res = await JobPostService.getCompany(id);
 
-    expect(spy).toHaveBeenCalledWith(id);
+    expect(spy).toHaveBeenCalledWith(id, company);
     expect(res).toEqual(company);
   });
   it("get location", async () => {
@@ -301,7 +294,7 @@ describe("JobPost Service:", () => {
     const id = "jobpost id";
     const res = await JobPostService.getLocation(id);
 
-    expect(spy).toHaveBeenCalledWith(id);
+    expect(spy).toHaveBeenCalledWith(id, "location");
     expect(res).toEqual(location);
   });
   it("get employment type", async () => {
@@ -315,17 +308,17 @@ describe("JobPost Service:", () => {
     const id = "jobpost id";
     const res = await JobPostService.getEmploymentType(id);
 
-    expect(spy).toHaveBeenCalledWith(id);
+    expect(spy).toHaveBeenCalledWith(id, "employment_type");
     expect(res).toEqual(employment_type);
   });
   it("get text", async () => {
     const text = "text";
     const spy = jest
-      .spyOn(JobPost, "findById")
+      .spyOn(Text, "findById")
       .mockImplementation(async () => Promise.resolve({ text: text }));
 
     const id = "jobpost id";
-    const res = await JobPostService.getText(id);
+    const res = await JobPostService.getTextField(id);
 
     expect(spy).toHaveBeenCalledWith(id);
     expect(res).toEqual(text);
@@ -333,7 +326,7 @@ describe("JobPost Service:", () => {
   it("get links", async () => {
     const links = [{ source: "source", url: "url" }];
     const spy = jest
-      .spyOn(JobPost, "findById")
+      .spyOn(Text, "findById")
       .mockImplementation(async () => Promise.resolve({ links: links }));
 
     const id = "jobpost id";
@@ -347,7 +340,7 @@ describe("JobPost Service:", () => {
     const url = "url";
     const links = [{ source: source, url: url }];
     const spy = jest
-      .spyOn(JobPost, "findById")
+      .spyOn(Text, "findById")
       .mockImplementation(async () => Promise.resolve({ links: links }));
 
     const id = "jobpost id";

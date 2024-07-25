@@ -33,10 +33,12 @@ const init_setup = async () => {
 
   const annotator_1 = {
     _id: "annotator1",
+    isHuman: false,
   };
 
   const annotator_2 = {
     _id: "annotator2",
+    isHuman: true,
   };
 
   const domain_1 = {
@@ -190,6 +192,7 @@ describe("MongoDB aggregation pipeline:", () => {
     };
     const annotator_3 = {
       _id: "annotator3",
+      isHuman: true,
     };
     const domain_3 = {
       domain: "Domain_3",

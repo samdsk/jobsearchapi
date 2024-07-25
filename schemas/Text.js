@@ -34,6 +34,7 @@ const Text = new mongoose.Schema(
     _id: { type: String },
     title: { type: String, required: true },
     text: { type: String, required: true },
+    author: { type: String, default: "unknown" },
     data_provider: { type: mongoose.Types.ObjectId, required: true },
     links: {
       type: [

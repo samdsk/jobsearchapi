@@ -41,11 +41,11 @@ const getRolesByReliabilityScore = async (score) => {
 };
 const getRole = async (id) => {
   const res = await Role.Role.findById(id);
-  return res.role;
+  return res?.role || null;
 };
 const getReliabilityScore = async (id) => {
   const res = await Role.Role.findById(id);
-  return res.reliability_score;
+  return res?.reliability_score || null;
 };
 
 module.exports = {

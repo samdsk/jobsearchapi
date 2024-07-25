@@ -29,7 +29,7 @@ const getAll = async () => {
 
 const getDomain = async (id) => {
   const res = await Domain.findById(id);
-  return res.domain;
+  return res?.domain || null;
 };
 
 module.exports = { create, deleteDomain, getAll, getDomain };

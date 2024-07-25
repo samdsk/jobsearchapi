@@ -110,7 +110,7 @@ describe("Annotation Service", () => {
 
     const id = "id";
     const token = "token";
-    await AnnotationService.removeToken(id, token);
+    await AnnotationService.deleteToken(id, token);
 
     expect(spy).toHaveBeenCalledWith(
       { _id: id },
