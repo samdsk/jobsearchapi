@@ -32,7 +32,7 @@ const getAll = async () => {
 
 const getBackground = async (id) => {
   const res = await Background.Background.findById(id);
-  return res.background;
+  return res?.background || null;
 };
 
 module.exports = { create, deleteBackground, getAll, getBackground };

@@ -1,5 +1,5 @@
 const RapidAPIConverter = require("../../lib/Converters/RapidAPIConverter");
-
+const RapiAPIRequestSender = require("../../lib/RequestSenders/RapiAPIRequestSender");
 const example_rapidapi_jobpost = {
   id: "QSxkLGQsZSx0LHQsbywgLEMsYSx0LGUscixpLG4sZywgLEEsZSxyLG8scCxvLHIsdCxvLCAsRixpLHU=",
   title: "Addetto Catering Aeroporto Fiumicino (697941)",
@@ -19,24 +19,51 @@ const example_rapidapi_jobpost = {
   ],
 };
 
-test("Creates a Job post from RapidAPI data", async () => {
-  const converter = RapidAPIConverter.convert;
-  const job_type = "Example Job Type";
-  const JobPost = converter(example_rapidapi_jobpost, job_type);
+describe("RapidAPI Converter", () => {
+  test("Creates a Job post from RapidAPI data", async () => {
+    const converter = RapidAPIConverter.convert;
+    const job_type = "Example Job Type";
+    const icu_locale = "it-IT";
+    const response = converter(example_rapidapi_jobpost, job_type, icu_locale);
 
-  expect(JobPost).not.toBe(undefined);
+    expect(response).not.toBe(undefined);
 
-  expect(JobPost.job_type).toEqual(job_type);
-  expect(JobPost.title).toEqual(example_rapidapi_jobpost.title);
-  expect(JobPost.company).toEqual(example_rapidapi_jobpost.company);
-  expect(JobPost.location).toEqual(example_rapidapi_jobpost.location);
-  expect(JobPost.employment_type).toEqual(
-    example_rapidapi_jobpost.employmentType
-  );
-  expect(JobPost.description).toEqual(example_rapidapi_jobpost.description);
+    expect(response.job_type).toEqual(job_type);
+    expect(response.title).toEqual(example_rapidapi_jobpost.title);
+    expect(response.company).toEqual(example_rapidapi_jobpost.company);
+    expect(response.location).toEqual(example_rapidapi_jobpost.location);
+    expect(response.employment_type).toEqual(
+      example_rapidapi_jobpost.employmentType
+    );
+    expect(response.text).toEqual(example_rapidapi_jobpost.description);
+    expect(response.icu_locale_language_tag).toEqual(icu_locale);
+    expect(response.data_provider).toEqual("RapidAPI");
 
-  expect(JobPost.links.length).toBe(1);
-  expect(JobPost.links[0].source).toBe(
-    example_rapidapi_jobpost.jobProviders[0].jobProvider
-  );
+    expect(response.links.length).toBe(1);
+    expect(response.links[0].source).toBe(
+      example_rapidapi_jobpost.jobProviders[0].jobProvider
+    );
+
+    expect(response.author).toEqual(RapiAPIRequestSender.DATA_PROVIDER);
+  });
+
+  test("invalid job_type", () => {
+    const converter = RapidAPIConverter.convert;
+    const job_type = 123;
+    const icu_locale = "it_IT";
+
+    expect(() =>
+      converter(example_rapidapi_jobpost, job_type, icu_locale)
+    ).toThrow("job_type must be a string!");
+  });
+
+  test("invalid icu locale", () => {
+    const converter = RapidAPIConverter.convert;
+    const job_type = "Job type";
+    const icu_locale = "it-en";
+
+    expect(() =>
+      converter(example_rapidapi_jobpost, job_type, icu_locale)
+    ).toThrow("Invalid ICU locale tag: it-en");
+  });
 });

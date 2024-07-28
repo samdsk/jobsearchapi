@@ -1,8 +1,18 @@
-const SearchRequestSender = require("../lib/searchRequestSender");
+const Collector = require("../../lib/collector");
+const { connect, close, clearDatabase } = require("../db_handler");
+const {
+  RapidAPIRequestSender,
+  DATA_PROVIDER,
+} = require("../../lib/RequestSenders/RapiAPIRequestSender");
+const RapidAPIConverter = require("../../lib/Converters/RapidAPIConverter");
+const JobPostService = require("../../Services/JobPostService.js");
+const JobPostController = require("../../Controllers/JobPostController");
+const DataProviderService = require("../../Services/DataProviderService.js");
 const axios = require("axios");
+
 require("dotenv").config();
 
-jest.mock("axios");
+const delete_list = ["texts"];
 
 const response_example = {
   jobs: [
@@ -26,45 +36,60 @@ const response_example = {
       ],
     },
   ],
+  location: "Italia",
+  language: "it_IT",
+  job_type: "Example",
+  data_provider: DATA_PROVIDER,
   index: 0,
   jobCount: 4,
   hasError: false,
   errors: [],
 };
 
-describe("SearchRequestSender tests", () => {
-  const sender = new SearchRequestSender();
+jest.mock("axios");
 
-  it("should send search request and default settings", async () => {
-    axios.request.mockResolvedValue({
-      data: response_example,
-    });
-    const location = "Italia";
-    const language = "it_IT";
-    const jobType = "Software Engineer";
-    const response = await sender.sendJobSearchRequest(jobType);
-
-    expect(response.jobType).toBe(jobType);
-    expect(response.location).toBe(location);
-    expect(response.language).toBe(language);
-    expect(response.jobCount).toBe(response_example.jobCount);
+describe("Collector Integration Test:", () => {
+  beforeAll(async () => {
+    await connect();
+    await DataProviderService.create("rapidapi");
   });
 
-  it("should throw an error with response.status=429", async () => {
-    const jobType = "Test";
+  afterAll(async () => {
+    await close();
+  });
 
-    axios.request.mockRejectedValue({
-      response: {
-        status: 429,
-      },
+  afterEach(async () => {
+    await clearDatabase(delete_list);
+  });
+
+  it("Collect job", async () => {
+    const jobType = "Software Engineer";
+    const language = "it_IT";
+    const response_example_1 = {
+      ...response_example,
+      language: language,
+      job_type: jobType,
+    };
+
+    const requestSender = new RapidAPIRequestSender();
+    const controller = new JobPostController(RapidAPIConverter, JobPostService);
+    const collector = new Collector(requestSender, controller);
+
+    axios.request.mockResolvedValue({
+      data: response_example_1,
     });
 
-    try {
-      const response = await sender.sendJobSearchRequest(jobType);
-    } catch (error) {
-      expect(error.status).toEqual(429);
-      expect(error.jobType).toEqual(jobType);
-      expect(error.index).toEqual(0);
-    }
+    jest
+      .spyOn(collector, "logFullResponse")
+      .mockImplementation(async () => Promise.resolve());
+    jest
+      .spyOn(collector, "logResults")
+      .mockImplementation(async () => Promise.resolve());
+
+    const job_type = "JobType";
+
+    const response = await collector.searchJobsByType(job_type);
+
+    expect((await JobPostService.getAll()).length).toBe(1);
   });
 });

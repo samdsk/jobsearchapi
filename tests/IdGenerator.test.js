@@ -1,4 +1,4 @@
-const generateID = require("../lib/generateID");
+const IdGenerator = require("../lib/IdGenerator");
 const crypto = require("crypto");
 const fs = require("fs/promises");
 
@@ -20,12 +20,12 @@ const job_3 = {
 
 describe("generate unique ID:", () => {
   it("should generate string from job containing title, company and location without spaces and all in lowercase", () => {
-    const res = generateID.jobToStringTitleCompanyLocation(job);
+    const res = IdGenerator.jobToStringTitleCompanyLocation(job);
     const expectedString = "titlecompanynamelocation";
     expect(expectedString).toEqual(res);
   });
   it("should generate an id in base64", () => {
-    const res = generateID.generateID(job);
+    const res = IdGenerator.generateJobPostID(job);
     const stringToHash = "titlecompanynamelocation";
     const expectedString = crypto
       .createHash("sha512")
@@ -37,14 +37,14 @@ describe("generate unique ID:", () => {
 
   it("should throw an error", () => {
     expect(() =>
-      generateID.jobToStringTitleCompanyLocation({
+      IdGenerator.jobToStringTitleCompanyLocation({
         title: "Title",
         company: "Company    Name",
       })
     ).toThrow("Invalid JobPost!");
 
     expect(() =>
-      generateID.jobToStringTitleCompanyLocation({
+      IdGenerator.jobToStringTitleCompanyLocation({
         title: "Title",
         company: "Company    Name",
         location: 1234,
@@ -53,8 +53,8 @@ describe("generate unique ID:", () => {
   });
 
   it("should remove special characters", () => {
-    const res = generateID.generateID(job_2);
-    const expected = generateID.generateID(job_3);
+    const res = IdGenerator.generateJobPostID(job_2);
+    const expected = IdGenerator.generateJobPostID(job_3);
 
     expect(expected).toEqual(res);
   });
@@ -70,7 +70,7 @@ describe("generate unique ID:", () => {
     const ids = new Set();
 
     for (const job of jobs) {
-      const temp = generateID.generateID(job);
+      const temp = IdGenerator.generateJobPostID(job);
       ids.add(temp);
     }
 

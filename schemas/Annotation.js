@@ -1,18 +1,18 @@
 const mongoose = require("mongoose");
-const JobPost = require("../Models/JobPost");
+const Text = require("../Models/Text");
 const Annotator = require("../Models/Annotator");
 const Label = require("../Models/Label");
 const Domain = require("../Models/Domain");
 
 const Annotation = new mongoose.Schema(
   {
-    source: {
+    text: {
       type: String,
       required: true,
-      ref: "JobPost",
+      ref: "Text",
     },
     annotator: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       required: true,
       ref: "Annotator",
     },
@@ -39,13 +39,13 @@ const Annotation = new mongoose.Schema(
 );
 
 Annotation.index(
-  { source: 1, annotator: 1, label: 1, domain: 1 },
+  { text: 1, annotator: 1, label: 1, domain: 1 },
   { unique: true }
 );
 
-Annotation.path("source").validate(async (value) => {
-  return await JobPost.JobPost.exists({ _id: value });
-}, "Invalid JobPost");
+Annotation.path("text").validate(async (value) => {
+  return await Text.Text.exists({ _id: value });
+}, "Invalid Text");
 
 Annotation.path("annotator").validate(async (value) => {
   return await Annotator.Annotator.exists({ _id: value });

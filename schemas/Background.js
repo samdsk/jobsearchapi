@@ -11,4 +11,6 @@ const Background = new mongoose.Schema(
   { timestamps: true }
 );
 
+Background.index({ background: 1 }, { unique: true });
+
 module.exports = Background;

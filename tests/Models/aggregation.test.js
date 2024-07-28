@@ -12,6 +12,7 @@ const { JobPost } = require("../../Models/JobPost");
 const { Label } = require("../../Models/Label");
 const { Role } = require("../../Models/Role");
 const OutputLLM = require("../../Models/OutputLLM");
+const { DataProvider } = require("../../Models/DataProvider");
 
 const init_setup = async () => {
   const role_1 = {
@@ -31,11 +32,13 @@ const init_setup = async () => {
   };
 
   const annotator_1 = {
-    email: "annotator1@asd.com",
+    _id: "annotator1",
+    isHuman: false,
   };
 
   const annotator_2 = {
-    email: "annotator2@asd.com",
+    _id: "annotator2",
+    isHuman: true,
   };
 
   const domain_1 = {
@@ -53,12 +56,12 @@ const init_setup = async () => {
   };
 
   const job_1 = {
-    _id: "test_1",
+    _id: "text_1",
     job_type: "JobType_1",
     title: "Title_1",
     company: "Company_1",
     location: "Location_1",
-    description: "Description_1",
+    text: "Description_1",
     links: [
       {
         source: "source 1",
@@ -69,15 +72,16 @@ const init_setup = async () => {
         url: "http://hhwexample.com",
       },
     ],
+    icu_locale_language_tag: "it-IT",
   };
 
   const job_2 = {
-    _id: "test_2",
+    _id: "text_2",
     job_type: "JobType_2",
     title: "Title_2",
     company: "Company_2",
     location: "Location_2",
-    description: "Description_2",
+    text: "Description_2",
     links: [
       {
         source: "source 1",
@@ -88,6 +92,14 @@ const init_setup = async () => {
         url: "http://hhwexample.com",
       },
     ],
+    icu_locale_language_tag: "en-GB",
+  };
+
+  const data_provider_1 = {
+    data_provider: "RapidAPI",
+  };
+  const data_provider_2 = {
+    data_provider: "BrandWatch",
   };
 
   var role = null;
@@ -96,6 +108,7 @@ const init_setup = async () => {
   var domain = null;
   var job = null;
   var label = null;
+  var data_provider = null;
 
   background = await Background.create(background_1);
   role = await Role.create(role_1);
@@ -107,10 +120,13 @@ const init_setup = async () => {
   domain = await Domain.create(domain_1);
   label = await Label.create(label_1);
 
+  data_provider = await DataProvider.create(data_provider_1);
+  job_1.data_provider = data_provider._id;
+
   job = await JobPost.create(job_1);
 
   const annotation_1 = {
-    source: job._id,
+    text: job._id,
     annotator: annotator._id,
     label: label._id,
     reason: "Reason_1",
@@ -129,10 +145,13 @@ const init_setup = async () => {
   annotator = await Annotator.create(annotator_2);
   domain = await Domain.create(domain_2);
   label = await Label.create(label_2);
+
+  data_provider = await DataProvider.create(data_provider_2);
+  job_2.data_provider = data_provider._id;
   job = await JobPost.create(job_2);
 
   const annotation_2 = {
-    source: job._id,
+    text: job._id,
     annotator: annotator._id,
     label: label._id,
     reason: "Reason_2",
@@ -172,7 +191,8 @@ describe("MongoDB aggregation pipeline:", () => {
       background: "Background_3",
     };
     const annotator_3 = {
-      email: "annotator3@asd.com",
+      _id: "annotator3",
+      isHuman: true,
     };
     const domain_3 = {
       domain: "Domain_3",
@@ -181,14 +201,17 @@ describe("MongoDB aggregation pipeline:", () => {
     const label_3 = {
       label: "Label_3",
     };
+    let data_provider = await DataProvider.findOne({
+      data_provider: "RapidAPI",
+    });
 
     const job_3 = {
-      _id: "test_3",
+      _id: "text_3",
       job_type: "JobType_3",
       title: "Title_3",
       company: "Company_3",
       location: "Location_3",
-      description: "Description_3",
+      text: "Description_3",
       links: [
         {
           source: "source 1",
@@ -199,6 +222,8 @@ describe("MongoDB aggregation pipeline:", () => {
           url: "http://hhwexample.com",
         },
       ],
+      icu_locale_language_tag: "it-IT",
+      data_provider: data_provider._id,
     };
 
     let background = await Background.create(background_3);
@@ -213,7 +238,7 @@ describe("MongoDB aggregation pipeline:", () => {
     let job = await JobPost.create(job_3);
 
     const annotation_3 = {
-      source: job._id,
+      text: job._id,
       annotator: annotator._id,
       label: label._id,
       reason: "Reason_3",
@@ -223,7 +248,7 @@ describe("MongoDB aggregation pipeline:", () => {
 
     await Annotation.create(annotation_3);
 
-    const res = await OutputLLM.find({ source: job._id });
+    const res = await OutputLLM.find({ text_id: job._id });
 
     expect(res[0].reason).toEqual(annotation_3.reason);
   });

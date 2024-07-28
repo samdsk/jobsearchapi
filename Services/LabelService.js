@@ -29,7 +29,7 @@ const getAll = async () => {
 
 const getLabel = async (id) => {
   const res = await Label.findById(id);
-  return res.label;
+  return res?.label || null;
 };
 
 module.exports = { create, deleteLabel, getAll, getLabel };

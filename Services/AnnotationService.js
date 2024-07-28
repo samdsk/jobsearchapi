@@ -7,8 +7,8 @@ const create = async (annotation) => {
   return await Annotation.create(annotation);
 };
 
-const updateSource = async (id, source) => {
-  return await Annotation.updateOne({ _id: id }, { source: source }, opts);
+const updateText = async (id, text) => {
+  return await Annotation.updateOne({ _id: id }, { text: text }, opts);
 };
 
 const updateAnnotator = async (id, annotator) => {
@@ -42,7 +42,7 @@ const addToken = async (id, token) => {
     opts
   );
 };
-const removeToken = async (id, token) => {
+const deleteToken = async (id, token) => {
   return await Annotation.updateOne(
     { _id: id },
     { $pull: { tokens: token } },
@@ -76,8 +76,8 @@ const getAll = async () => {
   return await Annotation.find();
 };
 
-const getAnnotationsBySource = async (source) => {
-  return await Annotation.find({ source: source });
+const getAnnotationsByText = async (text) => {
+  return await Annotation.find({ text: text });
 };
 const getAnnotationsByLabel = async (label) => {
   return await Annotation.find({ label: label });
@@ -89,49 +89,49 @@ const getAnnotationsByAnnotator = async (annotator) => {
   return await Annotation.find({ annotator: annotator });
 };
 
-const getSource = async (id) => {
+const getText = async (id) => {
   const res = await Annotation.findById(id);
-  return res.source;
+  return res?.text || null;
 };
 const getAnnotator = async (id) => {
   const res = await Annotation.findById(id);
-  return res.annotator;
+  return res?.annotator || null;
 };
 const getLabel = async (id) => {
   const res = await Annotation.findById(id);
-  return res.label;
+  return res?.label || null;
 };
 const getReason = async (id) => {
   const res = await Annotation.findById(id);
-  return res.reason;
+  return res?.reason || null;
 };
 const getDomain = async (id) => {
   const res = await Annotation.findById(id);
-  return res.domain;
+  return res?.domain || null;
 };
 const getTokens = async (id) => {
   const res = await Annotation.findById(id);
-  return res.tokens;
+  return res?.tokens || [];
 };
 
 module.exports = {
   create,
-  updateSource,
+  updateText,
   updateAnnotator,
   updateLabel,
   updateReason,
   updateDomain,
   updateTokens,
   addToken,
-  removeToken,
+  deleteToken,
   deleteAnnotations,
   deleteAnnotation,
   getAll,
   getAnnotationsByAnnotator,
   getAnnotationsByDomain,
   getAnnotationsByLabel,
-  getAnnotationsBySource,
-  getSource,
+  getAnnotationsByText,
+  getText,
   getTokens,
   getDomain,
   getReason,

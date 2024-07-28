@@ -1,10 +1,10 @@
 module.exports = [
   {
     $lookup: {
-      from: "jobposts",
-      localField: "source",
+      from: "texts",
+      localField: "text",
       foreignField: "_id",
-      as: "jobpost",
+      as: "text",
     },
   },
   {
@@ -24,7 +24,7 @@ module.exports = [
     },
   },
   {
-    $unwind: "$jobpost",
+    $unwind: "$text",
   },
   {
     $unwind: "$domain",
@@ -35,14 +35,33 @@ module.exports = [
   {
     $group: {
       _id: "$_id",
-      source: { $first: "$source" },
-      label: { $first: "$label.label" },
-      domain: { $first: "$domain.domain" },
-      description: { $first: "$jobpost.description" },
-      reason: { $first: "$reason" },
-      tokens: { $first: "$tokens" },
-      createdAt: { $first: "$createdAt" },
-      updatedAt: { $first: "$updatedAt" },
+      text_id: {
+        $first: "$text._id",
+      },
+      text: {
+        $first: "$text.text",
+      },
+      label: {
+        $first: "$label.label",
+      },
+      domain: {
+        $first: "$domain.domain",
+      },
+      reason: {
+        $first: "$reason",
+      },
+      tokens: {
+        $first: "$tokens",
+      },
+      icu_locale_language_tag: {
+        $first: "$text.icu_locale_language_tag",
+      },
+      createdAt: {
+        $first: "$createdAt",
+      },
+      updatedAt: {
+        $first: "$updatedAt",
+      },
     },
   },
 ];

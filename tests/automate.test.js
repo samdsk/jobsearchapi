@@ -2,6 +2,8 @@ const Automate = require("../lib/automate");
 const mongoose = require("mongoose");
 
 const axios = require("axios");
+const { DATA_PROVIDER } = require("../lib/RequestSenders/RapiAPIRequestSender");
+const DataProviderService = require("../Services/DataProviderService");
 
 jest.mock("axios");
 
@@ -59,7 +61,7 @@ describe("Automate collecting", () => {
 
   const options = {
     location: "Test-Location",
-    language: "Test-Lang",
+    language: "it-IT",
     datePosted: "Test-Date",
     employmentTypes: "Test-Types",
   };
@@ -69,12 +71,14 @@ describe("Automate collecting", () => {
       return Promise.resolve({ data: response_example });
     });
 
+    await DataProviderService.create(DATA_PROVIDER);
+
     const automate = new Automate(keys, config);
     const response = await automate.collect(jobTypesList, options);
 
     expect(response.length).toBe(2);
-    expect(response[0].jobType).toBe("type1");
-    expect(response[1].jobType).toBe("type2");
+    expect(response[0].job_type).toBe("type1");
+    expect(response[1].job_type).toBe("type2");
   });
 
   it("response should contain only element and jobtype should be type1", async () => {
@@ -88,10 +92,12 @@ describe("Automate collecting", () => {
       });
     });
 
+    await DataProviderService.create(DATA_PROVIDER);
+
     const automate = new Automate(keys, config);
     const response = await automate.collect(jobTypesList, options);
 
     expect(response.length).toBe(1);
-    expect(response[0].jobType).toBe("type1");
+    expect(response[0].job_type).toBe("type1");
   });
 });

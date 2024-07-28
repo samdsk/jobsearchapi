@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
+const Text = require("./Text");
+const JobPostSchema = require("../Schemas/JobPost");
 
-const JobPost = require("../Schemas/JobPost");
+const JobPost = Text.Text.discriminator("JobPost", JobPostSchema);
 
-module.exports.JobPost = mongoose.model("JobPost", JobPost);
+module.exports.JobPost = JobPost;
