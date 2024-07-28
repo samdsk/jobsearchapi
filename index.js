@@ -2,10 +2,10 @@ require("dotenv").config();
 
 const { db_connect, db_close } = require("./db/db");
 const Utils = require("./lib/utils");
-const Automate = require("./lib/automate");
+const Automate = require("./lib/Automaters/RapidAPIAutomater");
 const { logResultsToJSONFile } = require("./lib/resultsLogger");
 const Logger = require("./lib/logger");
-const Collector = require("./lib/collector");
+const Collector = require("./lib/Collectors/RapidAPICollector");
 const SearchRequestSender = require("./lib/RequestSenders/RapiAPIRequestSender");
 const JobPostController = require("./Controllers/JobPostController");
 const RapidAPIConverter = require("./lib/Converters/RapidAPIConverter");

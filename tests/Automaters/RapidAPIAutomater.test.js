@@ -1,9 +1,11 @@
-const Automate = require("../lib/automate");
+const Automate = require("../../lib/Automaters/RapidAPIAutomater");
 const mongoose = require("mongoose");
 
 const axios = require("axios");
-const { DATA_PROVIDER } = require("../lib/RequestSenders/RapiAPIRequestSender");
-const DataProviderService = require("../Services/DataProviderService");
+const {
+  DATA_PROVIDER,
+} = require("../../lib/RequestSenders/RapiAPIRequestSender");
+const DataProviderService = require("../../Services/DataProviderService");
 
 jest.mock("axios");
 
