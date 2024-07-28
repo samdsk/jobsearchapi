@@ -1,5 +1,6 @@
 const { Collection } = require("../Models/Collection");
 const TransactionWrapper = require("../db/TransactionWrapper");
+const TextService = require("./TextService");
 
 const opts = { runValidators: true };
 
@@ -24,10 +25,35 @@ const getTexts = async (id) => {
   return res?.texts || [];
 };
 
+const deleteCollection = async (id, session) => {
+  if (session) {
+    return await deleteOperation(id, session);
+  } else {
+    await TransactionWrapper.transactionWrapper(id, deleteOperation);
+  }
+};
+
+const deleteOperation = async (id, session) => {
+  const collection = await Collection.findById(id);
+  const res = null;
+  if (collection.texts) {
+    const texts = collection.texts;
+
+    res.texts = [];
+    for (const text of texts) {
+      const text_res = await TextService.deleteOne(text, session);
+      res.texts.push(text_res);
+    }
+  }
+  res.collection = await Collection.deleteOne({ _id: id });
+  return res;
+};
+
 module.exports = {
   create,
   addText,
   removeText,
   getName,
   getTexts,
+  deleteCollection,
 };
