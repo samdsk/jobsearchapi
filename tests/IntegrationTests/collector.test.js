@@ -1,4 +1,4 @@
-const Collector = require("../../lib/collector");
+const Collector = require("../../lib/Collectors/RapidAPICollector.js");
 const { connect, close, clearDatabase } = require("../db_handler");
 const {
   RapidAPIRequestSender,

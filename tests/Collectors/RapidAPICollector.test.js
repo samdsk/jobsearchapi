@@ -1,11 +1,11 @@
-const Collector = require("../lib/collector");
+const Collector = require("../../lib/Collectors/RapidAPICollector");
 const {
   RapidAPIRequestSender,
-} = require("../lib/RequestSenders/RapiAPIRequestSender");
-const JobPostController = require("../Controllers/JobPostController");
-const JobPostService = require("../Services/JobPostService");
-const RapidAPIConverter = require("../lib/Converters/RapidAPIConverter");
-const ResultLogger = require("../lib/resultsLogger");
+} = require("../../lib/RequestSenders/RapiAPIRequestSender");
+const JobPostController = require("../../Controllers/JobPostController");
+const JobPostService = require("../../Services/JobPostService");
+const RapidAPIConverter = require("../../lib/Converters/RapidAPIConverter");
+const ResultLogger = require("../../lib/resultsLogger");
 
 require("dotenv").config();
 

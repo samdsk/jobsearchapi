@@ -1,4 +1,3 @@
-const { language } = require("language-tags");
 const {
   RapidAPIRequestSender,
   DATA_PROVIDER,
