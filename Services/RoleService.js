@@ -5,6 +5,11 @@ const TransactionWrapper = require("../db/TransactionWrapper");
 const opts = { runValidators: true };
 
 const create = async (role) => {
+  const found = await Role.Role.exists({
+    role: role.role,
+  });
+
+  if (found) return null;
   return await Role.Role.create(role);
 };
 
@@ -25,7 +30,7 @@ const deleteRole = async (id, session) => {
 };
 
 const deleteOperation = async (id, session) => {
-  const role = await Role.Role.deleteOne({ _id: id }, { session: session });
+  const role = await Role.Role.deleteOne({ _id: id }, { session });
   const annotators = await AnnotatorService.deleteAnnotators(
     { role: id },
     session
@@ -48,6 +53,14 @@ const getReliabilityScore = async (id) => {
   return res?.reliability_score || null;
 };
 
+const updateRole = async (id, role) => {
+  const found = await Role.Role.exists({ _id: id });
+
+  if (!found) return null;
+
+  return await Role.Role.updateOne({ _id: id }, role, opts);
+};
+
 module.exports = {
   create,
   updateReliabilityScore,
@@ -56,4 +69,5 @@ module.exports = {
   getRolesByReliabilityScore,
   getRole,
   getReliabilityScore,
+  updateRole,
 };

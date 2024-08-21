@@ -1,9 +1,18 @@
 const AnnotatorService = require("./AnnotatorService");
 const Background = require("../Models/Background");
 const TransactionWrapper = require("../db/TransactionWrapper");
+const ValidationError = require("../Errors/ValidationError");
+
+const opts = { runValidators: true };
 
 const create = async (background) => {
-  return await Background.Background.create(background);
+  if (typeof background !== "string")
+    throw new ValidationError("must be a string", "Background", "background");
+
+  const found = await Background.Background.exists({ background: background });
+  if (found) return null;
+
+  return await Background.Background.create({ background: background });
 };
 
 const deleteBackground = async (id, session) => {
@@ -17,7 +26,7 @@ const deleteBackground = async (id, session) => {
 const deleteOperation = async (id, session) => {
   const background = await Background.Background.deleteOne(
     { _id: id },
-    { session: session }
+    { session }
   );
   const annotators = await AnnotatorService.deleteAnnotators(
     { background: id },
@@ -35,4 +44,20 @@ const getBackground = async (id) => {
   return res?.background || null;
 };
 
-module.exports = { create, deleteBackground, getAll, getBackground };
+const updateBackground = async (id, background) => {
+  const found = await Background.Background.exists({ _id: id });
+  if (!found) return null;
+
+  return await Background.Background.updateOne(
+    { _id: id },
+    { background: background, opts }
+  );
+};
+
+module.exports = {
+  create,
+  deleteBackground,
+  getAll,
+  getBackground,
+  updateBackground,
+};

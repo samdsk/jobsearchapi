@@ -114,10 +114,10 @@ module.exports = Object.assign(TextService, {
   getByCompany,
   getByLocation,
   getByEmploymentType,
+  getByDataProvider,
+  getByLanguageTag,
   getJobType,
   getCompany,
   getLocation,
   getEmploymentType,
-  getByDataProvider,
-  getByLanguageTag,
 });

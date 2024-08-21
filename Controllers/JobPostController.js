@@ -1,4 +1,6 @@
-const logger = require("../lib/logger");
+const CollectorLogger = require("winston").loggers.get("Collector");
+const JobPost = require("../Models/JobPost");
+const { searchMultiple, searchSingle } = require("./CommonControllerMethods");
 
 class JobPostController {
   constructor(Converter, JobPostService) {
@@ -12,7 +14,7 @@ class JobPostController {
       return await this.JobPostService.create(jobPost);
     } catch (err) {
       console.error(err);
-      logger.debug(JSON.stringify(err.message));
+      CollectorLogger.debug(JSON.stringify(err.message));
       return null;
     }
   }
@@ -29,4 +31,26 @@ class JobPostController {
   }
 }
 
-module.exports = JobPostController;
+const searchJobPosts = async (req, res, next) => {
+  try {
+    const result = await searchMultiple(req, JobPost.JobPost);
+    return res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getJobPost = async (req, res, next) => {
+  try {
+    const result = await searchSingle(req, JobPost.JobPost);
+    return res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  JobPostController,
+  searchJobPosts,
+  getJobPost,
+};

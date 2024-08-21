@@ -60,7 +60,7 @@ const deleteAnnotations = async (filter, session) => {
 };
 
 const deleteAnnotationsWithSession = async (filter, session) => {
-  return await Annotation.deleteMany(filter, { session: session });
+  return await Annotation.deleteMany(filter, { session });
 };
 
 const deleteAnnotation = async (id, session) => {
@@ -69,7 +69,7 @@ const deleteAnnotation = async (id, session) => {
 };
 
 const deleteAnnotationWithSession = async (id, session) => {
-  return await Annotation.deleteOne({ _id: id }, { session: session });
+  return await Annotation.deleteOne({ _id: id }, { session });
 };
 
 const getAll = async () => {

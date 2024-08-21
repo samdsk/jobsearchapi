@@ -80,7 +80,7 @@ const deleteMany = async (filter, session) => {
 const deleteTextWithSession = async (id, session) => {
   const res = {};
 
-  res.text = await Text.deleteOne({ _id: id }, { session: session });
+  res.text = await Text.deleteOne({ _id: id }, { session });
   res.annotations = await AnnotationService.deleteAnnotations(
     { text: id },
     session
@@ -90,7 +90,7 @@ const deleteTextWithSession = async (id, session) => {
 };
 
 const deleteTextsWithSession = async (filter, session) => {
-  const texts = await Text.find(filter, { session: session });
+  const texts = await Text.find(filter, null, { session });
   const annotations = [];
 
   for (const text of texts) {
@@ -107,7 +107,7 @@ const deleteTextsWithSession = async (filter, session) => {
   const deletedTexts = { annotations: annotations };
 
   deletedTexts.texts = await Text.deleteMany(filter, {
-    session: session,
+    session,
   });
 
   return deletedTexts;

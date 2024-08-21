@@ -1,6 +1,9 @@
 const { DataProvider } = require("../Models/DataProvider");
 const TextService = require("./TextService");
 const TransactionWrapper = require("../db/TransactionWrapper");
+const ValidationError = require("../Errors/ValidationError");
+
+const opts = { runValidators: true };
 
 const getIDByName = async (data_provider) => {
   const res = await DataProvider.findOne({
@@ -12,16 +15,19 @@ const getIDByName = async (data_provider) => {
 
 const create = async (data_provider) => {
   if (typeof data_provider !== "string")
-    throw new Error("data_provider must be a string!");
+    throw new ValidationError(
+      "must be a string",
+      "DataProvider",
+      "data_provider"
+    );
   const name = data_provider.toLowerCase();
 
-  const found = await getIDByName(name);
+  const found = await DataProvider.exists({ data_provider: name });
   if (found) return null;
 
-  const obj = {
+  return await DataProvider.create({
     data_provider: name,
-  };
-  return await DataProvider.create(obj);
+  });
 };
 
 const getAll = async () => {
@@ -37,15 +43,22 @@ const deleteDataProvider = async (id, session) => {
 };
 
 const deleteOperation = async (id, session) => {
-  const domain = await DataProvider.deleteOne(
-    { _id: id },
-    { session: session }
-  );
-  const annotation = await TextService.deleteMany(
-    { data_provider: id },
+  const data_provider = await DataProvider.deleteOne({ _id: id }).session(
     session
   );
-  return { domain: domain, annotation };
+  const texts = await TextService.deleteMany({ data_provider: id }, session);
+  return { data_provider: data_provider, texts: texts };
+};
+
+const updateDataProvider = async (id, data_provider) => {
+  const found = await DataProvider.exists({ _id: id });
+  if (!found) return null;
+
+  return await DataProvider.updateOne(
+    { _id: id },
+    { data_provider: data_provider },
+    opts
+  );
 };
 
 module.exports = {
@@ -53,4 +66,5 @@ module.exports = {
   create,
   getAll,
   deleteDataProvider,
+  updateDataProvider,
 };
