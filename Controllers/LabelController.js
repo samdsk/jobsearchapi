@@ -29,7 +29,7 @@ const createLabel = async (req, res, next) => {
   const label = req.body.label || "";
 
   try {
-    if (!label) throw new RequestError("label is required", 400);
+    if (!label) return next(new RequestError("label is required", 400));
     const result = await createSimpleDocument(label, LabelService.create);
     return res.json(result);
   } catch (error) {
@@ -42,11 +42,11 @@ const updateLabel = async (req, res, next) => {
   const id = req.body.id || "";
 
   try {
-    if (!label || !id) throw new RequestError("id and label are required", 400);
+    if (!label || !id) return next(new RequestError("id and label are required", 400));
 
     const result = await LabelService.updateLabel(id, label);
 
-    if (result === null) throw new RequestError(`Update operation failed`, 400);
+    if (result === null) return next(new RequestError(`Update operation failed`, 400));
 
     return res.json({ success: true });
   } catch (error) {
@@ -57,11 +57,11 @@ const updateLabel = async (req, res, next) => {
 const deleteLabel = async (req, res, next) => {
   const id = req.body.id || "";
   try {
-    if (!id) throw new RequestError("id is required", 400);
+    if (!id) return next(new RequestError("id is required", 400));
 
     const result = await LabelService.deleteLabel(id);
 
-    if (result === null) throw new RequestError(`Delete operation failed`, 400);
+    if (result === null) return next(new RequestError(`Delete operation failed`, 400));
 
     return res.json({ success: true, result: result });
   } catch (error) {

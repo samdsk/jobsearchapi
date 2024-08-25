@@ -102,13 +102,13 @@ const init_setup = async () => {
     data_provider: "BrandWatch",
   };
 
-  var role = null;
-  var background = null;
-  var annotator = null;
-  var domain = null;
-  var job = null;
-  var label = null;
-  var data_provider = null;
+  let role;
+  let background;
+  let annotator;
+  let domain;
+  let job;
+  let label;
+  let data_provider;
 
   background = await Background.create(background_1);
   role = await Role.create(role_1);

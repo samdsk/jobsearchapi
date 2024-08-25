@@ -36,7 +36,7 @@ const deleteOperation = async (id, session) => {
 };
 
 const getAll = async () => {
-  return await Background.Background.find();
+  return Background.Background.find();
 };
 
 const getBackground = async (id) => {
@@ -48,9 +48,9 @@ const updateBackground = async (id, background) => {
   const found = await Background.Background.exists({ _id: id });
   if (!found) return null;
 
-  return await Background.Background.updateOne(
-    { _id: id },
-    { background: background, opts }
+  return Background.Background.updateOne(
+      {_id: id},
+      {background: background, opts}
   );
 };
 

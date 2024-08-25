@@ -44,19 +44,19 @@ Annotation.index(
 );
 
 Annotation.path("text").validate(async (value) => {
-  return await Text.Text.exists({ _id: value });
+  return Text.Text.exists({_id: value});
 }, "Invalid Text");
 
 Annotation.path("annotator").validate(async (value) => {
-  return await Annotator.Annotator.exists({ _id: value });
+  return Annotator.Annotator.exists({_id: value});
 }, "Invalid Annotator");
 
 Annotation.path("label").validate(async (value) => {
-  return await Label.Label.exists({ _id: value });
+  return Label.Label.exists({_id: value});
 }, "Invalid Label");
 
 Annotation.path("domain").validate(async (value) => {
-  return await Domain.Domain.exists({ _id: value });
+  return Domain.Domain.exists({_id: value});
 }, "Invalid Domain");
 
 module.exports = Annotation;

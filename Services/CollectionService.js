@@ -5,7 +5,7 @@ const TextService = require("./TextService");
 const opts = { runValidators: true };
 
 const create = async (collection) => {
-  return await Collection.create(collection);
+  return Collection.create(collection);
 };
 
 const addText = async (id, text) => {

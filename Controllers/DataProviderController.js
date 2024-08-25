@@ -30,7 +30,7 @@ const createDataProvider = async (req, res, next) => {
 
   try {
     if (!data_provider)
-      throw new RequestError("data_provider is required", 400);
+      return next(new RequestError("data_provider is required", 400));
     const result = await createSimpleDocument(
       data_provider,
       DataProviderService.create
@@ -47,14 +47,14 @@ const updateDataProvider = async (req, res, next) => {
 
   try {
     if (!data_provider || !id)
-      throw new RequestError("id and data_provider are required", 400);
+      return next(new RequestError("id and data_provider are required", 400));
 
     const result = await DataProviderService.updateDataProvider(
       id,
       data_provider
     );
 
-    if (result === null) throw new RequestError(`Update operation failed`, 400);
+    if (result === null) return next(new RequestError(`Update operation failed`, 400));
 
     return res.json({ success: true });
   } catch (error) {
@@ -65,11 +65,11 @@ const updateDataProvider = async (req, res, next) => {
 const deleteDataProvider = async (req, res, next) => {
   const id = req.body.id || "";
   try {
-    if (!id) throw new RequestError("id is required", 400);
+    if (!id) return next(new RequestError("id is required", 400));
 
     const result = await DataProviderService.deleteDataProvider(id);
 
-    if (result === null) throw new RequestError(`Delete operation failed`, 400);
+    if (result === null) return next(new RequestError(`Delete operation failed`, 400));
 
     return res.json({ success: true, result: result });
   } catch (error) {

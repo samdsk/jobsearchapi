@@ -4,18 +4,18 @@ const TransactionWrapper = require("../db/TransactionWrapper");
 const opts = { runValidators: true };
 
 const create = async (annotation) => {
-  return await Annotation.create(annotation);
+  return Annotation.create(annotation);
 };
 
 const updateText = async (id, text) => {
-  return await Annotation.updateOne({ _id: id }, { text: text }, opts);
+  return Annotation.updateOne({_id: id}, {text: text}, opts);
 };
 
 const updateAnnotator = async (id, annotator) => {
-  return await Annotation.updateOne(
-    { _id: id },
-    { annotator: annotator },
-    opts
+  return Annotation.updateOne(
+      {_id: id},
+      {annotator: annotator},
+      opts
   );
 };
 
@@ -24,29 +24,29 @@ const updateLabel = async (id, label) => {
 };
 
 const updateReason = async (id, reason) => {
-  return await Annotation.updateOne({ _id: id }, { reason: reason }, opts);
+  return Annotation.updateOne({_id: id}, {reason: reason}, opts);
 };
 
 const updateDomain = async (id, domain) => {
-  return await Annotation.updateOne({ _id: id }, { domain: domain }, opts);
+  return Annotation.updateOne({_id: id}, {domain: domain}, opts);
 };
 
 const updateTokens = async (id, tokens) => {
-  return await Annotation.updateOne({ _id: id }, { tokens: tokens }, opts);
+  return Annotation.updateOne({_id: id}, {tokens: tokens}, opts);
 };
 
 const addToken = async (id, token) => {
-  return await Annotation.updateOne(
-    { _id: id },
-    { $push: { tokens: token } },
-    opts
+  return Annotation.updateOne(
+      {_id: id},
+      {$push: {tokens: token}},
+      opts
   );
 };
 const deleteToken = async (id, token) => {
-  return await Annotation.updateOne(
-    { _id: id },
-    { $pull: { tokens: token } },
-    opts
+  return Annotation.updateOne(
+      {_id: id},
+      {$pull: {tokens: token}},
+      opts
   );
 };
 
@@ -60,33 +60,33 @@ const deleteAnnotations = async (filter, session) => {
 };
 
 const deleteAnnotationsWithSession = async (filter, session) => {
-  return await Annotation.deleteMany(filter, { session });
+  return Annotation.deleteMany(filter, {session});
 };
 
 const deleteAnnotation = async (id, session) => {
   if (session) return await deleteAnnotationWithSession(id, session);
-  else TransactionWrapper.transactionWrapper(id, deleteAnnotationWithSession);
+  else await TransactionWrapper.transactionWrapper(id, deleteAnnotationWithSession);
 };
 
 const deleteAnnotationWithSession = async (id, session) => {
-  return await Annotation.deleteOne({ _id: id }, { session });
+  return Annotation.deleteOne({_id: id}, {session});
 };
 
 const getAll = async () => {
-  return await Annotation.find();
+  return Annotation.find();
 };
 
 const getAnnotationsByText = async (text) => {
-  return await Annotation.find({ text: text });
+  return Annotation.find({text: text});
 };
 const getAnnotationsByLabel = async (label) => {
-  return await Annotation.find({ label: label });
+  return Annotation.find({label: label});
 };
 const getAnnotationsByDomain = async (domain) => {
-  return await Annotation.find({ domain: domain });
+  return Annotation.find({domain: domain});
 };
 const getAnnotationsByAnnotator = async (annotator) => {
-  return await Annotation.find({ annotator: annotator });
+  return Annotation.find({annotator: annotator});
 };
 
 const getText = async (id) => {

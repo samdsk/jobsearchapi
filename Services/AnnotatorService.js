@@ -11,18 +11,18 @@ const create = async (annotator) => {
   });
 
   if (found) return null;
-  return await Annotator.create(annotator);
+  return Annotator.create(annotator);
 };
 
 const updateRole = async (id, role) => {
-  return await Annotator.updateOne({ _id: id }, { role: role }, opts);
+  return Annotator.updateOne({_id: id}, {role: role}, opts);
 };
 
 const updateBackground = async (id, background) => {
-  return await Annotator.updateOne(
-    { _id: id },
-    { background: background },
-    opts
+  return Annotator.updateOne(
+      {_id: id},
+      {background: background},
+      opts
   );
 };
 
@@ -81,13 +81,13 @@ const deleteAnnotatorWithSession = async (id, session) => {
 };
 
 const getAll = async () => {
-  return await Annotator.find();
+  return Annotator.find();
 };
 const getAnnotatorsByRole = async (role) => {
-  return await Annotator.find({ role: role });
+  return Annotator.find({role: role});
 };
 const getAnnotatorsByBackground = async (background) => {
-  return await Annotator.find({ background: background });
+  return Annotator.find({background: background});
 };
 
 const getRole = async (id) => {
@@ -106,10 +106,10 @@ const isHuman = async (id) => {
 };
 
 const getHumanAnnotators = async () => {
-  return await Annotator.find({ isHuman: true });
+  return Annotator.find({isHuman: true});
 };
 const getNotHumanAnnotators = async () => {
-  return await Annotator.find({ isHuman: false });
+  return Annotator.find({isHuman: false});
 };
 
 const setHuman = async (id, human) => {
@@ -121,7 +121,7 @@ const updateAnnotator = async (id, annotator) => {
 
   if (!found) return null;
 
-  return await Annotator.updateOne({ _id: id }, annotator, opts);
+  return Annotator.updateOne({_id: id}, annotator, opts);
 };
 
 module.exports = {

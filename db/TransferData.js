@@ -35,8 +35,8 @@ const transferJobPosts = async (local, remote) => {
     `Total: ${total}, inserted: ${count}, not inserted: ${total - count}`
   );
 
-  conn_local.close();
-  conn_remote.close();
+  await conn_local.close();
+  await conn_remote.close();
 
   return { total, count };
 };

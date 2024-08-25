@@ -5,11 +5,11 @@ const TransactionWrapper = require("../db/TransactionWrapper");
 const opts = { runValidators: true };
 
 const addLink = async (id, link) => {
-  return await Text.updateOne({ _id: id }, { $push: { links: link } }, opts);
+  return Text.updateOne({_id: id}, {$push: {links: link}}, opts);
 };
 
 const updateLinks = async (id, links) => {
-  return await Text.updateOne({ _id: id }, { links: links }, opts);
+  return Text.updateOne({_id: id}, {links: links}, opts);
 };
 
 const getLinks = async (id) => {
@@ -26,18 +26,18 @@ const getLinkBySource = async (id, source) => {
 };
 
 const removeLinkBySource = async (id, link_source) => {
-  return await Text.updateOne(
-    { _id: id },
-    { $pull: { links: { source: link_source } } },
-    opts
+  return Text.updateOne(
+      {_id: id},
+      {$pull: {links: {source: link_source}}},
+      opts
   );
 };
 
 const removeLinkByURL = async (id, link_url) => {
-  return await Text.updateOne(
-    { _id: id },
-    { $pull: { links: { url: link_url } } },
-    opts
+  return Text.updateOne(
+      {_id: id},
+      {$pull: {links: {url: link_url}}},
+      opts
   );
 };
 
@@ -47,7 +47,7 @@ const getTitle = async (id) => {
 };
 
 const updateTitle = async (id, title) => {
-  return await Text.updateOne({ _id: id }, { title: title }, opts);
+  return Text.updateOne({_id: id}, {title: title}, opts);
 };
 
 const getTextField = async (id) => {
@@ -56,7 +56,7 @@ const getTextField = async (id) => {
 };
 
 const updateTextField = async (id, text) => {
-  return await Text.updateOne({ _id: id }, { text: text }, opts);
+  return Text.updateOne({_id: id}, {text: text}, opts);
 };
 
 const deleteOne = async (id, session) => {
@@ -119,16 +119,16 @@ const getDataProvider = async (id) => {
 };
 
 const updateDataProvider = async (id, data_provider) => {
-  return await Text.updateOne(
-    { _id: id },
-    { data_provider: data_provider },
-    opts
+  return Text.updateOne(
+      {_id: id},
+      {data_provider: data_provider},
+      opts
   );
 };
 
 const getByDataProvider = async (data_provider, type) => {
-  if (type) return await Text.find({ data_provider: data_provider, __t: type });
-  return await Text.find({ data_provider: data_provider });
+  if (type) return Text.find({data_provider: data_provider, __t: type});
+  return Text.find({data_provider: data_provider});
 };
 
 const getAuthor = async (id) => {
@@ -137,11 +137,11 @@ const getAuthor = async (id) => {
 };
 
 const getByAuthor = async (author) => {
-  return await Text.find({ author: author });
+  return Text.find({author: author});
 };
 
 const updateAuthor = async (id, author) => {
-  return await Text.updateOne({ _id: id }, { author: author }, opts);
+  return Text.updateOne({_id: id}, {author: author}, opts);
 };
 
 const getLanguageTag = async (id) => {
@@ -151,21 +151,21 @@ const getLanguageTag = async (id) => {
 
 const getByLanguageTag = async (icu_locale_language_tag, type) => {
   if (type)
-    return await Text.find({
-      icu_locale_language_tag: icu_locale_language_tag,
-      __t: type,
+    return Text.find({
+        icu_locale_language_tag: icu_locale_language_tag,
+        __t: type,
     });
 
-  return await Text.find({
-    icu_locale_language_tag: icu_locale_language_tag,
+  return Text.find({
+      icu_locale_language_tag: icu_locale_language_tag,
   });
 };
 
 const updateLanguageTag = async (id, icu_locale_language_tag) => {
-  return await Text.updateOne(
-    { _id: id },
-    { icu_locale_language_tag: icu_locale_language_tag },
-    opts
+  return Text.updateOne(
+      {_id: id},
+      {icu_locale_language_tag: icu_locale_language_tag},
+      opts
   );
 };
 

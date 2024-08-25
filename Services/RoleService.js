@@ -10,14 +10,14 @@ const create = async (role) => {
   });
 
   if (found) return null;
-  return await Role.Role.create(role);
+  return Role.Role.create(role);
 };
 
 const updateReliabilityScore = async (id, score) => {
-  return await Role.Role.updateOne(
-    { _id: id },
-    { reliability_score: score },
-    opts
+  return Role.Role.updateOne(
+      {_id: id},
+      {reliability_score: score},
+      opts
   );
 };
 
@@ -39,10 +39,10 @@ const deleteOperation = async (id, session) => {
 };
 
 const getAll = async () => {
-  return await Role.Role.find();
+  return Role.Role.find();
 };
 const getRolesByReliabilityScore = async (score) => {
-  return await Role.Role.find({ reliability_score: score });
+  return Role.Role.find({reliability_score: score});
 };
 const getRole = async (id) => {
   const res = await Role.Role.findById(id);
@@ -58,7 +58,7 @@ const updateRole = async (id, role) => {
 
   if (!found) return null;
 
-  return await Role.Role.updateOne({ _id: id }, role, opts);
+  return Role.Role.updateOne({_id: id}, role, opts);
 };
 
 module.exports = {

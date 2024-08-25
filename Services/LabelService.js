@@ -33,7 +33,7 @@ const deleteOperation = async (id, session) => {
 };
 
 const getAll = async () => {
-  return await Label.find();
+  return Label.find();
 };
 
 const getLabel = async (id) => {
@@ -45,7 +45,7 @@ const updateLabel = async (id, label) => {
   const found = await Label.exists({ _id: id });
   if (!found) return null;
 
-  return await Label.updateOne({ _id: id }, { label: label }, opts);
+  return Label.updateOne({_id: id}, {label: label}, opts);
 };
 
 module.exports = { create, deleteLabel, getAll, getLabel, updateLabel };

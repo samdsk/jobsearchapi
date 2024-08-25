@@ -29,7 +29,7 @@ const createBackground = async (req, res, next) => {
   const background = req.body.background || "";
 
   try {
-    if (!background) throw new RequestError("background is required", 400);
+    if (!background) return next(new RequestError("background is required", 400));
     const result = await createSimpleDocument(
       background,
       BackgroundService.create
@@ -46,11 +46,11 @@ const updateBackground = async (req, res, next) => {
 
   try {
     if (!background || !id)
-      throw new RequestError("id and background are required", 400);
+      return next(new RequestError("id and background are required", 400));
 
     const result = await BackgroundService.updateBackground(id, background);
 
-    if (result === null) throw new RequestError(`Update operation failed`, 400);
+    if (result === null) return next(new RequestError(`Update operation failed`, 400));
 
     return res.json({ success: true });
   } catch (error) {
@@ -61,11 +61,11 @@ const updateBackground = async (req, res, next) => {
 const deleteBackground = async (req, res, next) => {
   const id = req.body.id || "";
   try {
-    if (!id) throw new RequestError("id is required", 400);
+    if (!id) return next(new RequestError("id is required", 400));
 
     const result = await BackgroundService.deleteBackground(id);
 
-    if (result === null) throw new RequestError(`Delete operation failed`, 400);
+    if (result === null) return next(new RequestError(`Delete operation failed`, 400));
 
     return res.json({ success: true, result: result });
   } catch (error) {

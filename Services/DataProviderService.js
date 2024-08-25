@@ -31,7 +31,7 @@ const create = async (data_provider) => {
 };
 
 const getAll = async () => {
-  return await DataProvider.find({});
+  return DataProvider.find({});
 };
 
 const deleteDataProvider = async (id, session) => {
@@ -54,10 +54,10 @@ const updateDataProvider = async (id, data_provider) => {
   const found = await DataProvider.exists({ _id: id });
   if (!found) return null;
 
-  return await DataProvider.updateOne(
-    { _id: id },
-    { data_provider: data_provider },
-    opts
+  return DataProvider.updateOne(
+      {_id: id},
+      {data_provider: data_provider},
+      opts
   );
 };
 

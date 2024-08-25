@@ -12,7 +12,7 @@ const transactionWrapper = async (filter, fn) => {
     await session.abortTransaction();
     throw error;
   } finally {
-    session.endSession();
+    await session.endSession();
   }
   return response;
 };

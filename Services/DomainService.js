@@ -33,7 +33,7 @@ const deleteOperation = async (id, session) => {
 };
 
 const getAll = async () => {
-  return await Domain.find();
+  return Domain.find();
 };
 
 const getDomain = async (id) => {
@@ -45,7 +45,7 @@ const updateDomain = async (id, domain) => {
   const found = await Domain.exists({ _id: id });
   if (!found) return null;
 
-  return await Domain.updateOne({ _id: id }, { domain: domain }, opts);
+  return Domain.updateOne({_id: id}, {domain: domain}, opts);
 };
 
 module.exports = { create, deleteDomain, getAll, getDomain, updateDomain };
