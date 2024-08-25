@@ -9,6 +9,7 @@ const BackgroundRouter = require("./BackgroundRouter");
 const RoleRouter = require("./RoleRouter");
 const AnnotatorRouter = require("./AnnotatorRouter");
 const AnnotationRouter = require("./AnnotationRouter");
+const CollectionRouter = require("./CollectionRouter");
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.use("/Background", BackgroundRouter);
 router.use("/Role", RoleRouter);
 router.use("/Annotator", AnnotatorRouter);
 router.use("/Annotation", AnnotationRouter);
+router.use("/Collection", CollectionRouter);
 
 module.exports = router;
