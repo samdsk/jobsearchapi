@@ -39,17 +39,7 @@ const deleteCollection = async (id, session) => {
 };
 
 const deleteOperation = async (id, session) => {
-    // const collection = await Collection.findById(id);
-    const res = {};
-    // if (collection.texts) {
-    //     res.texts = [];
-    //     for (const text of collection.texts) {
-    //         const text_res = await TextService.deleteOne(text, session);
-    //         res.texts.push(text_res);
-    //     }
-    // }
-    res.collection = await Collection.deleteOne({_id: id});
-    return res;
+    return Collection.deleteOne({_id: id}, {session});
 };
 
 const updateCollection = async (id, collection) => {
