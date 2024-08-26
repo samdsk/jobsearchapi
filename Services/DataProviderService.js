@@ -2,12 +2,12 @@ const {DataProvider} = require("../Models/DataProvider");
 const TextService = require("./TextService");
 const TransactionWrapper = require("../db/TransactionWrapper");
 const ValidationError = require("../Errors/ValidationError");
-
+const {removeExcessWhitespace} = require("../lib/dataCleaning");
 const opts = {runValidators: true};
 
 const getIDByName = async (data_provider) => {
     const res = await DataProvider.findOne({
-        data_provider: data_provider.toLowerCase(),
+        data_provider: removeExcessWhitespace(data_provider.toLowerCase(), " "),
     }).select("_id");
 
     return res?._id || null;
@@ -43,11 +43,9 @@ const deleteDataProvider = async (id, session) => {
 };
 
 const deleteOperation = async (id, session) => {
-    const data_provider = await DataProvider.deleteOne({_id: id}).session(
-        session
-    );
-    // const texts = await TextService.deleteMany({ data_provider: id }, session);
-    return {data_provider: data_provider};
+    const data_provider = await DataProvider.deleteOne({_id: id}, {session});
+    const texts = await TextService.deleteMany({data_provider: id}, session);
+    return {data_provider: data_provider, texts: texts};
 };
 
 const updateDataProvider = async (id, data_provider) => {

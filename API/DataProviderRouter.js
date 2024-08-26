@@ -1,10 +1,10 @@
 const express = require("express");
 const {
-  searchDataProvider,
-  getDataProvider,
-  createDataProvider,
-  updateDataProvider,
-  deleteDataProvider,
+    searchDataProvider,
+    getDataProvider,
+    createDataProvider,
+    updateDataProvider,
+    deleteDataProvider,
 } = require("../Controllers/DataProviderController");
 const router = express.Router();
 
