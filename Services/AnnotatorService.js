@@ -5,18 +5,24 @@ const TransactionWrapper = require("../db/TransactionWrapper");
 const opts = { runValidators: true };
 
 const create = async (annotator) => {
-  return await Annotator.create(annotator);
+  const found = await Annotator.exists({
+    role: annotator.role,
+    background: annotator.background,
+  });
+
+  if (found) return null;
+  return Annotator.create(annotator);
 };
 
 const updateRole = async (id, role) => {
-  return await Annotator.updateOne({ _id: id }, { role: role }, opts);
+  return Annotator.updateOne({_id: id}, {role: role}, opts);
 };
 
 const updateBackground = async (id, background) => {
-  return await Annotator.updateOne(
-    { _id: id },
-    { background: background },
-    opts
+  return Annotator.updateOne(
+      {_id: id},
+      {background: background},
+      opts
   );
 };
 
@@ -43,34 +49,29 @@ const deleteAnnotators = async (filter, session) => {
 };
 
 const deleteAnnotatorsWithSession = async (filter, session) => {
-  const annotators = await Annotator.find(filter, { session: session });
+  const annotators = await Annotator.find(filter, null, { session });
   const annotations = [];
 
   for (const annotator of annotators) {
     const res = {};
-
     res[annotator._id] = await AnnotationService.deleteAnnotations(
       { annotator: annotator._id },
       session
     );
-
     annotations.push(res);
   }
 
   const deletedAnnotators = { annotations: annotations };
 
   deleteAnnotators.annotators = await Annotator.deleteMany(filter, {
-    session: session,
+    session,
   });
 
   return deletedAnnotators;
 };
 
 const deleteAnnotatorWithSession = async (id, session) => {
-  const annotator = await Annotator.deleteOne(
-    { _id: id },
-    { session: session }
-  );
+  const annotator = await Annotator.deleteOne({ _id: id }, { session });
   const annotations = await AnnotationService.deleteAnnotations(
     { annotator: id },
     session
@@ -80,13 +81,13 @@ const deleteAnnotatorWithSession = async (id, session) => {
 };
 
 const getAll = async () => {
-  return await Annotator.find();
+  return Annotator.find();
 };
 const getAnnotatorsByRole = async (role) => {
-  return await Annotator.find({ role: role });
+  return Annotator.find({role: role});
 };
 const getAnnotatorsByBackground = async (background) => {
-  return await Annotator.find({ background: background });
+  return Annotator.find({background: background});
 };
 
 const getRole = async (id) => {
@@ -105,14 +106,22 @@ const isHuman = async (id) => {
 };
 
 const getHumanAnnotators = async () => {
-  return await Annotator.find({ isHuman: true });
+  return Annotator.find({isHuman: true});
 };
 const getNotHumanAnnotators = async () => {
-  return await Annotator.find({ isHuman: false });
+  return Annotator.find({isHuman: false});
 };
 
 const setHuman = async (id, human) => {
   await Annotator.updateOne({ _id: id }, { isHuman: human });
+};
+
+const updateAnnotator = async (id, annotator) => {
+  const found = await Annotator.exists({ _id: id });
+
+  if (!found) return null;
+
+  return Annotator.updateOne({_id: id}, annotator, opts);
 };
 
 module.exports = {
@@ -130,4 +139,5 @@ module.exports = {
   getHumanAnnotators,
   getNotHumanAnnotators,
   setHuman,
+  updateAnnotator,
 };

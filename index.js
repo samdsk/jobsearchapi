@@ -1,55 +1,45 @@
 require("dotenv").config();
+require("./lib/logger");
+
+const Logger = require("winston").loggers.get("Server");
+const morgan = require("morgan");
 
 const { db_connect, db_close } = require("./db/db");
-const RapidAPIAutomator = require("./lib/Automators/RapidAPIAutomator");
-const { logResultsToJSONFile } = require("./lib/resultsLogger");
-const Logger = require("./lib/logger");
 
-const CollectorEventEmitter = require("./lib/CollectorEventEmitter");
-const { Scheduler, EVENT } = require("./lib/Scheduler");
-
-const app = async () => {
-  const schedulerExpression = "*/1 * * * *"; // every 1 minutes
-  const keyset1 = new Set([
-    "***REMOVED***",
-  ]);
-
-  const jobList1 = ["sviluppatore software"];
-
-  const Emitter = new CollectorEventEmitter();
-
-  Emitter.on(EVENT, wrapper.bind(null, keyset1, jobList1));
-
-  const scheduler = new Scheduler(Emitter, schedulerExpression);
-
-  scheduler.start();
-
-  setTimeout(async () => {
-    scheduler.stop();
-    await db_connect();
-    Logger.info("Exiting...");
-  }, 1000 * 60 * 3 + 1000 * 20);
-};
-
-const wrapper = async (keySet, jobList) => {
-  const automator = new RapidAPIAutomator(keySet);
-  const response = await automator.collect(jobList);
-
-  Logger.info("Logging results summary");
-  await logResultsToJSONFile("summary", new Date(Date.now()), response);
-  Logger.info(JSON.stringify(response));
-};
-
-async function start() {
-  try {
-    Logger.info("Starting...");
-    await db_connect();
-    await app();
-  } catch (error) {
-    await db_close();
-    console.error(error);
-    process.exit(1);
+const morganMiddleware = morgan(
+  ":method :url :status :res[content-length] - :response-time ms",
+  {
+    stream: {
+      // Configure Morgan to use our custom logger with the http severity
+      write: (message) => Logger.info(message.trim()),
+    },
   }
-}
+);
+
+const express = require("express");
+const server = express();
+
+const api_route = require("./API/apiGateway");
+const ErrorHandler = require("./Errors/ErrorHandler");
+
+const PORT = process.env.PORT || 3000;
+
+server.use(morganMiddleware);
+server.use(express.json());
+
+server.use("/api", api_route);
+
+server.use(ErrorHandler);
+
+const start = async () => {
+  try {
+    await db_connect(process.env.DB_PROD_URL);
+    server.listen(PORT, () =>
+      Logger.info(`Server is up and running at port: ${PORT}`)
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 start();

@@ -61,7 +61,7 @@ const Text = new mongoose.Schema(
 );
 
 Text.path("data_provider").validate(async (value) => {
-  return await DataProvider.DataProvider.exists({ _id: value });
+  return DataProvider.DataProvider.exists({_id: value});
 }, "Invalid Data Provider");
 
 module.exports = Text;

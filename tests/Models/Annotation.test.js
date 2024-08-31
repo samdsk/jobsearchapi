@@ -55,13 +55,13 @@ const data_provider_1 = {
   data_provider: "DataProvider_1",
 };
 
-var role = null;
-var background = null;
-var annotator = null;
-var domain = null;
-var text = null;
-var label = null;
-var data_provider = null;
+let role = null;
+let background = null;
+let annotator = null;
+let domain = null;
+let text = null;
+let label = null;
+let data_provider = null;
 
 describe("Annotation Models", () => {
   beforeAll(async () => {

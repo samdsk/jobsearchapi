@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const transactionWrapper = async (filter, fn) => {
   const session = await mongoose.startSession();
-  const response = null;
+  let response = null;
 
   try {
     session.startTransaction();
@@ -13,8 +13,8 @@ const transactionWrapper = async (filter, fn) => {
     throw error;
   } finally {
     await session.endSession();
-    return response;
   }
+  return response;
 };
 
 module.exports = { transactionWrapper };

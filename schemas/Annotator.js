@@ -22,11 +22,11 @@ const Annotator = new mongoose.Schema(
 );
 
 Annotator.path("role").validate(async (value) => {
-  return await Role.Role.exists({ _id: value });
+  return Role.Role.exists({_id: value});
 }, "Invalid Role");
 
 Annotator.path("background").validate(async (value) => {
-  return await Background.Background.exists({ _id: value });
+  return Background.Background.exists({_id: value});
 }, "Invalid Background");
 
 module.exports = Annotator;

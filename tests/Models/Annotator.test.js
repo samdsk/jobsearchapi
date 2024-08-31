@@ -16,8 +16,8 @@ const background_1 = {
   background: "Background_1",
 };
 
-var role = null;
-var background = null;
+let role = null;
+let background = null;
 
 describe("Annotator Model", () => {
   beforeAll(async () => {

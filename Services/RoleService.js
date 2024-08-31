@@ -5,14 +5,19 @@ const TransactionWrapper = require("../db/TransactionWrapper");
 const opts = { runValidators: true };
 
 const create = async (role) => {
-  return await Role.Role.create(role);
+  const found = await Role.Role.exists({
+    role: role.role,
+  });
+
+  if (found) return null;
+  return Role.Role.create(role);
 };
 
 const updateReliabilityScore = async (id, score) => {
-  return await Role.Role.updateOne(
-    { _id: id },
-    { reliability_score: score },
-    opts
+  return Role.Role.updateOne(
+      {_id: id},
+      {reliability_score: score},
+      opts
   );
 };
 
@@ -25,7 +30,7 @@ const deleteRole = async (id, session) => {
 };
 
 const deleteOperation = async (id, session) => {
-  const role = await Role.Role.deleteOne({ _id: id }, { session: session });
+  const role = await Role.Role.deleteOne({ _id: id }, { session });
   const annotators = await AnnotatorService.deleteAnnotators(
     { role: id },
     session
@@ -34,10 +39,10 @@ const deleteOperation = async (id, session) => {
 };
 
 const getAll = async () => {
-  return await Role.Role.find();
+  return Role.Role.find();
 };
 const getRolesByReliabilityScore = async (score) => {
-  return await Role.Role.find({ reliability_score: score });
+  return Role.Role.find({reliability_score: score});
 };
 const getRole = async (id) => {
   const res = await Role.Role.findById(id);
@@ -48,6 +53,14 @@ const getReliabilityScore = async (id) => {
   return res?.reliability_score || null;
 };
 
+const updateRole = async (id, role) => {
+  const found = await Role.Role.exists({ _id: id });
+
+  if (!found) return null;
+
+  return Role.Role.updateOne({_id: id}, role, opts);
+};
+
 module.exports = {
   create,
   updateReliabilityScore,
@@ -56,4 +69,5 @@ module.exports = {
   getRolesByReliabilityScore,
   getRole,
   getReliabilityScore,
+  updateRole,
 };

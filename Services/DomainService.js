@@ -1,9 +1,18 @@
 const { Domain } = require("../Models/Domain");
 const AnnotationService = require("./AnnotationService");
 const TransactionWrapper = require("../db/TransactionWrapper");
+const ValidationError = require("../Errors/ValidationError");
+
+const opts = { runValidators: true };
 
 const create = async (domain) => {
-  return await Domain.create(domain);
+  if (typeof domain !== "string")
+    throw new ValidationError("must be a string", "Domain", "domain");
+
+  const found = await Domain.exists({ domain: domain });
+  if (found) return null;
+
+  return await Domain.create({ domain: domain });
 };
 
 const deleteDomain = async (id, session) => {
@@ -15,7 +24,7 @@ const deleteDomain = async (id, session) => {
 };
 
 const deleteOperation = async (id, session) => {
-  const domain = await Domain.deleteOne({ _id: id }, { session: session });
+  const domain = await Domain.deleteOne({ _id: id }, { session });
   const annotation = await AnnotationService.deleteAnnotations(
     { domain: id },
     session
@@ -24,7 +33,7 @@ const deleteOperation = async (id, session) => {
 };
 
 const getAll = async () => {
-  return await Domain.find();
+  return Domain.find();
 };
 
 const getDomain = async (id) => {
@@ -32,4 +41,11 @@ const getDomain = async (id) => {
   return res?.domain || null;
 };
 
-module.exports = { create, deleteDomain, getAll, getDomain };
+const updateDomain = async (id, domain) => {
+  const found = await Domain.exists({ _id: id });
+  if (!found) return null;
+
+  return Domain.updateOne({_id: id}, {domain: domain}, opts);
+};
+
+module.exports = { create, deleteDomain, getAll, getDomain, updateDomain };
