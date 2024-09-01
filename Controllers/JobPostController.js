@@ -3,7 +3,6 @@ const JobPost = require("../Models/JobPost");
 const {searchMultiple, searchSingle, createSimpleDocument} = require("./CommonControllerMethods");
 const RequestError = require("../Errors/RequestError");
 const JobPostService = require("../Services/JobPostService");
-const {json} = require("express");
 
 class JobPostController {
     constructor(Converter, JobPostService) {
@@ -84,7 +83,8 @@ const createJobPost = async (req, res, next) => {
         job_type: job_type,
         company: company,
         location: location,
-        employment_type: employment_type
+        employment_type: employment_type,
+        text: text
     }
 
     try {
@@ -143,7 +143,7 @@ const deleteJobPost = async (req, res, next) => {
 
     try {
         const result = await JobPostService.deleteOne(id);
-        return json({success: true, result: result});
+        return res.json({success: true, result: result});
     } catch (error) {
         next(error);
     }

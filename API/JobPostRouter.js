@@ -12,6 +12,7 @@ const {
     removeLinkBySource,
     removeLinkByURL
 } = require("../Controllers/TextController");
+const {roleAuthentication, ROLES} = require("../Middlewares/Authentication");
 
 
 const router = express.Router();
@@ -20,7 +21,7 @@ router.get("/search", searchJobPosts);
 router.get("/get", getJobPost);
 router.post("/", createJobPost);
 router.put("/", updateJobPost);
-router.delete("/", deleteJobPost);
+router.delete("/", roleAuthentication(...ROLES.Admin), deleteJobPost);
 
 router.put("/link", addLink)
 router.delete("/linkBySource", removeLinkBySource)
