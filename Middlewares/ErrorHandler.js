@@ -1,5 +1,5 @@
-const ValidationError = require("./ValidationError");
-const RequestError = require("./RequestError");
+const ValidationError = require("../Errors/ValidationError");
+const RequestError = require("../Errors/RequestError");
 const MongooseValidationError = require("../Errors/MongooseValidationError");
 
 const {default: mongoose} = require("mongoose");
@@ -7,6 +7,7 @@ const Logger = require("winston").loggers.get("Server");
 
 const ErrorHandler = (err, req, res, next) => {
     if (err) {
+        Logger.error(err.stack);
         if (err instanceof mongoose.Error.ValidationError) {
             err = new MongooseValidationError(err.message);
         }
@@ -24,7 +25,6 @@ const ErrorHandler = (err, req, res, next) => {
                 400
             );
 
-        Logger.error(err.stack);
 
         res.status(err.statusCode || 500);
 
