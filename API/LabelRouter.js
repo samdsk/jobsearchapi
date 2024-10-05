@@ -1,10 +1,10 @@
 const express = require("express");
 const {
-  searchLabel,
-  getLabel,
-  createLabel,
-  updateLabel,
-  deleteLabel,
+    searchLabel,
+    getLabel,
+    createLabel,
+    updateLabel,
+    deleteLabel,
 } = require("../Controllers/LabelController");
 const router = express.Router();
 

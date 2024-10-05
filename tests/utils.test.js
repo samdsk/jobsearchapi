@@ -18,14 +18,14 @@ require("dotenv").config();
 // });
 
 describe("asd", () => {
-  it.skip("Should not contain files that doesn't start with results", async () => {
-    const files = await Utils.getResultFiles();
-    const n = files.filter((file) => !file.startsWith("results"));
-    expect(n.length).toBe(0);
-  });
+    it.skip("Should not contain files that doesn't start with results", async () => {
+        const files = await Utils.getResultFiles();
+        const n = files.filter((file) => !file.startsWith("results"));
+        expect(n.length).toBe(0);
+    });
 
-  it.skip("transferDatabase", async () => {
-    const res = await Utils.transferDataBase(process.env.DB_URL_TEST);
-    expect(res.total).toEqual(res.count);
-  });
+    it.skip("transferDatabase", async () => {
+        const res = await Utils.transferDataBase(process.env.DB_URL_TEST);
+        expect(res.total).toEqual(res.count);
+    });
 });

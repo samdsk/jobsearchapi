@@ -1,10 +1,10 @@
 const express = require("express");
 const {
-  searchRole,
-  getRole,
-  createRole,
-  updateRole,
-  deleteRole,
+    searchRole,
+    getRole,
+    createRole,
+    updateRole,
+    deleteRole,
 } = require("../Controllers/RoleController");
 const router = express.Router();
 

@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const JobPost = new mongoose.Schema({
-  job_type: { type: String, required: true },
-  title: { type: String, required: true },
-  company: { type: String, required: true },
-  location: { type: String, required: true },
-  employment_type: { type: String, default: "" },
+    job_type: {type: String, required: true},
+    title: {type: String, required: true},
+    company: {type: String, required: true},
+    location: {type: String, required: true},
+    employment_type: {type: String, default: ""},
 });
 
 module.exports = JobPost;

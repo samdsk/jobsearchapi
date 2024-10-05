@@ -1,10 +1,10 @@
 const express = require("express");
 const {
-  searchAnnotator,
-  getAnnotator,
-  createAnnotator,
-  updateAnnotator,
-  deleteAnnotator,
+    searchAnnotator,
+    getAnnotator,
+    createAnnotator,
+    updateAnnotator,
+    deleteAnnotator,
 } = require("../Controllers/AnnotatorController");
 const router = express.Router();
 

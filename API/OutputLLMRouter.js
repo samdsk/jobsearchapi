@@ -1,7 +1,7 @@
 const express = require("express");
 const {
-  searchOutputLLM,
-  getOutputLLM,
+    searchOutputLLM,
+    getOutputLLM,
 } = require("../Controllers/OutputLLMController");
 const router = express.Router();
 

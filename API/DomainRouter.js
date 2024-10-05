@@ -1,10 +1,10 @@
 const express = require("express");
 const {
-  searchDomain,
-  getDomain,
-  createDomain,
-  updateDomain,
-  deleteDomain,
+    searchDomain,
+    getDomain,
+    createDomain,
+    updateDomain,
+    deleteDomain,
 } = require("../Controllers/DomainController");
 const router = express.Router();
 

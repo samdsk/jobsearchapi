@@ -1,10 +1,10 @@
 const express = require("express");
 const {
-  searchBackground,
-  getBackground,
-  createBackground,
-  updateBackground,
-  deleteBackground,
+    searchBackground,
+    getBackground,
+    createBackground,
+    updateBackground,
+    deleteBackground,
 } = require("../Controllers/BackgroundController");
 const router = express.Router();
 
