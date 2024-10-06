@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const gateway = require("../API/apiGateway");
+const gateway = require("../API/ApiGateway");
 
 router.use("/", gateway);
 
