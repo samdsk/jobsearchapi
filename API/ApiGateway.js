@@ -10,6 +10,7 @@ const RoleRouter = require("./RoleRouter");
 const AnnotatorRouter = require("./AnnotatorRouter");
 const AnnotationRouter = require("./AnnotationRouter");
 const CollectionRouter = require("./CollectionRouter");
+const CollectorRouter = require("./CollectorRouter");
 
 const {roleAuthentication, ROLES} = require("../Middlewares/Authentication");
 
@@ -26,5 +27,6 @@ router.use("/Role", roleAuthentication(...ROLES.AnnotationService), RoleRouter);
 router.use("/Annotator", roleAuthentication(...ROLES.AnnotationService), AnnotatorRouter);
 router.use("/Annotation", roleAuthentication(...ROLES.AnnotationService), AnnotationRouter);
 router.use("/Collection", roleAuthentication(...ROLES.AnnotationService), CollectionRouter);
+router.use("/Collector", roleAuthentication(...ROLES.AnnotationService), CollectorRouter);
 
 module.exports = router;

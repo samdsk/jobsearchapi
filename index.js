@@ -1,49 +1,35 @@
-require("dotenv").config();
-require("./lib/logger");
+const {fork} = require('child_process')
 
-const Logger = require("winston").loggers.get("Server");
-const morgan = require("morgan");
+const Logger = require("./lib/Loggers/masterLogger")
 
-const {db_connect, db_close} = require("./db/db");
-
-const morganMiddleware = morgan(
-    ":method :url :status :res[content-length] - :response-time ms",
-    {
-        stream: {
-            // Configure Morgan to use our custom logger with the http severity
-            write: (message) => Logger.info(message.trim()),
-        },
-    }
-);
-
-const express = require("express");
-const server = express();
-
-const api_route = require("./Routes/ApiRouter");
-const login_route = require("./Routes/LoginRouter");
-const user_route = require("./Routes/UserRouter");
-const ErrorHandler = require("./Middlewares/ErrorHandler");
-const {authentication} = require("./Middlewares/Authentication");
-const PORT = process.env.PORT || 3000;
-
-server.use(morganMiddleware);
-server.use(express.json());
-
-server.use("/api", authentication, api_route);
-server.use("/login", login_route);
-server.use("/user", user_route);
-
-server.use(ErrorHandler);
+const SERVER = './server'
+const COLLECTOR = './collector'
 
 const start = async () => {
-    try {
-        await db_connect(process.env.DB_PROD_URL);
-        server.listen(PORT, () =>
-            Logger.info(`Server is up and running at port: ${PORT}`)
-        );
-    } catch (error) {
-        console.error(error);
-    }
+    Logger.info(`Started MasterProcess with pid ${process.ppid}`);
+
+    const process_collector = fork(COLLECTOR);
+    Logger.info(`Process Collector started with pid ${process_collector.pid}`)
+
+    const process_server = fork(SERVER);
+    Logger.info(`Process Server started with pid ${process_server.pid}`)
+
+    process_collector.on('message', (msg) => {
+        Logger.info(`Received message from COLLECTOR <${process_collector.pid}> : ${msg.to}:${msg.code}`);
+        process_server.send(msg);
+    })
+
+    process_server.on('message', (msg) => {
+        Logger.info(`Received message from SERVER <${process_server.pid}> : ${msg.to}:${msg.code}`);
+        process_collector.send(msg);
+    })
 };
 
-start();
+(() => {
+    try {
+        start();
+    } catch (e) {
+        Logger.error(e)
+    }
+
+})()
