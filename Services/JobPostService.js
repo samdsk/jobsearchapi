@@ -27,7 +27,7 @@ const create = async (job_post) => {
 
     job_post.data_provider = data_provider_id;
 
-    return JobPost.create(job_post);
+    return await JobPost.create(job_post);
 };
 
 const updateJobType = async (id, job_type) => {
