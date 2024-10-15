@@ -56,7 +56,7 @@ async function convertOldJobPostToText(DB_URL, data_provider_name, language) {
             );
             const res = await JobPostService.create(textJob);
             if (res) count++;
-            else logger.debug(`not inserted: ${oldJob._id}`);
+            else Logger.debug(`not inserted: ${oldJob._id}`);
         } catch (error) {
             console.error(`error: ${oldJob._id} : ${error.message}`);
         }
@@ -72,6 +72,4 @@ async function convertOldJobPostToText(DB_URL, data_provider_name, language) {
     return {total, count};
 }
 
-// TODO: icu_locale valida tag from beginning
-// TODO: data provider delete cascade
 module.exports = {transferJobPosts, convertOldJobPostToText};

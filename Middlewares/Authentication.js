@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const RequestError = require("../Errors/RequestError");
 const Logger = require("winston").loggers.get("Server");
 
 const SECRET_KEY = process.env.SERVER_SECRET_KEY;
@@ -8,18 +9,18 @@ const authentication = async (req, res, next) => {
 
     if (!authHeader) {
         Logger.info(`Authentication failed : missing authorization header`);
-        return res.sendStatus(401);
+        return next(new RequestError("missing authorization header"));
     }
 
     const token = authHeader.split(" ")[1];
 
     if (!token) {
         Logger.info(`Authentication failed : missing token`);
-        return res.sendStatus(401);
+        return next(new RequestError("missing token"));
     }
 
     jwt.verify(token, SECRET_KEY, (err, decoded) => {
-        if (err) return res.sendStatus(403);
+        if (err) return res.status(401).json({success: false, error: "Unauthorized"});
 
         req.email = decoded.email;
         req.userType = decoded.userType;

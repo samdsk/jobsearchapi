@@ -13,29 +13,23 @@ const ErrorHandler = (err, req, res, next) => {
         }
 
         if (err instanceof mongoose.Error.CastError) {
-            err = new RequestError(
-                `Invalid value for '${err.path}' = '${err.value}'`,
-                400
-            );
+            err = new RequestError(`Invalid value for '${err.path}' = '${err.value}'`);
         }
 
         if (err.code === 11000)
-            err = new RequestError(
-                `Possible duplication detected`,
-                400
-            );
+            err = new RequestError(`Possible duplication detected`);
 
 
         res.status(err.statusCode || 500);
 
         if (err.statusCode) {
-            return res.json({
+            return res.status(err.statusCode).json({
                 success: false,
                 error: err.message,
             });
         }
 
-        return res.json({
+        return res.status(500).json({
             success: false,
             error: "Internal Server Error",
         });

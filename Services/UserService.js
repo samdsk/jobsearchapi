@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const {User} = require('../models/User');
-const Logger = require("winston").loggers.get("Server");
 
 const opts = {runValidators: true};
 
@@ -15,8 +14,6 @@ const createUser = async (email, password, userType = "LLM") => {
 
     const hash = await bcrypt.hash(password, 10);
     const result = await User.create({email: email, password: hash, userType: userType});
-
-    Logger.info(`User created: ${result}`);
 
     return result;
 }
