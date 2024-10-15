@@ -30,7 +30,7 @@ const createRole = async (req, res, next) => {
     const reliability_score = req.body.reliability_score || "";
     try {
         if (!reliability_score)
-            return next(new RequestError("reliability_score is required", 400));
+            return next(new RequestError("reliability_score is required"));
 
         const result = await createSimpleDocument(
             {role: role, reliability_score: parseInt(reliability_score)},
@@ -48,7 +48,7 @@ const updateRole = async (req, res, next) => {
     const id = req.body.id || "";
 
     try {
-        if (!id) return next(new RequestError("id is required", 400));
+        if (!id) return next(new RequestError("id is required"));
         const update = {};
 
         if (role) update.role = role;
@@ -57,7 +57,7 @@ const updateRole = async (req, res, next) => {
 
         const result = await RoleService.updateRole(id, update);
 
-        if (result == null) return next(new RequestError(`Update operation failed`, 400));
+        if (result == null) return next(new RequestError(`Update operation failed`));
 
         return res.json({success: true});
     } catch (error) {
@@ -68,11 +68,11 @@ const updateRole = async (req, res, next) => {
 const deleteRole = async (req, res, next) => {
     const id = req.body.id || "";
     try {
-        if (!id) return next(new RequestError("id is required", 400));
+        if (!id) return next(new RequestError("id is required"));
 
         const result = await RoleService.deleteRole(id);
 
-        if (result === null) return next(new RequestError(`Delete operation failed`, 400));
+        if (result === null) return next(new RequestError(`Delete operation failed`));
 
         return res.json({success: true, result: result});
     } catch (error) {

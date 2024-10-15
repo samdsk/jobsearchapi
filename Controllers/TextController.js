@@ -25,8 +25,8 @@ const addLink = async (req, res, next) => {
     const id = req.body.id || "";
     const link = req.body.link || "";
 
-    if (!id) return next(new RequestError("id is required", 400));
-    if (!link) return next(new RequestError("link is required", 400));
+    if (!id) return next(new RequestError("id is required"));
+    if (!link) return next(new RequestError("link is required"));
 
     try {
         const result = await TextService.addLink(id, link);
@@ -40,8 +40,8 @@ const removeLinkBySource = async (req, res, next) => {
     const id = req.body.id || "";
     const link_source = req.body.link_source || "";
 
-    if (!id) return next(new RequestError("id is required", 400));
-    if (!link_source) return next(new RequestError("link_source is required", 400));
+    if (!id) return next(new RequestError("id is required"));
+    if (!link_source) return next(new RequestError("link_source is required"));
     try {
         const result = await TextService.removeLinkBySource(id, link_source);
         return res.json({success: true, result: result});
@@ -53,8 +53,8 @@ const removeLinkByURL = async (req, res, next) => {
     const id = req.body.id || "";
     const link_url = req.body.link_url || "";
 
-    if (!id) return next(new RequestError("id is required", 400));
-    if (!link_url) return next(new RequestError("link_url is required", 400));
+    if (!id) return next(new RequestError("id is required"));
+    if (!link_url) return next(new RequestError("link_url is required"));
     try {
         const result = await TextService.removeLinkByURL(id, link_url);
         return res.json({success: true, result: result});

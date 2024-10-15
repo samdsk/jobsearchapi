@@ -16,22 +16,21 @@ const login = async (req, res, next) => {
         return next(new RequestError("email and password fields are required"));
 
     if (!validator.isEmail(email))
-        return res.sendStatus(401);
+        return next(new RequestError("invalid email"))
 
     try {
         const auth = await authenticateUser(email, password);
-        if (!auth) {
-            Logger.info(`Login failed : ${email}`);
-            return res.sendStatus(401);
-        }
 
         if (auth) {
             const token = generateToken(auth.email, auth.userType);
-            Logger.info(`Login : ${email} - ${token}`);
+            Logger.info(`Login : ${email}`);
             return res.json({
                 success: true,
                 token: token,
             })
+        } else {
+            Logger.info(`Unauthorized login attempted : ${email}`);
+            return res.status(401).json({success: false, error: "Unauthorized"});
         }
 
     } catch (error) {

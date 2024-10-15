@@ -1,20 +1,27 @@
 const {EVENT, API_TRIGGER} = require('../lib/Scheduler')
+const RequestError = require("../Errors/RequestError");
 const Logger = require("winston").loggers.get("Server");
 
-const triggerCollector = async (req, res) => {
-    const collect = req.body.collect || "";
+const triggerCollector = async (req, res, next) => {
+    const collect = req.body.collect || false;
     let status = 400;
-    if (collect === EVENT) {
+    if (collect === true) {
         Logger.info("Triggering collector.")
-        status = await sendTrigger({to: "COLLECTOR", code: API_TRIGGER});
-        Logger.info("received collector response.")
-        if (status.code === 200)
-            return res.sendStatus(200);
-        else
-            return res.sendStatus(500);
+        try {
+            status = await sendTrigger({to: "COLLECTOR", code: API_TRIGGER});
+            Logger.info("received collector response.")
+            if (status.code === 200)
+                return res.json({success: true});
+            else
+                return next(new Error("Unsuccessful manual collector trigger."))
+        } catch (error) {
+            return next(new Error("Manual collector trigger failed."))
+        }
+
+
     }
 
-    return res.sendStatus(400);
+    return next(new RequestError("Unknown command"));
 }
 
 const sendTrigger = async (msg) => {

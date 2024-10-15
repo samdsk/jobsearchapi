@@ -30,7 +30,7 @@ const createCollection = async (req, res, next) => {
     const texts = req.body.texts || [];
 
     if (!collection_name || texts.length === 0) {
-        return next(new RequestError("Create operation failed, following fields are required: collection_name, texts", 400));
+        return next(new RequestError("Create operation failed, following fields are required: collection_name, texts"));
     }
 
     const Collection = {
@@ -55,8 +55,8 @@ const updateCollection = async (req, res, next) => {
     const texts = req.body.texts || "";
     const id = req.body.id || "";
 
-    if (!id) return next(new RequestError("id is required", 400));
-    if (!Array.isArray(texts)) return next(new RequestError("texts field must be an array", 400));
+    if (!id) return next(new RequestError("id is required"));
+    if (!Array.isArray(texts)) return next(new RequestError("texts field must be an array"));
 
     try {
         const update = {};
@@ -64,7 +64,7 @@ const updateCollection = async (req, res, next) => {
         if (texts.length !== 0) update.texts = texts;
 
         const result = await CollectionService.updateCollection(id, update);
-        if (result === null) return next(new RequestError(`Update operation failed`, 400));
+        if (result === null) return next(new RequestError(`Update operation failed`));
         return res.json({success: true});
     } catch (error) {
         next(error);
@@ -73,11 +73,11 @@ const updateCollection = async (req, res, next) => {
 
 const deleteCollection = async (req, res, next) => {
     const id = req.body.id || "";
-    if (!id) return next(new RequestError("id is required", 400));
+    if (!id) return next(new RequestError("id is required"));
 
     try {
         const result = await CollectionService.deleteCollection(id);
-        if (result === null) return next(new RequestError(`Delete operation failed`, 400));
+        if (result === null) return next(new RequestError(`Delete operation failed`));
         return res.json({success: true, result: result});
     } catch (error) {
         next(error);
@@ -88,8 +88,8 @@ const addCollectionText = async (req, res, next) => {
     const id = req.body.id || "";
     const text = req.body.text || "";
 
-    if (!id) return next(new RequestError("id is required", 400));
-    if (!text) return next(new RequestError("text is required", 400));
+    if (!id) return next(new RequestError("id is required"));
+    if (!text) return next(new RequestError("text is required"));
 
     try {
         const result = await CollectionService.addText(id, text);
@@ -104,8 +104,8 @@ const deleteCollectionText = async (req, res, next) => {
     const id = req.body.id || "";
     const text = req.body.text || "";
 
-    if (!id) return next(new RequestError("id is required", 400));
-    if (!text) return next(new RequestError("text is required", 400));
+    if (!id) return next(new RequestError("id is required"));
+    if (!text) return next(new RequestError("text is required"));
 
     try {
         const result = await CollectionService.removeText(id, text);

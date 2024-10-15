@@ -112,8 +112,8 @@ const updateJobPost = async (req, res, next) => {
     const employment_type = req.body.employment_type || "";
     const id = req.body.id || "";
 
-    if (!id) return next(new RequestError("id is required", 400));
-    if (!Array.isArray(links)) return next(new RequestError("links field must be an array", 400));
+    if (!id) return next(new RequestError("id is required"));
+    if (!Array.isArray(links)) return next(new RequestError("links field must be an array"));
 
     try {
 
@@ -130,7 +130,7 @@ const updateJobPost = async (req, res, next) => {
         if (Array.isArray(links) && links.length !== 0) update.links = links;
 
         const result = await JobPostService.updateJobPost(id, update);
-        if (result === null) return next(new RequestError(`Update operation failed`, 400));
+        if (result === null) return next(new RequestError(`Update operation failed`));
         return res.json({success: true});
     } catch (error) {
         next(error);
@@ -139,7 +139,7 @@ const updateJobPost = async (req, res, next) => {
 
 const deleteJobPost = async (req, res, next) => {
     const id = req.body.id || "";
-    if (!id) return next(new RequestError("id is required", 400));
+    if (!id) return next(new RequestError("id is required"));
 
     try {
         const result = await JobPostService.deleteOne(id);

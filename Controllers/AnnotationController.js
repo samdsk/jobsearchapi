@@ -34,7 +34,7 @@ const createAnnotation = async (req, res, next) => {
     const tokens = req.body.tokens || [];
 
     if (!text || !label || !domain || !annotator || !reason || tokens.length === 0) {
-        return next(new RequestError("Create operation failed, following fields are required: text, label, domain, annotator, reason, tokens", 400));
+        return next(new RequestError("Create operation failed, following fields are required: text, label, domain, annotator, reason, tokens"));
     }
 
     const annotation = {
@@ -67,8 +67,8 @@ const updateAnnotation = async (req, res, next) => {
     const tokens = req.body.tokens || "";
     const id = req.body.id || "";
 
-    if (!id) return next(new RequestError("id is required", 400));
-    if (!Array.isArray(tokens)) return next(new RequestError("tokens field must be an array", 400));
+    if (!id) return next(new RequestError("id is required"));
+    if (!Array.isArray(tokens)) return next(new RequestError("tokens field must be an array"));
     try {
 
         const update = {};
@@ -80,7 +80,7 @@ const updateAnnotation = async (req, res, next) => {
         if (Array.isArray(tokens) && tokens.length !== 0) update.tokens = tokens;
 
         const result = await AnnotationService.updateAnnotation(id, update);
-        if (result === null) return next(new RequestError(`Update operation failed`, 400));
+        if (result === null) return next(new RequestError(`Update operation failed`));
         return res.json({success: true});
     } catch (error) {
         next(error);
@@ -89,11 +89,11 @@ const updateAnnotation = async (req, res, next) => {
 
 const deleteAnnotation = async (req, res, next) => {
     const id = req.body.id || "";
-    if (!id) return next(new RequestError("id is required", 400));
+    if (!id) return next(new RequestError("id is required"));
 
     try {
         const result = await AnnotationService.deleteAnnotation(id);
-        if (result === null) return next(new RequestError(`Delete operation failed`, 400));
+        if (result === null) return next(new RequestError(`Delete operation failed`));
         return res.json({success: true, result: result});
     } catch (error) {
         next(error);
@@ -104,8 +104,8 @@ const addAnnotationToken = async (req, res, next) => {
     const id = req.body.id || "";
     const token = req.body.token || "";
 
-    if (!id) return next(new RequestError("id is required", 400));
-    if (!token) return next(new RequestError("token is required", 400));
+    if (!id) return next(new RequestError("id is required"));
+    if (!token) return next(new RequestError("token is required"));
 
     try {
         const result = await AnnotationService.addToken(id, token);
@@ -120,8 +120,8 @@ const deleteAnnotationToken = async (req, res, next) => {
     const id = req.body.id || "";
     const token = req.body.token || "";
 
-    if (!id) return next(new RequestError("id is required", 400));
-    if (!token) return next(new RequestError("token is required", 400));
+    if (!id) return next(new RequestError("id is required"));
+    if (!token) return next(new RequestError("token is required"));
 
     try {
         const result = await AnnotationService.deleteToken(id, token);

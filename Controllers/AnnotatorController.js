@@ -33,7 +33,7 @@ const createAnnotator = async (req, res, next) => {
 
     try {
         if (!id)
-            return next(new RequestError("Create operation failed, id is required", 400));
+            return next(new RequestError("Create operation failed, id is required"));
         const result = await createSimpleDocument(
             {_id: id, role: role, background: background, isHuman: isHuman},
             AnnotatorService.create
@@ -51,7 +51,7 @@ const updateAnnotator = async (req, res, next) => {
     const id = req.body.id || "";
 
     try {
-        if (!id) return next(new RequestError("id is required", 400));
+        if (!id) return next(new RequestError("id is required"));
         const update = {};
         console.log(role, background, isHuman);
 
@@ -61,7 +61,7 @@ const updateAnnotator = async (req, res, next) => {
 
         const result = await AnnotatorService.updateAnnotator(id, update);
 
-        if (result === null) return next(new RequestError(`Update operation failed`, 400));
+        if (result === null) return next(new RequestError(`Update operation failed`));
 
         return res.json({success: true});
     } catch (error) {
@@ -72,11 +72,11 @@ const updateAnnotator = async (req, res, next) => {
 const deleteAnnotator = async (req, res, next) => {
     const id = req.body.id || "";
     try {
-        if (!id) return next(new RequestError("id is required", 400));
+        if (!id) return next(new RequestError("id is required"));
 
         const result = await AnnotatorService.deleteAnnotator(id);
 
-        if (result === null) return next(new RequestError(`Delete operation failed`, 400));
+        if (result === null) return next(new RequestError(`Delete operation failed`));
 
         return res.json({success: true, result: result});
     } catch (error) {

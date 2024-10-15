@@ -29,7 +29,7 @@ const createDomain = async (req, res, next) => {
     const domain = req.body.domain || "";
 
     try {
-        if (!domain) return next(new RequestError("domain is required", 400));
+        if (!domain) return next(new RequestError("domain is required"));
         const result = await createSimpleDocument(domain, DomainService.create);
         return res.json(result);
     } catch (error) {
@@ -43,11 +43,11 @@ const updateDomain = async (req, res, next) => {
 
     try {
         if (!domain || !id)
-            return next(new RequestError("id and domain are required", 400));
+            return next(new RequestError("id and domain are required"));
 
         const result = await DomainService.updateDomain(id, domain);
 
-        if (result === null) return next(new RequestError(`Update operation failed`, 400));
+        if (result === null) return next(new RequestError(`Update operation failed`));
 
         return res.json({success: true});
     } catch (error) {
@@ -58,11 +58,11 @@ const updateDomain = async (req, res, next) => {
 const deleteDomain = async (req, res, next) => {
     const id = req.body.id || "";
     try {
-        if (!id) return next(new RequestError("id is required", 400));
+        if (!id) return next(new RequestError("id is required"));
 
         const result = await DomainService.deleteDomain(id);
 
-        if (result === null) return next(new RequestError(`Delete operation failed`, 400));
+        if (result === null) return next(new RequestError(`Delete operation failed`));
 
         return res.json({success: true, result: result});
     } catch (error) {

@@ -3,7 +3,7 @@ const RequestError = require("../Errors/RequestError");
 const searchMultiple = async (req, MODEL) => {
     const searchParams = req.query || "";
     if (!searchParams)
-        throw new RequestError("Url query string is required", 400);
+        throw new RequestError("Url query string is required");
 
     const filterBy = searchParams.by || "";
     const filterValue = searchParams.value || "";
@@ -50,12 +50,12 @@ const searchMultiple = async (req, MODEL) => {
 
 const searchSingle = async (req, MODEL) => {
     const query = req.query || "";
-    if (!query) throw new RequestError("Url query string is required", 400);
+    if (!query) throw new RequestError("Url query string is required");
 
     const id = decodeURIComponent(query.id || "");
     const fields = decodeURIComponent(query.fields || "");
 
-    if (!id) throw new RequestError("id field is required", 400);
+    if (!id) throw new RequestError("id field is required");
 
     const select = fields.replaceAll(",", " ");
 
@@ -74,7 +74,7 @@ const createSimpleDocument = async (object, createMethod) => {
     const result = await createMethod(object);
 
     if (result === null)
-        throw new RequestError(`Create operation failed, possible duplication`, 400);
+        throw new RequestError(`Create operation failed, possible duplication`);
 
     result.__v = undefined;
 
