@@ -6,7 +6,7 @@ const {
 } = require("../../lib/RequestSenders/RapiAPIRequestSender");
 const RapidAPIConverter = require("../../lib/Converters/RapidAPIConverter");
 const JobPostService = require("../../Services/JobPostService.js");
-const JobPostController = require("../../Controllers/JobPostController");
+const {JobPostController} = require("../../Controllers/JobPostController");
 const DataProviderService = require("../../Services/DataProviderService.js");
 const axios = require("axios");
 

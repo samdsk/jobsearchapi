@@ -1,4 +1,4 @@
-const Automate = require("../../lib/Automaters/RapidAPIAutomater");
+const Automate = require("../../lib/Automators/RapidAPIAutomator");
 const mongoose = require("mongoose");
 
 const axios = require("axios");

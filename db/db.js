@@ -2,7 +2,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const pipeline = require("./finetune_pipeline");
 
-const Logger = require("winston").loggers.get("Database");
+const Logger = require("../lib/Loggers/DatabaseLogger");
 
 const db_connect = async (DB_URL) => {
     const url = DB_URL || process.env.DB_URL;

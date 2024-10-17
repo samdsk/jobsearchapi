@@ -254,15 +254,15 @@ describe("JobPost Service:", () => {
     });
 
     it("get job type", async () => {
-        const job_type = "job type";
+        const job_type = "job_type";
         const spy = jest
             .spyOn(JobPost, "findById")
             .mockImplementation(async () => Promise.resolve({job_type: job_type}));
 
         const id = "jobpost id";
-        const res = await JobPostService.getJobType(id);
+        const res = await JobPostService.getJobType(id, job_type);
 
-        expect(spy).toHaveBeenCalledWith(id);
+        expect(spy).toHaveBeenCalledWith(id, job_type);
         expect(res).toEqual(job_type);
     });
     it("get title", async () => {

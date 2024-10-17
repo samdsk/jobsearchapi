@@ -1,7 +1,5 @@
 require("dotenv").config();
-require("./lib/Loggers/logger");
-
-const Logger = require("winston").loggers.get("Server");
+const Logger = require("./lib/Loggers/ServerLogger")
 const morgan = require("morgan");
 
 const {db_connect, db_close} = require("./db/db");

@@ -3,7 +3,7 @@ const RequestError = require("../Errors/RequestError");
 const MongooseValidationError = require("../Errors/MongooseValidationError");
 
 const {default: mongoose} = require("mongoose");
-const Logger = require("winston").loggers.get("Server");
+const Logger = require("../lib/Loggers/ServerLogger");
 
 const ErrorHandler = (err, req, res, next) => {
     if (err) {

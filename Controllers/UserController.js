@@ -2,7 +2,7 @@ const RequestError = require("../Errors/RequestError");
 const UserService = require("../Services/UserService");
 const validator = require("validator");
 const USER_TYPES = require("../Models/User").USER_TYPES;
-const Logger = require("winston").loggers.get("Server");
+const Logger = require("../lib/Loggers/ServerLogger");
 
 const createUser = async (req, res, next) => {
 
