@@ -21,6 +21,10 @@ describe("JobPost Service:", () => {
             .spyOn(DataProviderService, "getIDByName")
             .mockImplementation(async () => Promise.resolve("MockedID"));
 
+        const spyExists = jest
+            .spyOn(JobPost, "exists")
+            .mockImplementation(async () => Promise.resolve());
+
         const jobpost = {
             title: "title",
             company: "company",

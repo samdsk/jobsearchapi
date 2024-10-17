@@ -5,24 +5,25 @@ describe("DataProvider Service", () => {
     beforeEach(() => jest.restoreAllMocks());
 
     it("create a data provider", async () => {
-        const spyRole = jest
+        const spyCreate = jest
             .spyOn(DataProvider, "create")
+            .mockImplementation(async () => Promise.resolve());
+
+        const spyExists = jest
+            .spyOn(DataProvider, "exists")
             .mockImplementation(async () => Promise.resolve());
 
         const data_provider = "RapidAPI";
         await DataProviderService.create(data_provider);
 
-        expect(spyRole).toHaveBeenCalled();
+        expect(spyExists).toHaveBeenCalled();
+        expect(spyCreate).toHaveBeenCalled();
     });
     it("invalid data provider", async () => {
-        const spyRole = jest
-            .spyOn(DataProvider, "create")
-            .mockImplementation(async () => Promise.resolve());
-
         const data_provider = 123;
 
         await expect(DataProviderService.create(data_provider)).rejects.toThrow(
-            "data_provider must be a string!"
+            "Validation Error - Model: DataProvider, Field: data_provider, Message: must be a string"
         );
     });
 

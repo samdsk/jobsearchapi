@@ -8,7 +8,7 @@ describe("Scheduler:", () => {
     let automator;
     beforeEach(() => {
         jest.useFakeTimers();
-        scheduler = new Scheduler(emitter, "* * * * * *");
+        scheduler = new Scheduler(emitter);
         const keySet = new Set(["key1", "key2", "key3"]);
         automator = new RapidAPIAutomator(keySet, {});
     });
@@ -22,7 +22,7 @@ describe("Scheduler:", () => {
 
         emitter.on(EVENT, () => automator.collect());
 
-        scheduler.start();
+        scheduler.start("* * * * * *");
         jest.advanceTimersByTime(3000);
 
         expect(spy).toHaveBeenCalledTimes(3);

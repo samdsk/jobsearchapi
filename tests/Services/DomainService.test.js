@@ -10,8 +10,11 @@ describe("Domain Service", () => {
         const spyLabel = jest
             .spyOn(Domain, "create")
             .mockImplementation(async () => Promise.resolve());
+        const spyExists = jest
+            .spyOn(Domain, "exists")
+            .mockImplementation(async () => Promise.resolve());
 
-        const domain = {};
+        const domain = "test-domain";
         await DomainService.create(domain);
 
         expect(spyLabel).toHaveBeenCalled();

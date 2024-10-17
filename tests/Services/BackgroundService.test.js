@@ -7,14 +7,18 @@ describe("Background Service", () => {
     beforeEach(() => jest.restoreAllMocks());
 
     it("create a background", async () => {
-        const spyRole = jest
+        const spyCreate = jest
             .spyOn(Background, "create")
             .mockImplementation(async () => Promise.resolve());
+        const spyExists = jest
+            .spyOn(Background, "exists")
+            .mockImplementation(async () => Promise.resolve());
 
-        const background = {};
+        const background = "test-background";
         await BackgroundService.create(background);
 
-        expect(spyRole).toHaveBeenCalled();
+        expect(spyExists).toHaveBeenCalled();
+        expect(spyCreate).toHaveBeenCalled();
     });
 
     it("delete Background cascades deletes to Annotators with session", async () => {
