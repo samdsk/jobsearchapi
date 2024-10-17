@@ -6,6 +6,8 @@ const Domain = new mongoose.Schema(
             type: String,
             required: true,
             unique: true,
+            trim: true,
+            collation: {locale: 'en', strength: 2}
         },
     },
     {timestamps: true}

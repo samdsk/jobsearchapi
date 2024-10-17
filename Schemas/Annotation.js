@@ -10,11 +10,13 @@ const Annotation = new mongoose.Schema(
             type: String,
             required: true,
             ref: "Text",
+            trim: true
         },
         annotator: {
             type: String,
             required: true,
             ref: "Annotator",
+            trim: true
         },
         label: {
             type: mongoose.Types.ObjectId,
@@ -24,6 +26,7 @@ const Annotation = new mongoose.Schema(
         reason: {
             type: String,
             required: true,
+            trim: true
         },
         domain: {
             type: mongoose.Types.ObjectId,

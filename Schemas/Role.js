@@ -6,6 +6,8 @@ const Role = new mongoose.Schema(
             type: String,
             required: true,
             unique: true,
+            trim: true,
+            collation: {locale: 'en', strength: 2}
         },
         reliability_score: {
             type: Number,

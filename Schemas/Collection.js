@@ -7,6 +7,8 @@ const Collection = new mongoose.Schema(
         collection_name: {
             type: String,
             required: true,
+            trim: true,
+            collation: {locale: 'en', strength: 2}
         },
         texts: {type: [String], ref: "Text", validate: {validator: text_validator}, default: []},
     },

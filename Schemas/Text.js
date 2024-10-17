@@ -31,17 +31,17 @@ function links_validator(links) {
 
 const Text = new mongoose.Schema(
     {
-        _id: {type: String},
-        title: {type: String, required: true},
-        text: {type: String, required: true},
+        _id: {type: String, trim: true,},
+        title: {type: String, required: true, trim: true},
+        text: {type: String, required: true, trim: true},
         author: {type: String, default: "unknown"},
         data_provider: {type: mongoose.Types.ObjectId, required: true},
         links: {
             type: [
                 {
-                    source: {type: String, required: true},
+                    source: {type: String, required: true, trim: true,},
                     url: {
-                        type: String,
+                        type: String, trim: true,
                     },
                 },
             ],
@@ -52,6 +52,7 @@ const Text = new mongoose.Schema(
         icu_locale_language_tag: {
             type: String,
             required: true,
+            trim: true,
             validate: {
                 validator: langTagValidator,
             },
