@@ -1,10 +1,9 @@
 require("dotenv").config();
-require("./lib/Loggers/logger");
 
 const {db_connect, db_close} = require("./db/db");
 const RapidAPIAutomator = require("./lib/Automators/RapidAPIAutomator");
 const {logResultsToJSONFile} = require("./lib/resultsLogger");
-const Logger = require("winston").loggers.get("Collector");
+const Logger = require("./lib/Loggers/CollectorLogger")
 
 const CollectorEventEmitter = require("./lib/CollectorEventEmitter");
 const {Scheduler, EVENT, API_TRIGGER, getNextSchedule} = require("./lib/Scheduler");

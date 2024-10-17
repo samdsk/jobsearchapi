@@ -1,6 +1,6 @@
 const {EVENT, API_TRIGGER} = require('../lib/Scheduler')
 const RequestError = require("../Errors/RequestError");
-const Logger = require("winston").loggers.get("Server");
+const Logger = require("../lib/Loggers/ServerLogger");
 
 const triggerCollector = async (req, res, next) => {
     const collect = req.body.collect || false;

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const RequestError = require("../Errors/RequestError");
-const Logger = require("winston").loggers.get("Server");
+const Logger = require("../lib/Loggers/ServerLogger");
 
 const SECRET_KEY = process.env.SERVER_SECRET_KEY;
 

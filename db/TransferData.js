@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
-const Logger = require("winston").loggers.get("Collector");
+const Logger = require("../lib/Loggers/CollectorLogger");
 const OldJobPost = require("../Models/OldJobPost");
 
 const JobPostSchema = require("../Schemas/JobPost");

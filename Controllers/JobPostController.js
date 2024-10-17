@@ -1,4 +1,4 @@
-const CollectorLogger = require("winston").loggers.get("Collector");
+const CollectorLogger = require("../lib/Loggers/CollectorLogger");
 const JobPost = require("../Models/JobPost");
 const {searchMultiple, searchSingle, createSimpleDocument} = require("./CommonControllerMethods");
 const RequestError = require("../Errors/RequestError");
