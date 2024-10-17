@@ -10,11 +10,15 @@ describe("Label Service", () => {
         const spyLabel = jest
             .spyOn(Label, "create")
             .mockImplementation(async () => Promise.resolve());
+        const spyExists = jest
+            .spyOn(Label, "exists")
+            .mockImplementation(async () => Promise.resolve());
 
-        const label = {};
+        const label = "test-label";
         await LabelService.create(label);
 
         expect(spyLabel).toHaveBeenCalled();
+        expect(spyExists).toHaveBeenCalled();
     });
 
     it("delete Label cascades deletes to Annotations with session", async () => {

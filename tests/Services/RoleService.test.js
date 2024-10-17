@@ -13,9 +13,14 @@ describe("Role Service", () => {
             .spyOn(Role, "create")
             .mockImplementation(async () => Promise.resolve());
 
+        const spyExists = jest
+            .spyOn(Role, "exists")
+            .mockImplementation(async () => Promise.resolve());
+
         const role = {};
         await RoleService.create(role);
 
+        expect(spyExists).toHaveBeenCalled();
         expect(spyRole).toHaveBeenCalled();
     });
 

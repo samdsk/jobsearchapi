@@ -20,9 +20,8 @@ const create = async (data_provider) => {
             "DataProvider",
             "data_provider"
         );
-    const name = data_provider.toLowerCase();
 
-    const found = await DataProvider.exists({data_provider: name});
+    const found = await DataProvider.exists({data_provider: data_provider});
     if (found) return null;
 
     return await DataProvider.create({

@@ -5,7 +5,7 @@ const Background = require("../Models/Background");
 
 const Annotator = new mongoose.Schema(
     {
-        _id: {type: String},
+        _id: {type: String, trim: true},
         role: {
             type: mongoose.Types.ObjectId,
             required: true,
