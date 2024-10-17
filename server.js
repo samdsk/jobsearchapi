@@ -40,6 +40,7 @@ const start = async () => {
             Logger.info(`Server is up and running at port: ${PORT}`)
         );
     } catch (error) {
+        Logger.info("Something went wrong in server")
         console.error(error);
     }
 };

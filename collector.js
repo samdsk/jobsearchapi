@@ -45,7 +45,7 @@ const wrapper = async (keySet, jobList) => {
         Logger.info(JSON.stringify(response));
 
     } catch (error) {
-        Logger.info("Something wrong in wrapper")
+        Logger.info("Something went wrong in wrapper")
         Logger.error(error.message)
     }
 };
@@ -56,7 +56,7 @@ async function start() {
         await db_connect(process.env.DB_PROD_URL);
         await app();
     } catch (error) {
-        Logger.info("Something wrong in collector start")
+        Logger.info("Something went wrong in collector start")
         Logger.error(error.message)
         await db_close();
         process.exit(1);
