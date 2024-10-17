@@ -25,7 +25,7 @@ const create = async (data_provider) => {
     if (found) return null;
 
     return await DataProvider.create({
-        data_provider: name,
+        data_provider: data_provider,
     });
 };
 

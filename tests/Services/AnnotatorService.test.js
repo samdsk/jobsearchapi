@@ -11,6 +11,9 @@ describe("Annotator Service", () => {
         const spy = jest
             .spyOn(Annotator, "create")
             .mockImplementation(async () => Promise.resolve());
+        const spyExists = jest
+            .spyOn(Annotator, "exists")
+            .mockImplementation(async () => Promise.resolve());
 
         const annotator = {
             role: "role.id",
@@ -20,6 +23,7 @@ describe("Annotator Service", () => {
         await AnnotatorService.create(annotator);
 
         expect(spy).toHaveBeenCalled();
+        expect(spyExists).toHaveBeenCalled();
     });
 
     it("update annotator role", async () => {
@@ -102,7 +106,7 @@ describe("Annotator Service", () => {
         const session = "session";
         await AnnotatorService.deleteAnnotators(filter, session);
 
-        expect(spyAnnotatorFind).toHaveBeenCalledWith(filter, {session: session});
+        expect(spyAnnotatorFind).toHaveBeenCalledWith(filter, null, {session});
         expect(spyAnnotator).toHaveBeenCalledWith(filter, {session: session});
         expect(spyAnnotation).toHaveBeenCalledTimes(2);
     });
