@@ -26,14 +26,6 @@ const app = async () => {
 
     handle_api_trigger(scheduler);
     Logger.info("started successfully")
-    process.on("message", (msg) => {
-        Logger.info(`from ${msg.from} to ${msg.to} : ${msg.code}`)
-    })
-
-    setInterval(async () => {
-        process.send({from: "COLLECTOR", to: "SERVER", code: `ping`})
-    }, 1000 * 6);
-
 };
 
 const wrapper = async (keySet, jobList) => {

@@ -58,5 +58,4 @@ function startChildProcess(pName, pPath) {
     } catch (e) {
         Logger.error(e)
     }
-
 })()
