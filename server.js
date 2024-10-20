@@ -39,7 +39,19 @@ const start = async () => {
         server.listen(PORT, () =>
             Logger.info(`Server is up and running at port: ${PORT}`)
         );
+        process.on("message", (msg) => {
+            Logger.info(`from ${msg.from} to ${msg.to} : ${msg.code}`)
+            process.send({from: "SERVER", to: "COLLECTOR", code: "pong"})
+        })
+
+        setTimeout(async () => {
+
+            await db_close();
+            Logger.info("Killing server")
+            process.exit(1)
+        }, 1000 * 10);
     } catch (error) {
+        await db_close();
         Logger.info("Something went wrong in server")
         console.error(error);
     }

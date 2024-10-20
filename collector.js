@@ -26,12 +26,14 @@ const app = async () => {
 
     handle_api_trigger(scheduler);
     Logger.info("started successfully")
+    process.on("message", (msg) => {
+        Logger.info(`from ${msg.from} to ${msg.to} : ${msg.code}`)
+    })
 
-    setTimeout(async () => {
-        scheduler.stop();
-        await db_close();
-        Logger.info("Exiting...");
-    }, 1000 * 60 * 3 + 1000 * 20);
+    setInterval(async () => {
+        process.send({from: "COLLECTOR", to: "SERVER", code: `ping`})
+    }, 1000 * 6);
+
 };
 
 const wrapper = async (keySet, jobList) => {
