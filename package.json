@@ -1,13 +1,13 @@
 {
-  "name": "jobsearchapi",
-  "version": "0.5",
-  "description": "",
+  "name": "data_collector",
+  "version": "0.6",
+  "description": "This web application is designed to collect data for LLM training, it's periodically collects data from third party data sources and provides an API to manipulate and access them.",
   "main": "index.js",
   "scripts": {
     "test": "jest --runInBand --coverage --verbose",
     "find-circular-deps": "madge . -c"
   },
-  "author": "",
+  "author": "Sameera Kaluwaduge (https://kaluwaduge.com)",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.7.3",
@@ -28,6 +28,10 @@
     "validator": "^13.12.0",
     "winston": "^3.13.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samdsk/DataCollector.git"
+  },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@shelf/jest-mongodb": "^4.2.0",
@@ -36,5 +40,12 @@
     "madge": "^7.0.0",
     "mongodb-memory-server": "^9.2.0",
     "nodemon": "^3.1.4"
-  }
+  },
+  "keywords": [
+    "node",
+    "express",
+    "data collector",
+    "express",
+    "mongodb"
+  ]
 }

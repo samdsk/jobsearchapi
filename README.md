@@ -1,4 +1,8 @@
-# Job Search API client
+# Data Collector
+
+This web application is designed to collect data for LLM training,
+it periodically collects data from third party data sources and
+provides an API to annotate and access them.
 
 ## Prerequisites
 
