@@ -10,7 +10,10 @@
 // required
 API_HOST= api host
 API_URL= api url
-DB_URL= mongo db url
+DB_USER= mongodb username
+DB_PASSWORD= mongodb password
+DB_URI= mongodb url (...mongodb.net)
+DB_NAME= collection name
 KEYS_FILENAME= path to json token array
 JOBTYPES_FILENAME= path to json job type array
 SERVER_SECRET_KEY= jwt encryption key
