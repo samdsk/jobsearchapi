@@ -1,8 +1,8 @@
 require("dotenv").config();
-const Logger = require("./lib/Loggers/ServerLogger")
+const Logger = require("./Library/Loggers/ServerLogger")
 const morgan = require("morgan");
 
-const {db_connect, db_close} = require("./db/db");
+const {db_connect, db_close} = require("./Database/db_handler");
 
 const morganMiddleware = morgan(
     ":method :url :status :res[content-length] - :response-time ms",
@@ -54,6 +54,7 @@ const start = async () => {
         await db_close();
         Logger.info("Something went wrong in server")
         console.error(error);
+        process.exit(1);
     }
 };
 

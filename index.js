@@ -1,6 +1,6 @@
 const {fork} = require('child_process')
 
-const Logger = require("./lib/Loggers/MasterProcessLogger")
+const Logger = require("./Library/Loggers/MasterProcessLogger")
 
 const SERVER = {
     name: "SERVER",

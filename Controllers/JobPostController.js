@@ -1,4 +1,4 @@
-const CollectorLogger = require("../lib/Loggers/CollectorLogger");
+const CollectorLogger = require("../Library/Loggers/CollectorLogger");
 const JobPost = require("../Models/JobPost");
 const {searchMultiple, searchSingle, createSimpleDocument} = require("./CommonControllerMethods");
 const RequestError = require("../Errors/RequestError");

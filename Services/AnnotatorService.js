@@ -1,6 +1,6 @@
 const {Annotator} = require("../Models/Annotator");
 const AnnotationService = require("./AnnotationService");
-const TransactionWrapper = require("../db/TransactionWrapper");
+const TransactionWrapper = require("../Database/TransactionWrapper");
 
 const opts = {runValidators: true};
 

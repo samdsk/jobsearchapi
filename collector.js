@@ -1,13 +1,13 @@
 require("dotenv").config();
 
-const {db_connect, db_close} = require("./db/db");
-const RapidAPIAutomator = require("./lib/Automators/RapidAPIAutomator");
-const {logResultsToJSONFile} = require("./lib/resultsLogger");
-const Logger = require("./lib/Loggers/CollectorLogger")
+const {db_connect, db_close} = require("./Database/db_handler");
+const RapidAPIAutomator = require("./Library/Automators/RapidAPIAutomator");
+const {logResultsToJSONFile} = require("./Library/resultsLogger");
+const Logger = require("./Library/Loggers/CollectorLogger")
 
-const CollectorEventEmitter = require("./lib/CollectorEventEmitter");
-const {Scheduler, EVENT, API_TRIGGER, getNextSchedule} = require("./lib/Scheduler");
-const {getJSONFromFile, getJobTypesFromFile} = require("./lib/utils");
+const CollectorEventEmitter = require("./Library/CollectorEventEmitter");
+const {Scheduler, EVENT, API_TRIGGER, getNextSchedule} = require("./Library/Scheduler");
+const {getJSONFromFile, getJobTypesFromFile} = require("./Library/utils");
 
 const app = async () => {
     const schedulerExpression = getNextSchedule()
