@@ -1,29 +1,56 @@
 const {fork} = require('child_process')
 
-const Logger = require("./lib/Loggers/MasterProcessLogger")
+const Logger = require("./Library/Loggers/MasterProcessLogger")
 
-const SERVER = './server'
-const COLLECTOR = './collector'
+const SERVER = {
+    name: "SERVER",
+    path: './server'
+}
+const COLLECTOR = {
+    name: "COLLECTOR",
+    path: './collector'
+}
+
+const PROCESS_MAP = {}
 
 const start = async () => {
     Logger.info(`Started MasterProcess with pid ${process.ppid}`);
 
-    const process_collector = fork(COLLECTOR);
-    Logger.info(`Process Collector started with pid ${process_collector.pid}`)
-
-    const process_server = fork(SERVER);
-    Logger.info(`Process Server started with pid ${process_server.pid}`)
-
-    process_collector.on('message', (msg) => {
-        Logger.info(`Received message from COLLECTOR <${process_collector.pid}> : ${msg.to}:${msg.code}`);
-        process_server.send(msg);
-    })
-
-    process_server.on('message', (msg) => {
-        Logger.info(`Received message from SERVER <${process_server.pid}> : ${msg.to}:${msg.code}`);
-        process_collector.send(msg);
-    })
+    startChildProcess(COLLECTOR.name, COLLECTOR.path)
+    startChildProcess(SERVER.name, SERVER.path)
 };
+
+function startChildProcess(pName, pPath) {
+    const child = fork(pPath);
+
+    PROCESS_MAP[pName] = child;
+
+    Logger.info(`Process ${pName} started with PID : ${child.pid}`);
+
+    child.on("exit", (code, signal) => {
+        if (code !== 0) {
+            Logger.info(`Process ${pName} crashed with code ${code}. Restarting...`)
+            startChildProcess(pName, pPath);
+
+        } else {
+            Logger.info(`Process ${pName} exited with code ${code}.`)
+        }
+    })
+
+    child.on("error", (error) => {
+        Logger.info(`ERROR: Failed to start process ${pName} : ${child.pid}`);
+        Logger.error(error)
+    })
+
+    Logger.info(`setting up message relaying for ${pName}`)
+    child.on("message", (msg) => {
+        if (msg.to) {
+            Logger.info(`Relaying message from ${msg.from} to ${msg.to} : ${msg.code}`)
+            if (pName !== msg.to)
+                PROCESS_MAP[msg.to].send(msg);
+        }
+    })
+}
 
 (() => {
     try {

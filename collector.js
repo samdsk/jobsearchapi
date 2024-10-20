@@ -1,13 +1,13 @@
 require("dotenv").config();
 
-const {db_connect, db_close} = require("./db/db");
-const RapidAPIAutomator = require("./lib/Automators/RapidAPIAutomator");
-const {logResultsToJSONFile} = require("./lib/resultsLogger");
-const Logger = require("./lib/Loggers/CollectorLogger")
+const {db_connect, db_close} = require("./Database/db_handler");
+const RapidAPIAutomator = require("./Library/Automators/RapidAPIAutomator");
+const {logResultsToJSONFile} = require("./Library/resultsLogger");
+const Logger = require("./Library/Loggers/CollectorLogger")
 
-const CollectorEventEmitter = require("./lib/CollectorEventEmitter");
-const {Scheduler, EVENT, API_TRIGGER, getNextSchedule} = require("./lib/Scheduler");
-const {getJSONFromFile, getJobTypesFromFile} = require("./lib/utils");
+const CollectorEventEmitter = require("./Library/CollectorEventEmitter");
+const {Scheduler, EVENT, API_TRIGGER, getNextSchedule} = require("./Library/Scheduler");
+const {getJSONFromFile, getJobTypesFromFile} = require("./Library/utils");
 
 const app = async () => {
     const schedulerExpression = getNextSchedule()
@@ -26,12 +26,14 @@ const app = async () => {
 
     handle_api_trigger(scheduler);
     Logger.info("started successfully")
+    process.on("message", (msg) => {
+        Logger.info(`from ${msg.from} to ${msg.to} : ${msg.code}`)
+    })
 
-    setTimeout(async () => {
-        scheduler.stop();
-        await db_close();
-        Logger.info("Exiting...");
-    }, 1000 * 60 * 3 + 1000 * 20);
+    setInterval(async () => {
+        process.send({from: "COLLECTOR", to: "SERVER", code: `ping`})
+    }, 1000 * 6);
+
 };
 
 const wrapper = async (keySet, jobList) => {

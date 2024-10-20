@@ -1,5 +1,5 @@
 const {Collection} = require("../Models/Collection");
-const TransactionWrapper = require("../db/TransactionWrapper");
+const TransactionWrapper = require("../Database/TransactionWrapper");
 const TextService = require("./TextService");
 const {Annotation} = require("../Models/Annotation");
 

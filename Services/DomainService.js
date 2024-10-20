@@ -1,6 +1,6 @@
 const {Domain} = require("../Models/Domain");
 const AnnotationService = require("./AnnotationService");
-const TransactionWrapper = require("../db/TransactionWrapper");
+const TransactionWrapper = require("../Database/TransactionWrapper");
 const ValidationError = require("../Errors/ValidationError");
 
 const opts = {runValidators: true};
